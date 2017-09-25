@@ -1,5 +1,11 @@
+/*!
+*  \file File stateTitle.cpp
+*  \brief Implementation of the class StateTitle
+*
+*  Auxiliary documentation
+*  \sa stateTitle.hpp
+*/
 #include <stateTitle.hpp>
-
 #include <camera.hpp>
 #include <complib.hpp>
 #include <game.hpp>
@@ -10,36 +16,96 @@
 #define BACKGROUND "img/tela-inicio2.png"
 #define INSTRUCTION_TEXT "IDJ-Projeto\n\nPress [Space] to continue\n[E] Level Editor\n"
 
-StateTitle::StateTitle():State::State(),bg{Sprite(BACKGROUND)},bt1{"img/botao-editor.png",2},bt2{"img/botao-inicio.png",2}{
+/*!
+	@class StateTitle
+	@brief This class provides the title states
+
+*/
+
+//! A constructor.
+    /*!
+    *	This is a constructor method of StateTitle
+		*/
+StateTitle::StateTitle():State::State(), bg{Sprite(BACKGROUND)},
+																				bt1{"img/botao-editor.png", 2},
+																				bt2{"img/botao-inicio.png", 2}{
 	LoadAssets();
-	
+
 	bg.StretchToFit(WINSIZE);
 }
-StateTitle::~StateTitle() {}
 
-void StateTitle::LoadAssets() {}
-void StateTitle::LoadGUI() {}
+//! A destructor.
+    /*!
+      This is a destructor method of StateTitle class
+    */
+StateTitle::~StateTitle() {
 
+}
+
+/*!
+	@fn void StateTitle::LoadAssets()
+	@brief Virtual method that loads assets
+	@return The execution of this method returns no value
+*/
+void StateTitle::LoadAssets() {
+
+}
+
+/*!
+	@fn void StateTitle::LoadGUI()
+	@brief Virtual method that loads GUI
+	@return The execution of this method returns no value
+*/
+void StateTitle::LoadGUI() {
+
+}
+
+/*!
+	@fn void StateTitle::Begin()
+	@brief Virtual method that represents the Begin title state
+	@return The execution of this method returns no value
+*/
 void StateTitle::Begin() {
-	//Create gameObjects here
-	GameObject* text = new GameObject{Rect{(WINSIZE.x/2),(WINSIZE.y/2),0,0}};
-	text->AddComponent(new CompText{INSTRUCTION_TEXT,36,SDL_COLOR_WHITE,Hotspot::CENTER});
+	//! Defines the GameObject
+	//! @var text
+	GameObject* text = new GameObject{Rect{(WINSIZE.x / 2), (WINSIZE.y / 2), 0,
+																					0}};//!< A GameObject with the informations of the game
+	text->AddComponent(new CompText{INSTRUCTION_TEXT, 36, SDL_COLOR_WHITE,
+											Hotspot::CENTER});
 	AddObject(text->uid);
 }
 
+/*!
+	@fn void StateTitle::Update(float time)
+	@brief Virtual method that updates the title state
+	@param time
+	@brief a positive float, the represents the game time
+	@return The execution of this method returns no value
+*/
 void StateTitle::Update(float time) {
-	if (INPUT.QuitRequested() || INPUT.KeyPress(KEY_ESC)) quitRequested=true;
+	//! Checks if the user tried to quit
+	if (INPUT.QuitRequested() || INPUT.KeyPress(KEY_ESC)){
+		quitRequested = true;
+	}
 
+	//! Checks if the user pressed the space key
 	if (INPUT.KeyPress(KEY_SPACE)) {
 		bt2.SetFrame(1);
 		GAMEINST.Push(new StateStage{"level_0"});
 	}
+	//! Checks if the user pressed the 'e' key
 	if (INPUT.KeyPress(KEY(e))) {
 		bt1.SetFrame(1);
 		GAMEINST.Push(new StateEditor{});
 	}
 	UpdateArray(time);
 }
+
+/*!
+	@fn void StateTitle::Render()
+	@brief Virtual method that renders the title images
+	@return The execution of this method returns no value
+*/
 void StateTitle::Render() {
 	bg.Render(0,0);
 	bt1.Render(500,300);
@@ -47,7 +113,20 @@ void StateTitle::Render() {
 	// RenderArray();
 }
 
-void StateTitle::Pause() {}
+/*!
+	@fn void StateTitle::Pause()
+	@brief Virtual method that represents the Pause title state
+	@return The execution of this method returns no value
+*/
+void StateTitle::Pause() {
+
+}
+
+/*!
+	@fn void StateTitle::Resume()
+	@brief Virtual method that represents the Resume title state
+	@return The execution of this method returns no value
+*/
 void StateTitle::Resume() {
 	CAMERA.x=CAMERA.y=0;
 }
