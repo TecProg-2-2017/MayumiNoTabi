@@ -26,8 +26,8 @@ public:
 	State();
 	virtual ~State() {}
 
-	virtual void Update(float time)=0;
-	virtual void Render()=0;
+	virtual void update(float time)=0;
+	virtual void render()=0;
 
 	virtual void Begin()=0;
 	virtual void End();

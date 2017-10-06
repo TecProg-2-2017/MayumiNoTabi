@@ -43,7 +43,7 @@ class InputManager{
 	InputManager();
 	~InputManager();
 public:
-	void Update(float time);
+	void update(float time);
 
 	bool KeyPress(int key);
 	bool KeyRelease(int key);

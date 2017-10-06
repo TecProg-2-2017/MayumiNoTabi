@@ -13,7 +13,7 @@
 #include <gameObject.hpp>
 #include <tileSet.hpp>
 
-/*!
+  /*!
 	@class TileMap
 	@brief This class provides the tile map to the game
 
@@ -30,18 +30,14 @@
 		*	\brief A pointer to TileSet, that represents the first tile set of the
     * tile map
     */
-TileMap::TileMap(int width, int height, TileSet* ts)
- 			: tileSet{ts}, mapWidth{width}, mapHeight{height}, mapDepth{1} {
-	tileMatrix.reserve(mapWidth*mapHeight)
-	//! Iterates through tileMatrix height of tile map
-	FOR(h, mapHeight) {
-
-    //! Iterates through tileMatrix width of tile map
-		FOR(w, mapWidth) {
+TileMap::TileMap(int width, int height, TileSet* tile_set) : tileSet{tile_set},map_width{width},map_height{height},map_depth{1} {
+	tile_matrix.reserve(map_width*map_height);
+  //! Iterates through tileMatrix height of tile map
+	FOR(height_iterator, map_height)
+	  //! Iterates through tileMatrix width of tile map
+    FOR(width_iterator, map_width)
       //! Empties the first layer of the tileMatrix
-			At(w, h, 0) = EMPTY_TILE;
-		}
-	}
+			at(width_iterator, height_iterator, 0) = EMPTY_TILE;
 }
 
 //! A constructor.
@@ -51,281 +47,271 @@ TileMap::TileMap(int width, int height, TileSet* ts)
 		*	\brief A pointer to TileSet, that represents the first tile set of the
     * tile map
     */
-TileMap::TileMap(TileSet* ts) : tileSet{ts} {
-
+TileMap::TileMap(TileSet* tile_set):tileSet{tile_set}{
 }
 
 /*!
 	@fn void TileMap::Load(ifstream& in)
 	@brief Method that loads the tile matrix for the in file
-	@param in
+	@param input_file
 	@brief A address to ifstream, that provides the tile map informations and
   elements
 	@return The execution of this method returns no value
 */
-void TileMap::Load(ifstream& in) {
+void TileMap::load(ifstream& input_file) {
   //! @var line
-  string line; //!< A string that represents the first line of the in file
+	string line;//!< A string that represents the first line of the in file
+
+	getline(input_file,line);
+	sscanf(line.c_str()," %d,%d,%d",&map_width,&map_height,&map_depth);
 
 	//! Reads a line of in and defines the map width, map height and map depth
-	getline(in,line);
-	sscanf(line.c_str(), " %d,%d,%d", &mapWidth, &mapHeight, &mapDepth);
+	tile_matrix.clear();
+	tile_matrix.reserve(map_width*map_height*map_depth);
 
-	//! Clears the tile matrix and reserves the size matching the number of
-	//! elements of the tile matrix
-	tileMatrix.clear();
-	tileMatrix.reserve(mapWidth*mapHeight*mapDepth);
-
-  //! @var t
-	int t; //!< a integer that represents a tile
-
+  //! @var tile
+	int tile;//!< a integer that represents a tile
+  
   //! Iterates through the tile matrix depth
-	FOR(d, mapDepth) {
-
+	FOR(d,map_depth) {
     //! Iterates through the tile matrix height
-		FOR(h, mapHeight) {
-
+		FOR(h,map_height) {
       //! Iterates through the tile matrix width
-			FOR(w, mapWidth) {
+			FOR(w,map_width) {
         //! Loads each position from in and saves on tile matrix
-				in >> t;
-				in.ignore(1);
-				At(w, h, d) = t-1;
+        input_file >> t;
+				input_file.ignore(1);
+				at(w,h,d) = t-1;
 			}
 		}
 	}
 }
 
 /*!
-	@fn void TileMap::Save(stringstream& out)
+	@fn void TileMap::save(stringstream& out)
 	@brief Method that saves the tile Matrix the out file
 	@param out
 	@brief A address to ifstream, that recives the tile matrix informations and
   elements
 	@return The execution of this method returns no value
 */
-void TileMap::Save(stringstream& out) {
-	//! Saves the width, height and depth of the tile matrix on out
-	out << mapWidth << "," << mapHeight << "," << mapDepth << endl << endl;
+void TileMap::save(stringstream& output_file) {
+  //! Saves the width, height and depth of the tile matrix on out
+	output_file<<map_width<<","<<map_height<<","<<map_depth<<endl<<endl;
 
   //! Iterates through the tile matrix depth
-	FOR(d, mapDepth) {
-    //! Iterates through the tile matrix height
-		FOR(h, mapHeight) {
+	FOR(depth_iterator,map_depth) {
+    //! Iterates through the tile matrix width
+		FOR(height_iterator,map_height) {
       //! Iterates through the tile matrix width
-			FOR(w, mapWidth) {
+			FOR(width_iterator,map_width) {
         //! Saves each position of the tile matrix in the out
-				out << At(w, h, d) + 1 << ",\t";
+				output_file<<at(width_iterator,height_iterator,depth_iterator)+1<<",\t";
 			}
-			out << endl;
+			output_file<<endl;
 		}
-		out << endl;
+		output_file<<endl;
 	}
 }
 
 /*!
-	@fn void TileMap::SetTileSet(TileSet* ts)
-	@brief A setter of the attribute tileSet
+	@fn void TileMap::set_tile_set(Tile_set* ts)
+	@brief A setter of the attribute tile_set
   @param ts
   @brief A pointer to TileSet, that represents the new first tile set of the
   tile map
   @return The execution of this method returns no value
 */
-void TileMap::SetTileSet(TileSet* ts) {
-	tileSet = ts;
+void TileMap::set_tile_set(TileSet* tile_set) {
+	this.tile_set = tile_set;
 }
 
 /*!
-	@fn int& TileMap::At(int x,int y,int z)
+	@fn int& TileMap::at(int position_x,int position_y,int position_z)
 	@brief Method that returns element of the corresponding position of the tile
   matrix
-	@param x
+	@param position_x
 	@brief A positive integer, that recives the x axis position of the element
-  @param y
+  @param position_y
   @brief A positive integer, that recives the y axis position of the element
-  @param z
+  @param position_z
   @brief A positive integer, that recives the z axis position of the element
 	@return A address to integer,that represents the tile of the tile matrix
 */
-int& TileMap::At(int x,int y,int z) {
-	return tileMatrix[x + (y * mapWidth) + (z * mapWidth * mapHeight)];
+int& TileMap::at(int position_x,int position_y,int position_z) {
+	return tile_matrix[position_x+(position_y*map_width)+(position_z*map_width*map_height)];
 }
 
+
 /*!
-	@fn int TileMap::At(int x, int y, int z) const
+	@fn int TileMap::at(int position_x,int position_y,int position_z) const
 	@brief Method that returns element of the corresponding position of the tile
   matrix
-  @param x
+  @param position_x
 	@brief A positive integer, that recives the x axis position of the element
-  @param y
+  @param position_y
   @brief A positive integer, that recives the y axis position of the element
-  @param z
+  @param position_z
   @brief A positive integer, that recives the z axis position of the element
 	@return A integer,that represents the tile of the tile matrix
 */
-int TileMap::At(int x, int y, int z) const {
-	return tileMatrix[x + (y * mapWidth) + (z * mapWidth * mapHeight)];
+int TileMap::at(int position_x,int position_y,int position_z) const{
+	return tile_matrix[position_x+(position_y*map_width)+(position_z*map_width*map_height)];
 }
 
 /*!
-	@fn void TileMap::RenderLayer(int layer, int posX , int posY)
+	@fn void TileMap::render_layer(int layer,int position_x ,int position_y)
 	@brief Method that reders a layer of the tile map
   @param layer
 	@brief A positive integer, that represents the layer that will be rendered
-  @param posX
+  @param position_x
   @brief A positive integer, that recives a position in the x axis
-  @param posY
+  @param position_Y
   @brief A positive integer, that recives a position in the y axis
   @return The execution of this method returns no value
   @warning Method that requires review of comment
-*/
-void TileMap::RenderLayer(int layer, int posX , int posY) {
-  //! @var w
-	int w = tileSet->GetWidth(); //!< a integer that represents the tile set width
-  //! @var h
-	int h = tileSet->GetHeight(); //!< a integer that represents the tile set height
+*/ 
+
+void TileMap::render_layer(int layer,int position_x ,int position_y) {
+  //! @var width
+	int width=tile_set->get_width(); //!< a integer that represents the tile set width
+  //! @var height
+	int height=tile_set->get_height(); //!< a integer that represents the tile set height
   //! @var tile
-  int tile; //! a integer that represents a tile
-	//! @var firstX
-  int firstX = 0; //!< a integer that represents the beginning of the layer in the axis x
+	int tile; //! a integer that represents a tile
+  //! @var firstX
+	int firstX=0; //!< a integer that represents the beginning of the layer in the axis x
   //! @var firstY
-  int firstY = 0; //!< a integer that represents the beginning of the layer in the axis y
+  int firstY=0; //!< a integer that represents the beginning of the layer in the axis y
   //! @var lastX
-  int lastX = mapWidth; //!< a integer that represents the end of the layer in the axis x
+  int lastX=map_width; //!< a integer that represents the end of the layer in the axis x
   //! @var lastY
-  int lastY = mapHeight; //!< a integer that represents the end of the layer in the axis y
+  int lastY=map_height; //!< a integer that represents the end of the layer in the axis y
 
   //! Checks if the camera is ahead of the posX in axis x
-	if (posX < CAMERA.x){
+	if (position_x<CAMERA.x){
     //! Reallocates the beginning of the layer in the axis x
-		firstX = (CAMERA.x - posX) / w;
-	}
+		firstX = (CAMERA.x-position_x)/width;
+  }
 	//! \warning else (do nothing)
-
+    
   //! Checks if the camera is ahead of the posy in axis y
-	if (posY < CAMERA.y){
+  if (position_y<CAMERA.y){
     //! Reallocates the beginning of the layer in the axis y
-		firstY = (CAMERA.y - posY) / h;
-	}
-  // \warning else (do nothing)
-
+		firstY = (CAMERA.y-position_y)/height;
+   }
+   //! \warning else (do nothing)
+  
   //! Defines the map and camera corners
   //! @var mapCorner
-	Vec2 mapCorner = Vec2(posX + (mapWidth * w),posY + (mapHeight * h)); //!< a two-dimensional vector, that represents the positons of the coners of the map
-  //! @var cameraCorner
-  Vec2 cameraCorner = CAMERA + (WINSIZE / CAMERAZOOM); //!< a two-dimensional vector, that represents the positons of the coners of the camera
-
+	Vec2 mapCorner = Vec2(position_x+(map_width*width),position_y+(map_height*height));//!< a two-dimensional vector, that represents the positons of the coners of the map
+	//! @var cameraConer
+  Vec2 cameraCorner = CAMERA+(WINSIZE/CAMERAZOOM);//!< a two-dimensional vector, that represents the positons of the coners of the camera
+	
   //! Checks if the coner of the map is ahead of the coner of the camera in axis
   //! x
-  if (mapCorner.x > cameraCorner.x){
-    //! Reallocates the end of the layer in the axis x
-		lastX -= (mapCorner.x - cameraCorner.x) / w;
-	}
+  if (mapCorner.x>cameraCorner.x){
+		//! Reallocates the end of the layer in the axis x
+    lastX -= (mapCorner.x-cameraCorner.x)/width;
+  }
   //! \warning else (do nothing)
-
-  //! Checks if the coner of the map is ahead of the coner of the camera in axis
-  //! y
-  if (mapCorner.y > cameraCorner.y){
+	
+  if (mapCorner.y>cameraCorner.y){
     //! Reallocates the end of the layer in the axis y
-		lastY -= (mapCorner.y - cameraCorner.y) / h;
-	}
+		lastY -= (mapCorner.y-cameraCorner.y)/height;
+  }
   //! \warning else (do nothing)
 
   //! Iterates the height of the layer
-	for (int y = firstY; y <= lastY; y++) {
-
-    //! Iterates the width of the layer
-		for (int x = firstX; x <= lastX; x++) {
-			tile = At(x, y, layer);
-
+	for (int y_iterator=firstY;y_iterator<=lastY;y_iterator++) {
+		//! Iterates the width of the layer
+    for (int x_iterator=firstX;x_iterator<=lastX;x_iterator++) {
+    
+			tile = at(x_iterator, y_iterator, layer);
       //! Checks if the tile is empty
-			if (tile != EMPTY_TILE){
+			if (tile != EMPTY_TILE)
         //! Render the tile
-				tileSet->Render(tile, RENDERPOSX(posX + (x * w)),
-					RENDERPOSY(posY + (y * h)), CAMERAZOOM);
-			}
+				tile_set->render(tile, RENDERPOSX(position_x+(x_iterator*width)), RENDERPOSY(position_y+(y_iterator*height)), CAMERAZOOM);
 		}
 	}
 }
 
 /*!
-	@fn void TileMap::Render(Vec2 pos)
+	@fn void TileMap::render(Vec2 position)
 	@brief Method that reders all layer of the tile map
-  @param pos
+  @param position
 	@brief A Vec2, that represents a two-dimensional vector with the positons of
   to be render
   @return The execution of this method returns no value
   @warning Method that requires review of comment
 */
-void TileMap::Render(Vec2 pos) {
+
+void TileMap::render(Vec2 position) {
   //! Iterates through the layer of the tile map
-	FOR(i, mapDepth) {
-    //! Renders the tile map layer
-		RenderLayer(i,pos.x, pos.y);
+	FOR(depth_iterator,map_depth) {
+		//! Renders the tile map layer
+    RenderLayer(depth_iterator,positions.x,positions.y);
 	}
 }
 
 /*!
-	@fn int TileMap::GetWidth() const
+	@fn int TileMap::get_width() const
 	@brief A getter of the attribute mapWidth
 	@return A positive integer, that represents the width of a tile map
 */
-int TileMap::GetWidth() const{
-	return mapWidth;
+int TileMap::get_width() const{
+	return map_width;
 }
 
+
 /*!
-	@fn int TileMap::GetHeight() const
+	@fn int TileMap::get_height() const
 	@brief A getter of the attribute mapHeight
 	@return A positive integer, that represents the height of a tile map
 */
-int TileMap::GetHeight() const{
-	return mapHeight;
+int TileMap::get_height() const{
+	return map_height;
 }
 
 /*!
-	@fn int TileMap::GetDepth() const
+	@fn int TileMap::get_depth() const
 	@brief A getter of the attribute mapDepth
 	@return A positive integer, that represents the depth of a tile map
 */
-int TileMap::GetDepth() const{
-	return mapDepth;
+int TileMap::get_depth() const{
+	return map_depth;
 }
 
+
 /*!
-	@fn void TileMap::SetSize(int newWidth,int newHeight)
+	@fn void TileMap::change_size(int new_width,int new_height)
 	@brief Method that changes the size of the tile map
-  @param newWidth
+  @param new_width
 	@brief A positive integer, that represents the new width of the tile map
-  @param newHeight
+  @param new_height
   @brief A positive integer, that represents the new height of the tile map
   @return The execution of this method returns no value
 */
-void TileMap::SetSize(int newWidth,int newHeight) {
-	//! @var newMatrix
-	vector<int> newMatrix(newWidth*newHeight*mapDepth, EMPTY_TILE);//!<  A integer vector, that represents the tile map with the new size
-  //! @var maxX
-  int maxX = min(newWidth, mapWidth); //!< A integer, that represents the lower value between newWidth and mapWidth
-  //! @var maxY
-	int maxY = min(newHeight, mapHeight); //!< A integer, that represents the lower value between newHeight and mapHeight
+void TileMap::change_size(int new_width,int new_height) {
+	//! @var new_matrix
+  vector<int> new_matrix(new_width*new_height*map_depth, EMPTY_TILE); //!<  A integer vector, that represents the tile map with the new size
+	//! @var max_x
+  int max_x = min(new_width, map_width); //!< A integer, that represents the lower value between newWidth and mapWidth
+	//! @var max_y
+  int max_y = min(new_height, map_height); //!< A integer, that represents the lower value between newHeight and mapHeight
 
   //! Iterates z from 0 to the tile map depth
-	FOR(z,mapDepth){
-
+	FOR(depth_iterator,map_depth)
     //! Iterates y from 0 to maxY
-		FOR(y,maxY){
-
-      //! Iterates x to 0 to maxX
-			FOR(x,maxX){
+		FOR(height_iterator,maxY)
+			//! Iterates x to 0 to maxX
+      FOR(width_iterator,maxX)
         //! Copies the elements of the tile matrix to the newMatrix
-				newMatrix[x+(y*newWidth)+(z*newWidth*newHeight)] = At(x, y, z);
-			}
-		}
-	}
+				new_matrix[width_iterator+(height_iterator*new_width)+(depth_iterator*new_width*new_height)] = at(width_iterator,height_iterator,depth_iterator);
 
-	//! Replaces the tileMatrix with the newMatrix
-	mapWidth = newWidth;
-	mapHeight = newHeight;
-	tileMatrix.clear();
-	tileMatrix = newMatrix;
+  //! Replaces the tileMatrix with the new matrix
+	map_width = new_width;
+	map_height = new_height;
+	tile_matrix.clear();
+	tile_matrix = new_matrix;
 }

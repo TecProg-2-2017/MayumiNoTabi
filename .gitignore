@@ -31,6 +31,21 @@
 # Dependency files
 *.d
 
+# Temporary files
+.tmp
+
+# Doxygen files
+latex
+src/html/**/*
+src/latex/*
+
+# Ignores the vscode folder
+.vscode/**/*
 
 #executavel
 JOGO
+
+#pastas geradas pelo Doxygen
+html/*
+latex/*
+

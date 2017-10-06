@@ -82,7 +82,7 @@ void StateTitle::Begin() {
 	@brief a positive float, the represents the game time
 	@return The execution of this method returns no value
 */
-void StateTitle::Update(float time) {
+void StateTitle::update(float time) {
 	//! Checks if the user tried to quit
 	if (INPUT.QuitRequested() || INPUT.KeyPress(KEY_ESC)){
 		quitRequested = true;
@@ -90,26 +90,27 @@ void StateTitle::Update(float time) {
 
 	//! Checks if the user pressed the space key
 	if (INPUT.KeyPress(KEY_SPACE)) {
-		bt2.SetFrame(1);
+		bt2.set_frame(1);
 		GAMEINST.Push(new StateStage{"level_0"});
 	}
 	//! Checks if the user pressed the 'e' key
 	if (INPUT.KeyPress(KEY(e))) {
-		bt1.SetFrame(1);
+		bt1.set_frame(1);
 		GAMEINST.Push(new StateEditor{});
 	}
 	UpdateArray(time);
 }
 
 /*!
-	@fn void StateTitle::Render()
+	@fn void StateTitle::render()
 	@brief Virtual method that renders the title images
 	@return The execution of this method returns no value
 */
-void StateTitle::Render() {
-	bg.Render(0,0);
-	bt1.Render(500,300);
-	bt2.Render(100,300);
+
+void StateTitle::render() {
+	bg.render(0,0);
+	bt1.render(500,300);
+	bt2.render(100,300);
 	// RenderArray();
 }
 

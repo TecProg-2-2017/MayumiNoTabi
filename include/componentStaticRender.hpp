@@ -21,9 +21,9 @@ public:
 	CompStaticRender(const Sprite &sp,const Vec2 &p=Vec2{}, const bool cs = true);
 	~CompStaticRender();
 
-	void Update(float time);
-	void Render();
-	Component::type GetType()const;
+	void update(float time);
+	void render();
+	Component::type get_type()const;
 };
 
 #endif//COMPSTATICRENDERHPP

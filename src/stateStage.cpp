@@ -55,14 +55,14 @@ void StateStage::Begin() {
 }
 
 /*!
-	@fn void StateStage::Update(float time)
+	@fn void StateStage::update(float time)
 	@brief Virtual method that updates the stage state
 	@param time
 	@brief a positive float, the represents the game time
 	@return The execution of this method returns no value
 */
 void StateStage::Update(float time) {
-	Camera::Update(time);
+	Camera::update(time);
 	//! Checks if the player requested to quit
 	if (INPUT.QuitRequested()){
 		quitRequested = true;
@@ -114,24 +114,25 @@ void StateStage::Update(float time) {
 	UpdateArray(time);
 }
 
+
 /*!
-	@fn void StateStage::Render()
+	@fn void StateStage::render()
 	@brief Virtual method that renders the stage background
 	@return The execution of this method returns no value
 */
-void StateStage::Render() {
-	level.background.Render(0, 0);
-	// floresta_bg1.Render(RENDERPOS(Vec2(0,0)));
-	// floresta_bg2.Render(RENDERPOS(Vec2(4433,0)));
-	// floresta_bg3.Render(RENDERPOS(Vec2(8465,0)));
-	floresta_bg2.Render(RENDERPOS(Vec2(0,0)));
-	floresta_bg2.Render(RENDERPOS(Vec2(4032*1,0)));
-	floresta_bg2.Render(RENDERPOS(Vec2(4032*2,0)));
-	floresta_bg2.Render(RENDERPOS(Vec2(4032*3,0)));
-	floresta_bg2.Render(RENDERPOS(Vec2(4032*4,0)));
-	floresta_bg2.Render(RENDERPOS(Vec2(4032*5,0)));
-	floresta_bg3.Render(RENDERPOS(Vec2(4032*6,0)));
-	level.tileMap.Render();
+void StateStage::render() {
+	level.background.render(0, 0);
+	// floresta_bg1.render(RENDERPOS(Vec2(0,0)));
+	// floresta_bg2.render(RENDERPOS(Vec2(4433,0)));
+	// floresta_bg3.render(RENDERPOS(Vec2(8465,0)));
+	floresta_bg2.render(RENDERPOS(Vec2(0,0)));
+	floresta_bg2.render(RENDERPOS(Vec2(4032*1,0)));
+	floresta_bg2.render(RENDERPOS(Vec2(4032*2,0)));
+	floresta_bg2.render(RENDERPOS(Vec2(4032*3,0)));
+	floresta_bg2.render(RENDERPOS(Vec2(4032*4,0)));
+	floresta_bg2.render(RENDERPOS(Vec2(4032*5,0)));
+	floresta_bg3.render(RENDERPOS(Vec2(4032*6,0)));
+	level.tileMap.render();
 	RenderArray();
 }
 

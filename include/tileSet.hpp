@@ -11,19 +11,19 @@ class TileSet{
 	int rows;
 	int columns;
 
-	int tileWidth;
-	int tileHeight;
+	int tile_width;
+	int tile_height;
 public:
 	TileSet();
-	TileSet(int  w,int h,string file);
-	
-	void Load(int w, int h, string file);
-	
-	void Render(unsigned int index,float x,float y, float extScale = 1.0f);
-	
-	int GetWidth();
-	int GetHeight();
-	int GetTileCount();
+	TileSet(int  width,int height,string file_path);
+
+	void load(int width, int height, string file_path);
+
+	void render(unsigned int index,float position_x,float position_y, float extended_scale = 1.0f);
+
+	int get_width();
+	int get_height();
+	int get_tile_count();
 };
 
 #endif//TILESETHPP

@@ -21,30 +21,31 @@ Timer::Timer() {
 }
 
 /*!
-	@fn void Timer::Update(float dTime)
+	@fn void Timer::add_time(float additional_time)
 	@brief Method that adds time to the timer
-	@param dTime
+	@param additional_time
 	@brief A float, that represents time that will bee add to the timer
 	@return The execution of this method returns no value
 */
-void Timer::Update(float dTime) {
-	time += dTime;
+
+void Timer::add_time(float additional_time) {
+	time+=additional_time;
 }
 
 /*!
-	@fn void Timer::Restart()
+	@fn void Timer::restart_time()
 	@brief Method that resets the timer
 	@return The execution of this method returns no value
 */
-void Timer::Restart() {
-	time = 0;
+void Timer::restart_time() {
+	time=0;
 }
 
 /*!
-	@fn float Timer::Get()
+	@fn float Timer::get_time()
 	@brief A getter of the attribute time
 	@return A positive float, that represents the timer's current time
 */
-float Timer::Get() {
+float Timer::get_time() {
 	return time;
 }

@@ -8,9 +8,9 @@ class Timer{
 public:
 	Timer();
 
-	void Update(float dTime);
-	void Restart();
-	float Get();
+	void add_time(float additional_time);
+	void restart_time();
+	float get_time();
 };
 
 #endif//TIMERHPP

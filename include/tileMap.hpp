@@ -11,30 +11,30 @@ class TileSet;
 class GameObject;
 
 class TileMap{
-	vector<int> tileMatrix;
-	TileSet* tileSet;
-	int mapWidth;
-	int mapHeight;
-	int mapDepth;
+	vector<int> tile_matrix;
+	TileSet* tile_set;
+	int map_width;
+	int map_height;
+	int map_depth;
 public:
-	TileMap(int width, int height, TileSet* ts);
-	TileMap(TileSet* ts);
-	
-	void Load(ifstream& in);
-	void Save(stringstream& out);
-	
-	void SetTileSet(TileSet* ts);
-	
-	int& At(int x,int y,int z);
-	int  At(int x,int y,int z) const;
-	
-	void Render(Vec2 pos = {0,0});
-	void RenderLayer(int layer,int posX=0,int posY=0);
-	
-	int GetWidth() const;
-	int GetHeight() const;
-	int GetDepth() const;
-	void SetSize(int width,int height);
+	TileMap(int width, int height, TileSet* tile_set);
+	TileMap(TileSet* tile_set);
+
+	void load(ifstream& input_file);
+	void save(stringstream& output_file);
+
+	void set_tile_set(TileSet* tile_set);
+
+	int& at(int position_x,int position_y,int position_z);
+	int  at(int position_x,int position_y,int position_z) const;
+
+	void render(Vec2 position = {0,0});
+	void render_layer(int layer,int position_x=0,int position_y=0);
+
+	int get_width() const;
+	int get_height() const;
+	int get_depth() const;
+	void change_size(int new_width,int new_height);
 };
 
 #endif//TILEMAPHPP

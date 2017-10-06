@@ -85,11 +85,11 @@ extern int debugCount;
 #define FILL_RECT(r) SDL_RenderFillRect(GAMERENDER, (r))
 #define DRAW_LINE(x0,y0,x,y) SDL_RenderDrawLine(GAMERENDER,(x0),(y0),(x),(y))
 
-#define SDL_COLOR_BLACK MakeColor(0,0,0)
-#define SDL_COLOR_RED   MakeColor(255,0,0)
-#define SDL_COLOR_GREEN MakeColor(0,255,0)
-#define SDL_COLOR_BLUE  MakeColor(0,0,255)
-#define SDL_COLOR_WHITE MakeColor(255,255,255)
+#define SDL_COLOR_BLACK generate_color(0,0,0)
+#define SDL_COLOR_RED   generate_color(255,0,0)
+#define SDL_COLOR_GREEN generate_color(0,255,0)
+#define SDL_COLOR_BLUE  generate_color(0,0,255)
+#define SDL_COLOR_WHITE generate_color(255,255,255)
 
 #define PRECISION 0.0001
 #define PLAYER_JUMP 8.1//m/s
@@ -108,14 +108,26 @@ extern int debugCount;
 #define RENDERCOLLISION
 
 
-typedef enum {TOP_LEFT,TOP,TOP_RIGHT,LEFT,CENTER,RIGHT,BOTTOM_LEFT,BOTTOM,BOTTOM_RIGHT} Hotspot;
-extern pair<float,float> HotspotPos[];
+typedef enum {
+  TOP_LEFT,
+  TOP,
+  TOP_RIGHT,
+  LEFT,
+  CENTER,
+  RIGHT,
+  BOTTOM_LEFT,
+  BOTTOM,
+  BOTTOM_RIGHT
+} Hotspot;
 
-SDL_Color MakeColor(int r,int g,int b,int a=255);
+extern pair<float,float> hotspot_positions[];
+
+SDL_Color generate_color(int red, int green, int blue, int alpha = 255);
 
 bool equals(const float &a,const float &b);
-float closeDist(const float &from,const float &to,const float &change);
 
-string FloatToStr(float f);
+float close_distance(const float &from, const float &to, const float &change);
 
-#endif//COMMONHPP
+string convert_float_to_str(float float_number);
+
+#endif

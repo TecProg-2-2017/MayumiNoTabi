@@ -44,8 +44,8 @@ template<class T> txtFuncType1 AddSprite(T& in) {
 		spr->flipped=true;
 		spr->rotation=self->rotation;
 		Sprite sp;
-		if     (self->HasComponent(Component::type::t_animation))        sp = COMPANIMp(self)->sp;
-		else if (self->HasComponent(Component::type::t_animation_control))sp = COMPANIMCONTp(self)->GetCur().sp;
+		if     (self->HasComponent(Component::type::t_animation))        sp = COMPANIMPOINTER(self)->sp;
+		else if (self->HasComponent(Component::type::t_animation_control))sp = COMPANIMCONTPOINTER(self)->get_current().sp;
 		else if (self->HasComponent(Component::type::t_static_render))    sp = COMPSTATICRENDERp(self)->sp;
 		sp.SetFrameTime(-1.0f);
 		if (limit != -1)spr->AddComponent(new CompTimer{limit});

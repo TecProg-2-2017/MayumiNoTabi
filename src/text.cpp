@@ -49,6 +49,7 @@ Text::Text(const string& txt, int fSize, SDL_Color c, Style st,
     /*!
       This is a destructor method of Text class
     */
+
 Text::~Text() {
 	//! Iterates through all the lineArray lines
 	for (auto& i : lineArray) {
@@ -80,7 +81,6 @@ void Text::Render(Vec2 camera, Rect* clipRect) {
 	int y = pos.y - (camera.y * CAMERAZOOM); //!< A positive integer that represents the beginning of the text box rectangle in the axis y
 
 	//! \warning modularize decision structure
-
 	//! Checks if the text box rectangle exist
 	if (clipRect) {
 		//! @var
@@ -111,19 +111,19 @@ void Text::Render(Vec2 camera, Rect* clipRect) {
 			SDL_Rect dest;
 			if (clipRect->x > i.box.x) {
 				clip.x = clipRect->x - i.box.x;
-				dest.x = x + clipRect->x;
+				dest.x = position_x + clipRect->x;
 			}
 			else {
 				clip.x = 0;
-				dest.x = x + i.box.x;
+				dest.x = position_x + i.box.x;
 			}
 			if (clipRect->y > i.box.y) {
 				clip.y = clipRect->y - i.box.y;
-				dest.y = y + clipRect->y;
+				dest.y = position_y + clipRect->y;
 			}
 			else {
 				clip.y = 0;
-				dest.y = y + i.box.y;
+				dest.y = position_y + i.box.y;
 			}
 			if (clipRectEnd.x < lineBoxEnd.x) {
 				clip.w = dest.w = clipRectEnd.x - i.box.x - clip.x +1;
@@ -142,10 +142,10 @@ void Text::Render(Vec2 camera, Rect* clipRect) {
 		}
 	}
 	else {
-		for (auto& i : lineArray) {
+		for (auto& i : line_array) {
 			SDL_Rect dest;
-			dest.x=x+i.box.x;
-			dest.y=y+i.box.y;
+			dest.x=position_x+i.box.x;
+			dest.y=position_y+i.box.y;
 			dest.w=i.box.w;
 			dest.h=i.box.h;
 			SDL_RenderCopy(GAMERENDER,i.texture,nullptr,&dest);
@@ -204,11 +204,12 @@ void Text::SetText(string txt) {
 			//! Attributes a white space to the line text
 			line.text = " ";
 		}
-		lineArray.push_back(line);
+		line_array.push_back(line);
 	}
 
 	RemakeTexture();
 }
+
 
 /*!
 	@fn void Text::SetLine(int line, string txt)
@@ -225,6 +226,7 @@ void Text::SetLine(int line, string txt) {
 	if (line >= 0 && line < (int)lineArray.size()) {
 		//! Replaces the line text for the new line text
 		lineArray[line].text = txt;
+
 		RemakeTexture();
 	}
 }
@@ -365,6 +367,7 @@ void Text::RemakeTexture() {
 				//! Applies the alignment is RIGHT
 				i.box.x=(box.w-i.box.w);
 			}
+
 		}
 	}
 }

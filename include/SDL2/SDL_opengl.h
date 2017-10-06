@@ -402,7 +402,7 @@ typedef double		GLclampd;	/* double precision float in [0,1] */
 #define GL_ONE_MINUS_DST_COLOR			0x0307
 #define GL_SRC_ALPHA_SATURATE			0x0308
 
-/* Render Mode */
+/* render Mode */
 #define GL_FEEDBACK				0x1C01
 #define GL_RENDER				0x1C00
 #define GL_SELECT				0x1C02

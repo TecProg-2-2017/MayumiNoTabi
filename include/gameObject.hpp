@@ -43,8 +43,8 @@ public:
 	GameObject(const Rect &rect,float r=0.0f,Hotspot h=Hotspot::TOP_LEFT, bool a=false);
 	~GameObject();
 
-	void Update(float time);
-	void Render();
+	void update(float time);
+	void render();
 
 	void AddComponent(Component* component);
 	void ReplaceComponent(Component* component);

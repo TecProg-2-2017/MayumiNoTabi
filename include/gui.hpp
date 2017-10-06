@@ -32,8 +32,8 @@ protected:
 public:
 	virtual ~GUI_Element();
 	
-	virtual void Update()=0;
-	virtual void Render()=0;
+	virtual void update()=0;
+	virtual void render()=0;
 	
 	void SetPos(const Vec2& pos);
 	Rect GetBox()const;
@@ -51,8 +51,8 @@ public:
 
 	GUI_Button(uint a, const Vec2& pos={0,0});
 	
-	virtual void Update();
-	virtual void Render();
+	virtual void update();
+	virtual void render();
 	
 	void Reset();
 	bool IsPressed()const;
@@ -64,8 +64,8 @@ class GUI_CheckButton:public GUI_Button{
 public:
 	GUI_CheckButton(bool& v, const Vec2& pos={0,0});
 	
-	virtual void Update();
-	virtual void Render();
+	virtual void update();
+	virtual void render();
 };
 
 class GUI_TextButton:public GUI_Button{
@@ -73,7 +73,7 @@ class GUI_TextButton:public GUI_Button{
 public:
 	GUI_TextButton(uint a, const string& l = "Text", const Vec2& pos={0,0});
 	
-	virtual void Render();
+	virtual void render();
 };
 
 class GUI_IconButton:public GUI_Button{
@@ -81,7 +81,7 @@ class GUI_IconButton:public GUI_Button{
 public:
 	GUI_IconButton(uint a, string i, const Vec2& pos={0,0});
 	
-	virtual void Render();
+	virtual void render();
 };
 
 class GUI_InputBox:public GUI_Button{
@@ -96,8 +96,8 @@ protected:
 	virtual void SetValue()=0;
 	virtual string GetValue()const=0;
 public:	
-	void Update();
-	void Render();
+	void update();
+	void render();
 };
 
 class GUI_StringBox:public GUI_InputBox{
@@ -126,8 +126,8 @@ class GUI_Label:public GUI_Element{
 public:
 	GUI_Label(const string& t, Snap s=SNAP_NONE, const Vec2& pos={0,0});
 	
-	virtual void Update();
-	virtual void Render();
+	virtual void update();
+	virtual void render();
 };
 
 class GUI_Array:public GUI_Element{
@@ -139,22 +139,22 @@ protected:
 public:
 	GUI_Array(vector<GUI_Element*>& v);
 
-	virtual void Update();
-	virtual void Render();
+	virtual void update();
+	virtual void render();
 };
 
 class GUI_HBar:public GUI_Array{
 public:
 	GUI_HBar(vector<GUI_Element*>& v, uint width=0, const Vec2& pos={0,0});
 
-	virtual void Render();
+	virtual void render();
 };
 
 class GUI_VBar:public GUI_Array{
 public:
 	GUI_VBar(vector<GUI_Element*>& v, uint height=0, const Vec2& pos={0,0});
 	
-	virtual void Render();
+	virtual void render();
 };
 
 class GUI_Window:public GUI_Element{
@@ -167,7 +167,7 @@ public:
 	
 	GUI_Window(vector<GUI_Element*>& v, int i, const string& l, const Vec2& pos={-1,-1});
 	
-	virtual void Update();
-	virtual void Render();
+	virtual void update();
+	virtual void render();
 };
 #endif //GUIHPP

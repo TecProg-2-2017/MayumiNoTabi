@@ -28,7 +28,7 @@ void Sprite::Open(const string& file,int fCountX,int fCountY,float fTime,int fCo
 
 	SetFrameCount(fCountX,fCountY,fCount);
 	SetFrameTime(fTime);
-	SetFrame(0);
+	set_frame(0);
 }
 void Sprite::SetClip(int x,int y,int w,int h) {
 	clipRect.x=x;
@@ -37,7 +37,7 @@ void Sprite::SetClip(int x,int y,int w,int h) {
 	clipRect.h=h;
 }
 
-void Sprite::Render(float x,float y,float angle, float extScale) {
+void Sprite::render(float x,float y,float angle, float extScale) {
 	SDL_Rect dest;
 	
 	dest.x=(x);
@@ -54,20 +54,20 @@ void Sprite::Render(float x,float y,float angle, float extScale) {
 	SDL_RenderCopyEx(GAMERENDER,texture.get(),&clipRect,&dest,angle,nullptr,flip);
 }
 
-void Sprite::Render(const Vec2& v, float angle, float extScale) {
-	Render(v.x, v.y, angle, extScale);
+void Sprite::render(const Vec2& v, float angle, float extScale) {
+	render(v.x, v.y, angle, extScale);
 }
 
-void Sprite::Update(float time) {
-	if (GetFrameCount()==1 || frameTime<0)return;
+void Sprite::update(float time) {
+	if (get_frame_count()==1 || frameTime<0)return;
 	timeElapsed+=time;
 	if (timeElapsed>frameTime) {
 		timeElapsed-=frameTime;
-		SetFrame((currentFrame+1)%GetFrameCount());
+		set_frame((currentFrame+1)%get_frame_count());
 		looped = (currentFrame==0);
 	}
 }
-void Sprite::SetFrame(int frame) {
+void Sprite::set_frame(int frame) {
 	currentFrame = frame;
 	SetClip((frame%frameCountX)*GetWidth(),(frame/frameCountX)*GetHeight(),GetWidth(),GetHeight());
 }
@@ -89,15 +89,15 @@ int Sprite::GetHeight()const{
 	return (height*scaleY)/frameCountY;
 }
 
-int Sprite::GetCurFrame()const{
+int Sprite::get_current_frame()const{
 	return currentFrame;
 }
 
-int Sprite::GetFrameCount()const{
+int Sprite::get_frame_count()const{
 	return frameCount;
 }
 
-Vec2 Sprite::GetFrameCount(bool b)const{
+Vec2 Sprite::get_frame_count(bool b)const{
 	UNUSED(b);
 	return {(float)frameCountX,(float)frameCountY};
 }
@@ -105,7 +105,7 @@ Vec2 Sprite::GetFrameCount(bool b)const{
 bool Sprite::IsOpen()const{
 	return (texture!=nullptr);
 }
-bool Sprite::Looped()const{
+bool Sprite::is_looped()const{
 	return looped;
 }
 

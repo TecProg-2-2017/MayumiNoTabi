@@ -1,7 +1,10 @@
-/*
- *  File: componentAI.cpp
+/*!
+ *  \file File componentAi.cpp
+ *  \brief Implementation of artificial inteligence of the in-game components
  *
- *  Description:  Implements CompAI class
+ *  The class implemented here defines the AI logic behind the components
+ *
+ *  \sa componentAI.hpp
  */
 
 #include <componentAI.hpp>
@@ -11,29 +14,56 @@
 //#include <inputManager.hpp>
 
 // TODO: Refactorate
-// Constructor
-// Recieves a aiFunc type param composed value and executes it
+
+//! A constructor.
+  /*!
+  This is a constructor method of the componentAI class
+  */
+
 CompAI::CompAI(aiFunc func):foo{func} { // aiFunc=function<void(CompAI*,float)>;
 
 }
 
-// Destructor method
+//! A destructor.
+  /*!
+  This is a destructor method of the componentAi class
+  */
+
 CompAI::~CompAI() {
 
 }
 
-// Updates the component ai based on the param
-// Recieves a float number as a param that represents time
-void CompAI::Update(float time) {
-	foo(this,time);
+/*!
+  @fn       void CompAI::update(float time)
+  @brief    Updates the component AI based on the time param
+  @param    float value that resembles time
+  @return   void
+  @warning  none
+*/
+
+void CompAI::update(float time) {
+  foo(this,time);  // Maybe I should leave it's name like this
 }
 
-// Renders component ai
-void CompAI::Render() {
+/*!
+  @fn       void CompAI::render()
+  @brief    Renders component ai
+  @param    none
+  @return   void
+  @warning  Empty
+*/
 
+void CompAI::render_component_ai() {
 }
 
-// Method that picks a component type and returns it
-Component::type CompAI::GetType()const {
-	return Component::type::t_ai;
+/*!
+  @fn       Component::type CompAI::get_type()const
+  @brief    Method that picks a component type and returns it
+  @param    none
+  @return   Component::type
+  @warning  TODO: refactorate for better understanding
+*/
+
+Component::type CompAI::get_type()const {
+  return Component::type::t_ai;
 }

@@ -172,7 +172,7 @@ extern DECLSPEC int SDLCALL SDL_JoystickNumHats(SDL_Joystick * joystick);
 extern DECLSPEC int SDLCALL SDL_JoystickNumButtons(SDL_Joystick * joystick);
 
 /**
- *  Update the current state of the open joysticks.
+ *  update the current state of the open joysticks.
  *
  *  This is called automatically by the event loop if any joystick
  *  events are enabled.

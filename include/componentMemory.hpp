@@ -19,9 +19,9 @@ public:
 
 	CompMemory();
 	~CompMemory();
-	void Update(float time);
-	void Render();
-	Component::type GetType()const;
+	void update(float time);
+	void render();
+	Component::type get_type()const;
 };
 
 #endif//COMPMEMORYHPP

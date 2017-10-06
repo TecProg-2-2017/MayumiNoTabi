@@ -18,9 +18,9 @@ public:
 	CompText(string text,int size,SDL_Color c=SDL_COLOR_WHITE, Hotspot h=Hotspot::TOP_LEFT, Vec2 p=Vec2{});
 	~CompText();
 
-	void Update(float time);
-	void Render();
-	Component::type GetType()const;
+	void update(float time);
+	void render();
+	Component::type get_type()const;
 };
 
 #endif//COMPONENTTEXTHPP

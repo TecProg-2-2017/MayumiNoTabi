@@ -144,7 +144,7 @@ typedef enum
     SDL_AUDIODEVICEADDED = 0x1100, /**< A new audio device is available */
     SDL_AUDIODEVICEREMOVED,        /**< An audio device has been removed. */
 
-    /* Render events */
+    /* render events */
     SDL_RENDER_TARGETS_RESET = 0x2000, /**< The render targets have been reset and their contents need to be updated */
     SDL_RENDER_DEVICE_RESET, /**< The device has been reset and all textures need to be recreated */
 

@@ -26,8 +26,8 @@ public:
 	GUIManager();
 	~GUIManager();
 	
-	void Update();
-	void Render();
+	void update();
+	void render();
 	
 	void PushElement(GUI_Element* element);
 	void RequestPop(GUI_Element* element);

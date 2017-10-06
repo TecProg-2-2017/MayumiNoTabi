@@ -53,7 +53,7 @@ void State::UpdateArray(float time) {
 			GameObject::entities.erase(uid);
 			continue;
 		}
-		GO(uid)->Update(time);
+		GO(uid)->update(time);
 		if (GO(uid)->Remove()) {
 			// cout << "Removing go " << uid << endl;
 			GameObject::entities.erase(uid);
@@ -68,6 +68,6 @@ void State::RenderArray() {
 			GameObject::entities.erase(uid);
 			continue;
 		}
-		GO(uid)->Render();
+		GO(uid)->render();
 	}
 }

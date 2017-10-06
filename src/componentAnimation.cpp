@@ -1,7 +1,10 @@
-/*
- *  File: componentAnimation.cpp
+/*!
+ *  \file File componentAnimation.cpp
+ *  \brief Implementation of CompAnim class
  *
- *  Description:  Implements CompAnim class
+ *  This file has the implementation of CompAnim class
+ *
+ *  \sa componentAnimation.hpp
  */
 
 #include <componentAnimation.hpp>
@@ -11,65 +14,73 @@
 #include <game.hpp>
 #include <stateStage.hpp>
 #include <txtFuncs.hpp>
-//#include <inputManager.hpp>
+// #include <inputManager.hpp>
 
-// No params constructor method
+//! A constructor.
+  /*!
+  This is a constructor method of CompAnim class
+  */
+
+// Constructor method with no params
 CompAnim::CompAnim() {
 
 }
 
-// Constructor Method for component animation
-// Takes a file name and a CompCollider values as params
-CompAnim::CompAnim(string file, CompCollider* tempColl) {
+//! A constructor.
+  /*!
+   This is a constructor method of CompAnim class
+  */
 
-	// TODO: separate variable declarations
-	string name, imgFile, func, animFile, type;
+  CompAnim::CompAnim(string filename, CompCollider* temporary_collider) {
 
-	int fCount,fCountX,fCountY,collCount,funcCount;
+  // TODO: separate variable declarations and comment them all 
+	string name, img_file, function_name, /* animFile, unused */ type;
 
-	float fTime,x,y,w,h,r;
+	int f_count, f_counter_x, f_counter_y, collider_counter, function_counter;
 
-	ifstream in(ANIMATION_PATH + file + ".txt");
+	float f_time, x_axis, y_axis, width, height, r;
+
+	ifstream in(ANIMATION_PATH + filename + ".txt");
 
 	// Treats possible file opening error
 	if (!in.is_open()) {
-		cerr << "Erro ao abrir arquivo de animação '" << file << "'" << endl;
+		cerr << "Erro ao abrir arquivo de animação '" << filename << "'" << endl;
 	}
 	else {
-		in >> imgFile >> fCount >> fCountX >> fCountY >> fTime;
+		in >> img_file >> f_count >> f_counter_x >> f_counter_y >> f_time;
 
-		sp.Open(imgFile,fCountX,fCountY,fTime,fCount);
+		sp.Open(img_file, f_counter_x, f_counter_y, f_time, f_count);
 
-		colliders.resize(fCount,nullptr);
+		colliders.resize(f_count, nullptr);
 
-		for (i,fCount) {
-			in >> collCount;
+		FOR(i, f_count) {
+			in >> collider_counter;
 
-			if (collCount) {
+			if (collider_counter) {
 				colliders[i] = new CompCollider{};
 				colliders[i]->entity = entity;
 
-				for (j, collCount) {
+				FOR(j, collider_counter) {
 					//TODO: use rotation
 					//TODO: different collider types for each coll
-					in >> x >> y >> w >> h >> r;
+					in >> x_axis >> y_axis >> width >> height >> r;
 
-					colliders[i]->colls.emplace_back(entity, tempColl->colls[0].cType,
-																						Rect{x,y,w,h});
+					colliders[i]->colls.emplace_back(entity, temporary_collider->colls[0].cType,
+																						Rect{x_axis, y_axis, width, height});
 
-					colliders[i]->colls[j].useDefault = tempColl->colls[0].useDefault;
+					colliders[i]->colls[j].useDefault = temporary_collider->colls[0].useDefault;
 
-					colliders[i]->colls[j].active = tempColl->colls[0].active;
+					colliders[i]->colls[j].active = temporary_collider->colls[0].active;
 				}
 			}
 
-			in >> funcCount;
+			in >> function_counter;
 
-			for (funcI, funcCount) {
-				in >> func;
+			FOR(funcI, funcCount) {
+				in >> function_name;
 
-				if (txtFuncsF.count(func)) {
-					frameFunc[i].push_back(txtFuncsF[func](in));
+				if (txtFuncsF.count(function_name)) {
+					frameFunc[i].push_back(txtFuncsF[function_name](in));
 				}
 			}
 		}
@@ -83,10 +94,14 @@ CompAnim::CompAnim(string file, CompCollider* tempColl) {
 	};
 }
 
-// Destructor method
+//! A destructor.
+  /*!
+  This is a destructor method of CompAnim class
+  */
+
 CompAnim::~CompAnim() {
 	// Iterates through coliders
-	for (i, colliders.size()) {
+	FOR(i, colliders.size()) {
 
 		// Ignores deletion if current collider equals current frame
 		if (i == GetCurFrame()) {
@@ -97,23 +112,43 @@ CompAnim::~CompAnim() {
 	}
 }
 
-// Returns current frame count as a integer
-int CompAnim::GetFrameCount()const {
-	return sp.GetFrameCount();
+/*!
+	@fn       int CompAnim::get_frame_count()const
+	@brief    Returns current frame count as a integer
+	@param    none
+	@return   int value of frame count
+	@warning  none
+*/
+
+int CompAnim::get_frame_count()const {
+	return sp.get_frame_count();
 }
 
-// Returns current frame as a integer
-int CompAnim::GetCurFrame()const {
-	return sp.GetCurFrame();
+/*!
+	@fn       int CompAnim::get_current_frame()const
+	@brief    Returns current frame as a integer
+	@param    none
+	@return   int with the number of the current frame
+	@warning  none
+*/
+
+int CompAnim::get_current_frame()const {
+	return sp.get_current_frame();
 }
 
-// Set current frame
-// Recieves frame number and force option as params
-void CompAnim::SetCurFrame(int frame,		// range: unknown
-													 bool force) {// true to force current frame
+/*!
+	@fn       void CompAnim::SetCurFrame(int frame, bool force)
+	@brief    Sets the current frame
+	@param    int frame, bool force
+	@return   void
+	@warning  TOD: some of the decision structure must be rewritten
+*/
+
+void CompAnim::set_current_frame(int frame,		// range: unknown
+      													 bool force) {// true to force current frame
 
 	// Set frame as current if it isn't already
-	if (frame != GetCurFrame()) {
+	if (frame != get_current_frame()) {
 		sp.SetFrame(frame);
 
 		for (auto &foo:frameFunc[frame]) {
@@ -138,15 +173,28 @@ void CompAnim::SetCurFrame(int frame,		// range: unknown
 	}
 }
 
-// Returns if the animation is looped (true) or not (false)
+/*!
+	@fn       bool CompAnim::Looped()const
+	@brief    Returns if the animation is looped (true) or not (false)
+	@param    none
+	@return   bool velue defining if animation is looped or not
+	@warning  none
+*/
+
 bool CompAnim::Looped()const {
 	return sp.Looped();
 }
 
-// Updates the animation
-// Recieves a time value, in float format, as param. Range: unknown
+/*!
+	@fn       void CompAnim::Update(float time)
+	@brief    Updates the animation
+	@param    float time
+	@return   void
+	@warning  none
+*/
+
 void CompAnim::Update(float time) {
-	int frame1 = GetCurFrame();
+	int frame1 = GetCurFrame(); //!< Used later for comparrison with next frame
 
 	// Checks if the animation has not been called and calls it
 	if (!called) {
@@ -161,9 +209,10 @@ void CompAnim::Update(float time) {
 
 	sp.Update(time);
 
-	int frame2 = GetCurFrame();
+  int frame2 = GetCurFrame(); //!< Assigns the new frame to this variable for
+                              //!< comparing with the previous one
 
-	// Checks if current frames is the same as the next one, if they're not the
+  // Checks if current frames is the same as the next one, if they're not the
 	// next frame is set
 	if (frame1 != frame2) {
 		called = false;
@@ -171,32 +220,54 @@ void CompAnim::Update(float time) {
 	}
 }
 
-// Renders the component animation
-void CompAnim::Render() {
-	Vec2 pos = GO(entity)->FullBox().corner().renderPos();
+/*!
+	@fn       void CompAnim::Render()
+	@brief    Renders current animation
+	@param    none
+	@return   void
+	@warning  none
+*/
 
-	sp.SetFlipH(GO(entity)->flipped);
+void CompAnim::Render() {
+
+  Vec2 pos = GO(entity)->FullBox().corner().renderPos(); //!< Used to save the
+                                                         //!< position to render
+
+  sp.SetFlipH(GO(entity)->flipped);
 	sp.Render(pos, GO(entity)->rotation, Camera::zoom);
 }
 
-// Sets ownage of a animation to a game object
-// Recieves a game object as param
-void CompAnim::Own(GameObject *go) {
+/*!
+	@fn       void CompAnim::own(GameObject* go)
+	@brief    Sets ownage of a animation to a game object
+	@param    GameObject* go
+	@return   void
+	@warning  none
+*/
+
+void CompAnim::own(GameObject* go) {
 	entity = go->uid;
 
 	// Iterates through the colliders and defines its ownage if they're not null
 	for (CompCollider *coll:colliders) {
 		if (coll != nullptr) {
-			coll->Own(go);
+			coll->own(go);
 		}
 	}
 
-	int frame = GetCurFrame();
+  int frame = GetCurFrame();
 
-	SetCurFrame(frame, true);
+  SetCurFrame(frame, true);
 }
 
-// Returns type of the animation as a constant value
+/*!
+	@fn       Component::type CompAnim::GetType()const
+	@brief    Returns type of the animation as a constant value
+	@param    none
+	@return   Component::type type of the animation
+	@warning  none
+*/
+
 Component::type CompAnim::GetType()const {
 	return Component::type::t_animation;
 }

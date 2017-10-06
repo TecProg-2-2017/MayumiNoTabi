@@ -23,16 +23,16 @@ public:
 	CompAnim(string file,CompCollider* coll);
 	~CompAnim();
 
-	int GetFrameCount()const;
-	int GetCurFrame()const;
-	void SetCurFrame(int frame,bool force=false);
+	int get_frame_count()const;
+	int get_current_frame()const;
+	void set_current_frame(int frame, bool force=false);
 
 	bool Looped()const;
 
 	void Update(float time);
-	void Own(GameObject *go);
+	void own(GameObject *go);
 	void Render();
 	Component::type GetType()const;
 };
 
-#endif//COMPANIMATIONHPP
+#endif

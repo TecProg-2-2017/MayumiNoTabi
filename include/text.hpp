@@ -11,37 +11,37 @@ public:
 	enum Align{LEFT, RIGHT, CENTERED};
 private:
 	class TextLine;
-	
-	vector<TextLine> lineArray;
+
+	vector<TextLine> line_array;
 	shared_ptr<TTF_Font> font;
-	string fontName;
+	string font_name;
 	Style style;
-	int fontSize;
+	int font_size;
 	SDL_Color color;
 	Align alignment=Text::Align::LEFT;
 	Hotspot hotspot=Hotspot::TOP_LEFT;
 	Rect box;
 
-	void RemakeTexture();
+	void remake_texture();
 public:
-	Text(const string& txt,int fSize,SDL_Color c=SDL_COLOR_WHITE,Style st=Style::BLENDED,string file="font/arial.ttf",int x=0,int y=0);
+	Text(const string& text,int fSize,SDL_Color color =SDL_COLOR_WHITE,Style style=Style::BLENDED,string file_path="font/arial.ttf",int box_position_x=0,int box_position_y=0);
 	~Text();
 
-	void Render(Vec2 camera = {0,0}, Rect* clipRect=nullptr);
+	void render(Vec2 camera = {0,0}, Rect* clipRect=nullptr);
 
-	void SetPos(int x,int y);
-	void SetPos(Vec2 v);
+	void set_box_position(int position_x,int position_y);
+	void set_box_position(Vec2 position);
 
 	void SetText(string txt);
-	void SetLine(int line, string txt);
-	
-	void SetColor(SDL_Color c);
-	void SetStyle(Style st);
-	void SetFontSize(int fSize);
-	void SetAlignment(Align al);
-	void SetHotspot(Hotspot h=Hotspot::CENTER);
-	
-	Rect GetBox() const;
+	void set_line(int line, string text);
+
+	void set_color(SDL_Color color);
+	void set_style(Style style);
+	void set_font_size(int fSize);
+	void set_alignment(Align alignment);
+	void set_hotspot(Hotspot hotspot=Hotspot::CENTER);
+
+	Rect get_box() const;
 };
 
 class Text::TextLine {
@@ -49,7 +49,7 @@ public:
 	SDL_Texture* texture=nullptr;
 	string text;
 	Rect box;
-	
+
 	TextLine();
 };
 

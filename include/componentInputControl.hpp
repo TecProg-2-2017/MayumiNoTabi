@@ -16,9 +16,9 @@ public:
 	CompInputControl(function<void(GameObject*,float)> f);
 	~CompInputControl();
 
-	void Update(float time);
-	void Render();
-	Component::type GetType()const;
+	void update(float time);
+	void render();
+	Component::type get_type()const;
 };
 
 #endif//COMPONENTINPUTCONTROLHPP

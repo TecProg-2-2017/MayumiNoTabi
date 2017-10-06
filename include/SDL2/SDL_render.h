@@ -365,7 +365,7 @@ extern DECLSPEC int SDLCALL SDL_GetTextureBlendMode(SDL_Texture * texture,
                                                     SDL_BlendMode *blendMode);
 
 /**
- *  \brief Update the given texture rectangle with new pixel data.
+ *  \brief update the given texture rectangle with new pixel data.
  *
  *  \param texture   The texture to update
  *  \param rect      A pointer to the rectangle of pixels to update, or NULL to
@@ -382,7 +382,7 @@ extern DECLSPEC int SDLCALL SDL_UpdateTexture(SDL_Texture * texture,
                                               const void *pixels, int pitch);
 
 /**
- *  \brief Update a rectangle within a planar YV12 or IYUV texture with new pixel data.
+ *  \brief update a rectangle within a planar YV12 or IYUV texture with new pixel data.
  *
  *  \param texture   The texture to update
  *  \param rect      A pointer to the rectangle of pixels to update, or NULL to
@@ -851,7 +851,7 @@ extern DECLSPEC int SDLCALL SDL_RenderReadPixels(SDL_Renderer * renderer,
                                                  void *pixels, int pitch);
 
 /**
- *  \brief Update the screen with rendering performed.
+ *  \brief update the screen with rendering performed.
  */
 extern DECLSPEC void SDLCALL SDL_RenderPresent(SDL_Renderer * renderer);
 

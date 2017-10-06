@@ -23,88 +23,88 @@ TileSet::TileSet() {
 //! A constructor.
     /*!
     *	This is a constructor method of TileSet class
-		*	\param w
+		*	\param width
 		*	\brief A positive integer, that represents width of a tile
-		*	\param h
+		*	\param height
 		*	\brief A positive integer, that represents height of a tile
-		*	\param file
+		*	\param file_path
 		*	\brief A string, that represents path of the file with the tile set
     */
-TileSet::TileSet(int w, int h, string file) {
-	Load(w, h, file);
+TileSet::TileSet(int width, int height, string file_path) {
+	load(width, height, file_path);
 }
 
+
 /*!
-	@fn void TileSet::Load(int  w, int h, string file)
+	@fn void TileSet::load(int  width, int height, string file_path)
 	@brief Method that loads the tile set from the file
-	@param w
+	@param width
 	@brief A positive integer, that represents width of a tile
-	@param h
+	@param height
 	@brief A positive integer, that represents height of a tile
-	@param file
+	@param file_path
 	@brief A string, that represents path of the file with the tile set
 	@return The execution of this method returns no value
 */
-void TileSet::Load(int  w, int h, string file) {
-	//! Attributes the value of the width and height of a tile
-	tileWidth = w;
-	tileHeight = h;
-
+void TileSet::load(int  width, int height, string file_path) {
+  //! Attributes the value of the width and height of a tile
+	tile_width = width;
+	tile_height = height;
+  
 	//! Opens the file with the tile set
-	tileSet.Open(file);
-
-	//! Defines the numbers of rows and columns of the tile set
-	rows = tileSet.GetHeight() / tileHeight;
-	columns = tileSet.GetWidth() / tileWidth;
+  tileSet.Open(file_path);
+	
+  //! Defines the numbers of rows and columns of the tile set
+  rows = tileSet.GetHeight()/tile_height;
+	columns = tileSet.GetWidth()/tile_width;
 }
 
 /*!
-	@fn void TileSet::Render(unsigned int index, float x, float y, float extScale)
+	@fn void TileSet::render(unsigned int index,float position_x,float position_y, float extended_scale)
 	@brief Method that renders the tile set
 	@param index
 	@brief A unsigned integer
-	@param x
+	@param position_x
 	@brief A float
-	@param y
+	@param position_y
 	@brief A float
-	@param extScale
+	@param extended_scale
 	@brief A float
 	@return The execution of this method returns no value
 	@warning Method that requires review of comment
-*/
-void TileSet::Render(unsigned int index, float x, float y, float extScale) {
-	//! Checks if the number of tiles is bigger that the index
-	if ((int)index < (rows * columns)) {
-		tileSet.SetClip(tileWidth * (index % columns),
-										(tileHeight * (index / columns)), tileWidth, tileHeight);
-		tileSet.Render(x, y, 0, extScale);
+*/  
+void TileSet::render(unsigned int index,float position_x,float position_y, float extended_scale) {
+  //! Checks if the number of tiles is bigger that the index
+	if ((int)index<(rows*columns)) {
+		tileSet.SetClip(tile_width*(index%columns),(tile_height*(index/columns)),tile_width,tile_height);
+		tileSet.render(position_x,position_y,0,extended_scale);
 	}
 	//! \warning else (do nothing)
 }
 
 /*!
-	@fn int TileSet::GetWidth()
+	@fn int TileSet::get_width()
 	@brief A getter of the attribute tileWidth
 	@return A positive integer, that represents the width of a tile
 */
-int TileSet::GetWidth() {
-	return tileWidth;
+int TileSet::get_width() {
+	return tile_width;
 }
 
 /*!
-	@fn int TileSet::GetHeight()
+	@fn int TileSet::get_height()
 	@brief A getter of the attribute tileHeight
 	@return A positive integer, that represents the height of a tile
 */
-int TileSet::GetHeight() {
-	return tileHeight;
+int TileSet::get_height() {
+	return tile_height;
 }
 
 /*!
-	@fn int TileSet::GetTileCount()
+	@fn int TileSet::get_tile_count()
 	@brief Method that returns the number of tiles in the tile set
 	@return A positive integer, that number of tiles in the tile set
 */
-int TileSet::GetTileCount() {
+int TileSet::get_tile_count() {
 	return rows*columns;
 }

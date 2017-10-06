@@ -16,8 +16,8 @@ public:
 	StateTitle();
 	~StateTitle();
 
-	virtual void Update(float time);
-	virtual void Render();
+	virtual void update(float time);
+	virtual void render();
 
 	virtual void Begin();
 	virtual void Pause();

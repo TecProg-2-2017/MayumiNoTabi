@@ -31,22 +31,22 @@ public:
 
 	void Open(const string& file,int fCountX=1,int fCountY=1,float fTime=1.0f,int fCount=-1);
 	void SetClip(int x,int y,int w,int h);
-	void Render(float x,float y,float angle=0.0f, float extScale = 1.0f);
-	void Render(const Vec2& v, float angle=0.0f, float extScale = 1.0f);//extScale = External Scale. Example: camera zoom
+	void render(float x,float y,float angle=0.0f, float extScale = 1.0f);
+	void render(const Vec2& v, float angle=0.0f, float extScale = 1.0f);//extScale = External Scale. Example: camera zoom
 
-	void Update(float time);
-	void SetFrame(int frame);
+	void update(float time);
+	void set_frame(int frame);
 	void SetFrameCount(int fCountX,int fCountY = 1,int fCount = -1);
 	void SetFrameTime(float fTime);
 
 	int GetWidth()const;
 	int GetHeight()const;
-	int GetCurFrame()const;
-	int GetFrameCount()const;
-	Vec2 GetFrameCount(bool b)const;
+	int get_current_frame()const;
+	int get_frame_count()const;
+	Vec2 get_frame_count(bool b)const;
 
 	bool IsOpen()const;
-	bool Looped()const;
+	bool is_looped()const;
 
 	void SetScale(float scale); //Set both scales
 	void SetScaleX(float scale);
