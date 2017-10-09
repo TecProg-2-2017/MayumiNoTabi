@@ -17,7 +17,7 @@ TileMap::TileMap(TileSet* tile_set):tileSet{tile_set}{
 }
 
 void TileMap::load(ifstream& input_file) {
-	string line;
+	string line "";
 
 	getline(input_file,line);
 	sscanf(line.c_str()," %d,%d,%d",&map_width,&map_height,&map_depth);
@@ -25,7 +25,7 @@ void TileMap::load(ifstream& input_file) {
 	tile_matrix.clear();
 	tile_matrix.reserve(map_width*map_height*map_depth);
 
-	int t;
+	int t = 0;
 	FOR(d,map_depth) {
 		FOR(h,map_height) {
 			FOR(w,map_width) {
@@ -64,7 +64,7 @@ int TileMap::at(int position_x,int position_y,int position_z) const{
 void TileMap::render_layer(int layer,int position_x ,int position_y) {
 	int width=tile_set->get_width();
 	int height=tile_set->get_height();
-	int tile;
+	int tile = 0;
 	int firstX=0,firstY=0,lastX=map_width,lastY=map_height;
 
 	if (position_x<CAMERA.x)

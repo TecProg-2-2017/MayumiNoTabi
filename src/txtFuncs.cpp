@@ -37,7 +37,7 @@ void CallFunc(const string func,const string str,GameObject* go) {
 // template<class T> txtFuncType1 AddParticle(T& in) {}
 template<class T> txtFuncType1 AddSprite(T& in) {
 	Vec2 pos;
-	float limit;
+	float limit = 0.0;
 	in >> pos.x >> pos.y >> limit;
 	return [pos,limit](GameObject* self) {
 		GameObject *spr = new GameObject{pos};
@@ -55,8 +55,8 @@ template<class T> txtFuncType1 AddSprite(T& in) {
 }
 template<class T> txtFuncType1 AddSprite2(T& in) {
 	Vec2 pos;
-	float limit;
-	string file;
+	float limit = 0.0;
+	string file "";
 	in >> file >> pos.x >> pos.y >> limit;
 	return [file,pos,limit](GameObject* self) {
 		GameObject *spr = new GameObject{pos};
@@ -81,7 +81,7 @@ template<class T> txtFuncType1 AddVar(T& in) {
 		};
 	}
 	if (type=="float") {
-		float val;
+		float val 0.0;
 		in >> val;
 		return [name,val](GameObject* self) {
 			if (!self->HasComponent(Component::type::t_memory))self->AddComponent(new CompMemory{});
@@ -93,7 +93,8 @@ template<class T> txtFuncType1 AddVar(T& in) {
 	return txtFuncType1{};
 }
 template<class T> txtFuncType1 ChangeVar(T& in) {
-	string type,name;
+	string type = "";
+	string name = "";
 	in >> type >> name;
 	if (type=="string") {
 		string val;
@@ -104,7 +105,7 @@ template<class T> txtFuncType1 ChangeVar(T& in) {
 		};
 	}
 	if (type=="int") {
-		int val;
+		int val = 0;
 		in >> val;
 		return [name,val](GameObject* self) {
 			if (!self->HasComponent(Component::type::t_memory))self->AddComponent(new CompMemory{});
@@ -112,7 +113,7 @@ template<class T> txtFuncType1 ChangeVar(T& in) {
 		};
 	}
 	if (type=="float") {
-		float val;
+		float val = 0.0;
 		in >> val;
 		return [name,val](GameObject* self) {
 			if (!self->HasComponent(Component::type::t_memory))self->AddComponent(new CompMemory{});
@@ -130,7 +131,8 @@ template<class T> txtFuncType1 ChangeVar(T& in) {
 	return txtFuncType1{};
 }
 template<class T> txtFuncType1 Damage(T& in) {
-	int dmgLow,dmgHigh;
+	int dmgLow = 0;
+	int dmgHigh = 0;
 	in >> dmgLow >> dmgHigh;
 	dmgHigh=max(dmgHigh,dmgLow+1);
 	return [dmgLow,dmgHigh](GameObject* self) {
@@ -139,9 +141,9 @@ template<class T> txtFuncType1 Damage(T& in) {
 	};
 }
 template<class T> txtFuncType1 DamageArea(T& in) {
-	bool dmgSelf;
-	int dmgLow,dmgHigh;
-	float x,y,w,h,r;
+	bool dmgSelf = false;
+	int dmgLow = 0,dmgHigh = 0;
+	float x = 0,y = 0,w = 0,h = 0,r = 0;
 	in >> x >> y >> w >> h >> r >> dmgLow >> dmgHigh >> dmgSelf;
 	Rect rect{x,y,w,h};
 	dmgHigh=max(dmgHigh,dmgLow+1);
@@ -169,9 +171,9 @@ template<class T> txtFuncType1 DamageArea(T& in) {
 	};
 }
 template<class T> txtFuncType1 DamageAreaFixed(T& in) {
-	bool dmgSelf;
-	int dmgLow,dmgHigh;
-	float x,y,w,h,r;
+	bool dmgSelf = false;
+	int dmgLow = 0,dmgHigh = 0;
+	float x = 0,y = 0,w = 0,h = 0,r = 0;
 	in >> x >> y >> w >> h >> r >> dmgLow >> dmgHigh >> dmgSelf;
 	Rect rect{x,y,w,h};
 	dmgHigh=max(dmgHigh,dmgLow+1);
@@ -201,9 +203,10 @@ template<class T> txtFuncType1 DamageAreaFixed(T& in) {
 }
 template<class T> txtFuncType1 FireProjectile(T& in) {
 	COUTL(FireProjectile read begin);
-	int count;
-	float x,y,f,r,g;
-	string projFile,projFileStatic,animFile,cur,target,funcN;
+	int count = 0;
+	float x = 0,y = 0,f = 0,r = 0,g = 0;
+	string projFile = "",projFileStatic = "";
+	string animFile = "",cur,target = "",funcN = "";
 	in >> x >> y >> f >> r >> projFile;
 
 	DEBUG(x);
@@ -350,24 +353,6 @@ template<class T> txtFuncType1 Remove(T& in) {
 		self->remove = true;
 	};
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 MAP(txtFuncsF,ifstream);
 MAP(txtFuncsS,istringstream);
