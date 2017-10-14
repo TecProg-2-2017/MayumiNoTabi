@@ -22,16 +22,17 @@ map<string,vector<string>> Resources::game_blueprint_table;
  */
 shared_ptr<SDL_Texture> Resources::game_get_image(const string& file) {
 
-    //! TODO: Insert else to do nothing
     if (game_image_table.count(file)) {
         return game_image_table[file];
+    }
+    else {
+        // Do nothing
     }
 
     //! Load texture of the file 
     SDL_Texture* texture = IMG_LoadTexture(GAMERENDER,file.c_str());
 
     //! Exit game if texture does not load 
-    //! TODO: Insert else to do nothing
     if (!texture) {
         string error=SDL_GetError();
 
@@ -39,6 +40,9 @@ shared_ptr<SDL_Texture> Resources::game_get_image(const string& file) {
         cerr << error << endl << "o programa ira encerrar agora" << endl;
 
         exit(EXIT_FAILURE);
+    }
+    else {
+        // Do nothing
     }
 
     auto func = [](SDL_Texture* texture) {SDL_DestroyTexture(texture);};
@@ -73,16 +77,17 @@ void Resources::game_clear_images() {
  */
 shared_ptr<Mix_Music> Resources::game_get_music(const string& file) {
 
-    //! TODO: Insert else to do nothing
     if (game_music_table.count(file)) {
         return game_music_table[file];
+    }
+    else {
+        // Do nothing
     }
 
     //! Load music from the file 
     Mix_Music* music = Mix_LoadMUS(file.c_str());
 
     //! Exit if there's an error with the music load
-    //! TODO: Insert else to do nothing
     if (!music) {
         string error=SDL_GetError();
 
@@ -90,6 +95,9 @@ shared_ptr<Mix_Music> Resources::game_get_music(const string& file) {
         cerr << error << endl << "o programa ira encerrar agora" << endl;
 
         exit(EXIT_FAILURE);
+    }
+    else {
+        // Do nothing
     }
 
     auto func = [](Mix_Music* music) {Mix_FreeMusic(music);};
@@ -124,16 +132,17 @@ void Resources::game_clear_musics() {
  */
 shared_ptr<Mix_Chunk> Resources::game_get_sound(const string& file) {
 
-    //! TODO: Insert else to do nothing
     if (game_sound_table.count(file)) {
         return game_sound_table[file];
+    }
+    else {
+        // Do nothing
     }
 
     //! Load sound from the file 
     Mix_Chunk* sound = Mix_LoadWAV(file.c_str());
 
     //! Exit if there's an error with the sound load
-    //! TODO: Insert else to do nothing
     if (!sound) {
         string error=SDL_GetError();
 
@@ -141,6 +150,9 @@ shared_ptr<Mix_Chunk> Resources::game_get_sound(const string& file) {
         cerr << error << endl << "o programa ira encerrar agora" << endl;
 
         exit(EXIT_FAILURE);
+    }
+    else {
+        // Do nothing
     }
 
     auto func = [](Mix_Chunk* sound) {Mix_FreeChunk(sound);};
@@ -178,16 +190,17 @@ shared_ptr<TTF_Font> Resources::game_get_font(const string& file,int ptsize) {
 
     string key = file+std::to_string(ptsize);
 
-    //! TODO: Insert else to do nothing
     if (game_font_table.count(key)) {
         return game_font_table[key];
+    }
+    else {
+        // Do nothing
     }
 
     //! Load fonts from the file 
     TTF_Font* font = TTF_OpenFont(file.c_str(),ptsize);
 
     //! Exit if there's an error with the font load
-    //! TODO: Insert else to do nothing
     if (!font) {
         string error=SDL_GetError();
 
@@ -195,6 +208,9 @@ shared_ptr<TTF_Font> Resources::game_get_font(const string& file,int ptsize) {
         cerr << error << endl << "o programa ira encerrar agora" << endl;
 
         exit(EXIT_FAILURE);
+    }
+    else {
+        // Do nothing
     }
 
     auto func = [](TTF_Font* font) {TTF_CloseFont(font);};
@@ -238,10 +254,12 @@ const vector<string>& Resources::game_get_blueprint(const string& file) {
     file_input.open(BLUEPRINT_PATH + file + ".txt");
 
     //! Get an error while opening the file
-    //! TODO: Insert else to do nothing
     if (!file_input.is_open()) {
         cerr << "Erro ao abrir o arquivo \"" << file << "\", o programa ira encerrar agora" << endl;
         exit(EXIT_FAILURE);
+    }
+    else {
+        // Do nothing
     }
 
     //! Iterate through the file adding blueprint to the game_blueprint_table 

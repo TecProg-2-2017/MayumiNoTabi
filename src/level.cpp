@@ -68,10 +68,12 @@ void Level::load_level_from_file(const string& file) {
     file_input.open(LEVEL_PATH + file + ".txt");
 
     //! Get an error while opening the file
-    //! TODO: Insert else to do nothing
     if (!file_input.is_open()) {
         cerr << "Erro ao abrir o arquivo \"" << file << "\", o programa ira encerrar agora" << endl;
         exit(EXIT_FAILURE);
+    }
+    else {
+        // Do nothing
     }
     
     string file_parameters = ""; //! <Store parameters readed from level file
@@ -80,9 +82,11 @@ void Level::load_level_from_file(const string& file) {
     getline(file_input,background_file_name);
 
     //! Load background to the level if it's not empty
-    //! TODO: Insert else to do nothing
     if (!background_file_name.empty()) { 
         background_sprite.Open(background_file_name);
+    }
+    else {
+        // Do nothing
     }
 
     file_input.ignore(1);
@@ -139,9 +143,11 @@ void Level::load_level_from_file(const string& file) {
     for(string object;getline(file_input, object);) {
 
         //! Add not empty objects to level_object_list
-        //! TODO: Insert else to do nothing
         if (!object.empty()) {
             level_object_list.push_back(object);
+        }
+        else {
+            // Do nothing
         }
     }
 
@@ -161,16 +167,20 @@ string Level::save_level_to_file(const string& file) {
     ofstream file_output = NULL;//! <To write level output on a file
 
     //! Open file with a valid name
-    //! TODO: Insert else to do nothing
     if (file != "") { 
         file_output.open(LEVEL_PATH + file + ".txt");
 
         //! Get an error while opening the file
-        //! TODO: Insert else to do nothing
         if (!file_output.is_open()) {
             cerr << "Erro ao abrir o arquivo \"" << file << "\", o programa ira encerrar agora" << endl;
             exit(EXIT_FAILURE);
         }
+        else {
+            // Do nothing
+        }
+    }
+    else {
+        // Do nothing
     }
     
     //! Saving the background:
@@ -200,9 +210,11 @@ string Level::save_level_to_file(const string& file) {
     }
     level_stream_out << endl;
     
-    //! TODO: Insert else to do nothing
     if (file == "") {
         return level_stream_out.str();
+    }
+    else {
+        // Do nothing
     }
 
     file_output << out.str();
@@ -228,9 +240,11 @@ void Level::load_level_objects(bool collisors) {
     for(auto& i:level_object_list) {
         
         //! Continue for empty object
-        //! TODO: Insert else to do nothing
         if (i.empty()) {
              continue;
+        }
+        else {
+            // Do nothing
         }
 
         sscanf(i.c_str(), " %s %f %f %d", object_type, &object_position.x, &objPos.y, &layer);
@@ -239,9 +253,11 @@ void Level::load_level_objects(bool collisors) {
     }
     
     //! Setting the collision boxes:
-    //! TODO: Insert else to do nothing
     if (!collisors) { 
         return;
+    }
+    else {
+        // Do nothing
     }
 
   
@@ -283,11 +299,13 @@ void Level::load_level_objects(bool collisors) {
         r.h*=level_tile_height;
 
         //! Instantiate a new game object 
-        //! TODO: Insert else to do nothing
         if (t) {
             GameObject *tile = new GameObject{r};
             tile->AddComponent(new CompCollider{CompCollider::collType::t_ground});
             GAMESTATE.AddObject(tile->uid);
+        }
+        else {
+            // Do nothing
         }
     }
 }
@@ -330,9 +348,11 @@ void Level::save_level_objects(const vector<pair<ii,ii>>& grouped) {
  */
 bool Level::operator==(Level& level) {
     
-    //! TODO: Insert else to do nothing
     if (Save() == level.save_level_to_file()){ 
         return true;
+    }
+    else {
+        // Do nothing
     }
 
     return false;

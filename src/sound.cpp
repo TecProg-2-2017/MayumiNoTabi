@@ -42,6 +42,9 @@ void Sound::Stop() {
 		Mix_HaltChannel(channel);
 		channel=-1;
 	}
+    else {
+        // Do nothing
+    }
 }
 
 /*!
