@@ -77,48 +77,76 @@ void StateStage::update(float time) {
 	if (INPUT.get_quit_requested()){
 		quit_requested = true;
 	}
+	else{
+		// do nothing
+	}
 
 	//! Checks if the player pressed the key 'ESC'
 	if (INPUT.key_pressed(KEY_ESC)){
 		popRequested=true;
 	}
+	else{
+		// do nothing
+	}
 
 	//! @var pos
-	Vec2 pos = GO(PLAYER_UID)->pos;//!< A Vec2, that represents the player position
+	//!< A Vec2, that represents the player position
+	Vec2 pos = GO(PLAYER_UID)->pos;
 
 	//! Checks if the player pressed the key 'u'
 	if (INPUT.key_pressed(KEY(u))){
 		AddObject(GameObject::MakePorco(pos+Vec2{2000.0f,-100.0f}));
+	}
+	else{
+		// do nothing
 	}
 
 	//! Checks if the player pressed the key 'p'
 	if (INPUT.key_pressed(KEY(p))){
 		AddObject(GameObject::MakeMike(pos+Vec2{850.0f,-100.0f}));
 	}
+	else{
+		// do nothing
+	}
 
 	//! Checks if the player pressed the key 'o'
 	if (INPUT.key_pressed(KEY(o))){
 		AddObject(GameObject::MakeBanshee(pos+Vec2{850.0f,-100.0f},pos+Vec2{230.0f,-200.0f}));
+	}
+	else{
+		// do nothing
 	}
 
 	//! Checks if the player pressed the key 'i'
 	if (INPUT.key_pressed(KEY(i))){
 		AddObject(GameObject::MakeMask(pos+Vec2{850.0f,-100.0f}));
 	}
+	else{
+		// do nothing
+	}
 
 	//! Checks if the player pressed the key 'y'
 	if (INPUT.key_pressed(KEY(y))){
 		GO(player)->dead=true;
+	}
+	else{
+		// do nothing
 	}
 
 	//! Checks if the player pressed the key 'n'
 	if (INPUT.key_pressed(KEY(n))){
 		SETTINGS.showHP = !SETTINGS.showHP;
 	}
+	else{
+		// do nothing
+	}
 
 	//! Checks if the player pressed the key 'm'
 	if (INPUT.key_pressed(KEY(m))){
 		 SETTINGS.showCollision = !SETTINGS.showCollision;
+	}
+	else{
+		// do nothing
 	}
 
 	UpdateArray(time);
