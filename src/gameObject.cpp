@@ -3,7 +3,6 @@
  *
  * Description: Create and generate objects game features.
  */
-
 #include <gameObject.hpp>
 #include <game.hpp>
 #include <componentMovement.hpp>
@@ -13,7 +12,7 @@
 #include <txtFuncs.hpp>
 #include <music.hpp>
 
-uint GameObject::goCount=0;
+uint GameObject::goCount = 0;
 map<uint, unique_ptr<GameObject>> GameObject::entities;
 
 //! A constructor.
@@ -77,16 +76,14 @@ GameObject::GameObject (const Rect &rect,float r,Hotspot hs,bool a):
 
 GameObject::~GameObject() {
 	UnAttach();
-	for (GameObject* obj:attachedObjs)obj->dead = true;
+	for (GameObject* obj:attachedObjs) {obj->dead = true;
 
 	FOR(i,Component::type::t_count) if (HasComponent(i)) delete components[i];
 
-	if (Camera::GetFocus()==uid)Camera::Unfollow();
+	if (Camera::GetFocus() == uid)Camera::Unfollow();
 
 	entities.erase(uid);
 }
-
-
 
 /*!
 	@fn void GameObject::Update(float time)
@@ -97,7 +94,7 @@ GameObject::~GameObject() {
 */
 
 void GameObject::update(float time) {
-
+	bool remove = false // Initializing the variabel remove
 	if (IsDead()) {
 		remove = true;
 		// for (auto i=Component::type::t_first+1;i!=Component::type::t_count;i++) {
@@ -111,12 +108,15 @@ void GameObject::update(float time) {
 					remove = false;
 				}
 			}
+			else {
+				//! Nothing to do
+			}
 		}
 	}
 
 	//! Reset move
 	if (HasComponent(Component::type::t_movement)) {
-		COMPMOVEp(this)->move=0.0f;
+		COMPMOVEp(this)->move = 0.0f;
 	}
 	else {
 		//! Nothing to do.
@@ -140,7 +140,7 @@ void GameObject::update(float time) {
 
 	//! Then set move
 	if (HasComponent(Component::type::t_movement)) {
-	    COMPMOVEp(this)->move+=COMPMOVEp(this)->speed*time;
+	    COMPMOVEp(this)->move += COMPMOVEp(this)->speed*time;
 	}
 	else {
 		//! Nothing to do.
@@ -165,22 +165,49 @@ void GameObject::update(float time) {
 */
 
 void GameObject::Render() {
-
-				if (components[i]->kills_component(time))RemoveComponent((Component::type)i);
-				else remove=false;
-			}
-		}
+	if (components[i]->kills_component(time)) {
+		RemoveComponent((Component::type)i);
 	}
-	//reset move
-	if (HasComponent(Component::type::t_movement))COMPMOVEp(this)->move=0.0f;
-	//process input control and ai first
-	if (HasComponent(Component::type::t_input_control))COMPINPUTCONTp(this)->update(time);
-	if (HasComponent(Component::type::t_ai))COMPAIp(this)->update(time);
-	//then set move
-	if (HasComponent(Component::type::t_movement))COMPMOVEp(this)->move+=COMPMOVEp(this)->speed*time;
-	//and then do the rest
+	else {
+		remove = false;
+	}
+
+	// Reset move
+	if (HasComponent(Component::type::t_movement)) {
+		COMPMOVEp(this)->move = 0.0f;
+	}
+	else {
+		// Nothing to do
+	}
+	// Process input control and ai first
+	if (HasComponent(Component::type::t_input_control)) {
+		COMPINPUTCONTp(this)->update(time);
+	}
+	else {
+		// Nothing to do
+	}
+
+	if (HasComponent(Component::type::t_ai)) {
+		COMPAIp(this)->update(time);
+  }
+	else {
+		// Nothing to do
+	}
+	// Then set move
+	if (HasComponent(Component::type::t_movement)) {
+		COMPMOVEp(this)->move += COMPMOVEp(this)->speed*time;
+	}
+	else {
+		// Nothing to do
+	}
+	// And then do the rest
 	FOR2(i,Component::type::t__+1,Component::type::t_count) {
-		if (HasComponent(i))components[i]->update(time);
+		if (HasComponent(i)) {
+			components[i]->update(time);
+		}
+		else {
+			// Nothing to do
+		}
 	}
 }
 
@@ -190,6 +217,9 @@ void GameObject::render() {
 		//! Render a component
 		if (HasComponent(i)) {
 			components[i]->render();
+		}
+		else {
+			// Nothing to do
 		}
 	}
 }
@@ -228,7 +258,7 @@ void GameObject::AddComponent(Component* component) {
 
 void GameObject::ReplaceComponent(Component* component) {
 
-	auto t=component->GetType();
+	auto t = component->GetType();
 	//! if the component doesn't have a type, then it is deleted.
 	if (!HasComponent(t)) {
 		cerr << "Error, replacing component " << t
@@ -257,7 +287,7 @@ void GameObject::RemoveComponent(Component::type t) {
 	}
 	else {
 		delete components[t];
-		components[t]=nullptr;
+		components[t] = nullptr;
 	}
 }
 
@@ -271,7 +301,7 @@ void GameObject::RemoveComponent(Component::type t) {
 */
 
 void GameObject::SetComponent(Component::type t,Component* component) {
-	components[t]=component;
+	components[t] = component;
 	component->own(this);
 }
 
@@ -454,7 +484,7 @@ Rect GameObject::FullBox() const{
 
 template<int atkDist,int seeDist,
          int id> void HostileAIfunc(CompAI* ai,float time) {
-	Sound music;
+	Sound music = null; // Initializing the variable music
 
 	CompAnimControl *ac = COMPANIMCONTp(GO(ai->entity)); // ac - Animation Control
 	CompMemory *mem = COMPMEMORYp(GO(ai->entity)); // mem - among component memory
@@ -481,7 +511,7 @@ template<int atkDist,int seeDist,
 	if (state == CompAI::state::idling) { // State of velocity object
     //! If the object is touched
 		if ((alerted || cd.Get() > 3) && target != nullptr) {
-			state=CompAI::state::looking;
+			state = CompAI::state::looking;
 			cd.Restart();
 			return;
 		}
@@ -489,8 +519,8 @@ template<int atkDist,int seeDist,
 			//! Nothing to do
 		}
 	}
-	else if (target==nullptr) {
-		state=CompAI::state::idling;
+	else if (target == nullptr) {
+		state = CompAI::state::idling;
 		ac->change_current("idle");
 		cd.Restart();
 		return;
@@ -512,7 +542,7 @@ template<int atkDist,int seeDist,
 
 		if ((alerted && dist < (seeDist*2)) || dist < seeDist) {
 			if (dist < atkDist) {
-                state=CompAI::state::attacking;
+                state = CompAI::state::attacking;
                 if (id == 1) { // Mike
                     music.open_music_file("audio/mike-hit-chao.wav");
                     music.play_music(1);
@@ -521,7 +551,7 @@ template<int atkDist,int seeDist,
                     music.play_music(1);
                 }
 			} else {
-                state=CompAI::state::walking;
+                state = CompAI::state::walking;
                 ac->change_current("walk");
                 if (id == 1) { // Mike
                     music.open_music_file("audio/mike-arrastando-clava.wav");
@@ -537,7 +567,7 @@ template<int atkDist,int seeDist,
 		if (id == 1) // Mike
 			music.open_music_file("audio/mike-arrastando-clava.wav");
 		if (al.Get() > 10 && cd.Get() > 5) {
-			state=CompAI::state::looking;
+			state = CompAI::state::looking;
 			movement->speed.x = 0;
 
 			ac->ChangeCur("idle"); // Control is idle
@@ -554,7 +584,7 @@ template<int atkDist,int seeDist,
 				state = CompAI::state::looking;
 				movement->speed.x = 0; // the object is idle
 				ac->ChangeCur("idle");
-				
+
 				cd.Restart();
 				return;
 			}
@@ -562,7 +592,7 @@ template<int atkDist,int seeDist,
 			else if (dist < atkDist+abs(movement->speed.x)*time) {
 				//!
 				if (GO(ai->entity)->Box().x < target->Box().x) {
-					movement->move= dist-atkDist;
+					movement->move = dist-atkDist;
 				}
 				else {
 					movement->move =- dist + atkDist;
@@ -576,7 +606,7 @@ template<int atkDist,int seeDist,
                     music.open_music_file("audio/alma-firebal.wav");
                     music.play_music(1);
                 }
-				movement->speed.x=0;
+				movement->speed.x = 0;
 				ac->change_current("idle");
 				cd.Restart();
 				return;
@@ -594,9 +624,9 @@ template<int atkDist,int seeDist,
 	}
 	//! State of object in attack
 	else if (state == CompAI::state::attacking) {
-		if (!alerted && attacked>3) {
+		if (!alerted && attacked > 3) {
 			state = CompAI::state::idling;
-			attacked=0;
+			attacked = 0;
 			ac->change_current("idle");
 			cd.Restart();
 			return;
@@ -619,7 +649,7 @@ template<int atkDist,int seeDist,
 		}
 		else{
 			if (target->Box().x > GO(ai->entity)->Box().x && !GO(ai->entity)->flipped) {
-				GO(ai->entity)->flipped=true;
+				GO(ai->entity)->flipped = true;
 			}
 			else {
 				//! Nothing to do
@@ -643,7 +673,7 @@ template<int atkDist,int seeDist,
 */
 
 void PassiveAIfunc(CompAI* ai,float time) {
-	Sound music; // Media audio
+	Sound music = null; // Initializing variable mucsic,  a media audio
 	CompAnimControl *ac = COMPANIMCONTp(GO(ai->entity)); // Control animation
 	CompMemory *mem = COMPMEMORYp(GO(ai->entity)); // memory of component
 
@@ -701,9 +731,9 @@ void PassiveAIfunc(CompAI* ai,float time) {
 
 template<int atkDist,int seeDist,int stCD,int atkCount,int stompCount>
                                void PumbaAiFunc(CompAI* ai,float time) {
-	Sound music;
-	Music music2;
-  
+	Sound music = null; // Initializing variable music
+	Music music2 = null; // Initializing variable music2
+
 	CompAnimControl *ac = COMPANIMCONTp(GO(ai->entity)); // Component Control
 
 	CompMemory *mem = COMPMEMORYp(GO(ai->entity));
@@ -728,7 +758,7 @@ template<int atkDist,int seeDist,int stCD,int atkCount,int stompCount>
 	string &curAnim = ac->GetCurName(); // Current animation
 	//! If the name of animation starts with _r
 
-	if (curAnim.substr(curAnim.size()-2)=="_r") {
+	if (curAnim.substr(curAnim.size()-2) == "_r") {
 		//! If the entity cant't flipped
 		if (!GO(ai->entity)->flipped) {
 
@@ -740,7 +770,7 @@ template<int atkDist,int seeDist,int stCD,int atkCount,int stompCount>
 	//! If the entity cans flipped
 	else if (GO(ai->entity)->flipped) {
 		int frame = ac->get_current().get_current_frame();
-		curAnim=curAnim+"_r";
+		curAnim = curAnim+"_r";
 		ac->get_current().set_current_frame(frame);
 	}
 
@@ -770,8 +800,8 @@ template<int atkDist,int seeDist,int stCD,int atkCount,int stompCount>
 	}
 
 	//! If the game ends
-	else if (target==nullptr) {
-		state=CompAI::state::idling;
+	else if (target == nullptr) {
+		state = CompAI::state::idling;
 		ac->change_current("idle");
 		cd.Restart();
 		return;
@@ -789,8 +819,8 @@ template<int atkDist,int seeDist,int stCD,int atkCount,int stompCount>
 
 		if ((alerted && dist < (seeDist*2)) || dist < seeDist) {
 			//!
-			if (dist < 2*atkDist && stompCD.Get()>stCD) {
-				state=CompAI::state::stomping;
+			if (dist < 2*atkDist && stompCD.Get() > stCD) {
+				state = CompAI::state::stomping;
 				ac->change_current("stomp");
 				music.open_music_file("audio/porco-pisada.wav");
 				music.play_music(1);
@@ -800,7 +830,7 @@ template<int atkDist,int seeDist,int stCD,int atkCount,int stompCount>
 				state = CompAI::state::attacking;
 			}
 			else {
-         state=CompAI::state::walking; // The object walks
+         state = CompAI::state::walking; // The object walks
          ac->change_current("walk");
          music.open_music_file("audio/porco-walking-grunhido.wav");
          music.play_music(1);
@@ -832,8 +862,8 @@ template<int atkDist,int seeDist,int stCD,int atkCount,int stompCount>
 				return;
 			}
 
-			else if (dist < 2*atkDist+abs(move->speed.x)*time &&
-								cd.Get()<1.5 && stompCD.Get() > stCD) {
+			else if (dist < 2 * atkDist + abs(move->speed.x) * time &&
+								cd.Get() < 1.5 && stompCD.Get() > stCD) {
 				//! If the object not matched the target yet
 				if (GO(ai->entity)->Box().x < target->Box().x) {
 					move->move = dist - (2*atkDist);
@@ -850,10 +880,10 @@ template<int atkDist,int seeDist,int stCD,int atkCount,int stompCount>
 				music.play_music(1);
 				cd.Restart();
 			}
-			else if (dist < atkDist+abs(move->speed.x)*time) {
+			else if (dist < atkDist + abs(move->speed.x)*time) {
 				//! If the character not matched the target yet
 				if (GO(ai->entity)->Box().x < target->Box().x) {
-					move->move = dist-atkDist;
+					move->move = dist - atkDist;
 				}
 				else {
 					move->move = -dist + atkDist;
@@ -899,7 +929,7 @@ template<int atkDist,int seeDist,int stCD,int atkCount,int stompCount>
 				state = CompAI::state::looking; // State of object is looking
 				music.open_music_file("audio/porco-grunhido-3.wav");
                 music.play_music(1);
-				attacked=0;
+				attacked = 0;
 				ac->change_current("idle");
 				cd.Restart();
 				return;
@@ -926,7 +956,7 @@ template<int atkDist,int seeDist,int stCD,int atkCount,int stompCount>
 			state = CompAI::state::attacking;
 			music.open_music_file("audio/porco-investida-1.wav");
             music.play_music(1);
-			attacked=0;
+			attacked = 0;
 			ac->change_current("idle");
 			cd.Restart();
 			return; // @warning Refactor this
@@ -936,8 +966,8 @@ template<int atkDist,int seeDist,int stCD,int atkCount,int stompCount>
 			//! Distance of character is bigger than the double
 			if (dist > atkDist*2) {
 
-				state=CompAI::state::looking; // Character is observing
-				attacked=0;
+				state = CompAI::state::looking; // Character is observing
+				attacked = 0;
 				ac->change_current("idle");
 				music.open_music_file("audio/porco-grunhido-3.wav");
                 music.play_music(1);
@@ -962,10 +992,11 @@ template<int atkDist,int seeDist,int stCD,int atkCount,int stompCount>
 			//! Nothing to do
 		}
 	}
-	else if (state==CompAI::state::charging) {
+}
+	else if (state == CompAI::state::charging) {
 		if (ac->get_current_name() != "charge" && ac->get_current_name() != "charge_r") {
-			state=CompAI::state::looking;
-			attacked=0;
+			state = CompAI::state::looking;
+			attacked = 0;
 			ac->change_current("idle");
 
 			cd.Restart();
@@ -990,7 +1021,7 @@ template<int atkDist,int seeDist,int stCD,int atkCount,int stompCount>
 			//! If distance between character and boar doesn't complete in display
 			if (dist > seeDist) {
 				cd.Restart();
-				state=CompAI::state::looking; //! Character is looking
+				state = CompAI::state::looking; //! Character is looking
 				ac->change_current("idle");
 				music.open_music_file("audio/porco-grunhido-3.wav");
                 music.play_music(1);
@@ -1017,7 +1048,7 @@ template<int atkDist,int seeDist,int stCD,int atkCount,int stompCount>
 				}
 
 				cd.Restart();
-				if (cd.Get()<1.5) {
+				if (cd.Get() < 1.5) {
                     state = CompAI::state::attacking;
                     music.open_music_file("audio/porco-grunhido-3.wav");
                     music.play_music(1);
@@ -1029,7 +1060,7 @@ template<int atkDist,int seeDist,int stCD,int atkCount,int stompCount>
 			}
 			else if (GO(ai->entity)->pos.x < target->pos.x) {
 				GO(ai->entity)->flipped=true;
-				move->speed.x= 100.0f;
+				move->speed.x = 100.0f;
 			}
 			else {
 				GO(ai->entity)->flipped = false;
@@ -1049,9 +1080,9 @@ template<int atkDist,int seeDist,int stCD,int atkCount,int stompCount>
             music.play_music(1);
 			return;
 		}
-		else{
+		else {
 			if (target->Box().x > GO(ai->entity)->Box().x && !GO(ai->entity)->flipped) {
-				GO(ai->entity)->flipped=true;
+				GO(ai->entity)->flipped = true;
 			}
 			else {
 				//! Nothing to do
@@ -1065,7 +1096,7 @@ template<int atkDist,int seeDist,int stCD,int atkCount,int stompCount>
 			if (attacked >= atkCount) {
 				attacked = 0;
 				cd.Restart();
-				state=CompAI::state::idling;
+				state = CompAI::state::idling;
 				ac->change_current("idle");
 			}
 		}
@@ -1086,7 +1117,7 @@ template<int atkDist,int seeDist,int stCD,int atkCount,int stompCount>
 		if (attacked >= 1) {
 			attacked = 0;
 			cd.Restart();
-			state=CompAI::state::idling;
+			state = CompAI::state::idling;
 			ac->change_current("idle");
 		}
 	}
@@ -1141,7 +1172,7 @@ void PlayerControlFunc(GameObject* go, float time) {
 			//! Nothing to do
 		}
 		if (INPUT.key_pressed(KEY_UP) && !mem->ints["doubleJump"]) {
-			if (!mem->ints["onAir"])speed.y =- 1000.0f;
+			if (!mem->ints["onAir"])speed.y = -1000.0f;
 			else speed.y = -750.0f;
 			mem->ints["doubleJump"] = mem->ints["onAir"];
 			mem->ints["onAir"] = 1;
@@ -1149,56 +1180,89 @@ void PlayerControlFunc(GameObject* go, float time) {
 		}
 
 		if (INPUT.key_is_down(KEY_LEFT) && !INPUT.key_is_down(KEY_RIGHT))
-			speed.x=-400.0f;
+			speed.x = -400.0f;
 		else if (INPUT.key_is_down(KEY_RIGHT) && !INPUT.key_is_down(KEY_LEFT))
-			speed.x= 400.0f;
-		else speed.x=0.0f;
+			speed.x = 400.0f;
+		else speed.x = 0.0f;
 	}
 
 
 	if (equals(speed.x,0)) {
-		if (curAnim == "walk")ac->change_current("idle");
+		if (curAnim == "walk") {
+			ac->change_current("idle");
+		}
+		else {
+			// Nothing to do
+		}
 	}
-	else{
-		if (curAnim == "idle")ac->change_current("walk");
-		if ((speed.x < 0 && go->flipped) || (speed.x>0 && !go->flipped)) {
+	else {
+		if (curAnim == "idle") {
+			ac->change_current("walk");
+		}
+		else {
+			// Nothing to do
+		}
+		if ((speed.x < 0 && go->flipped) || (speed.x > 0 && !go->flipped)) {
 			go->flipped = !go->flipped;
 			// ac->change_current("flipped",false);
+		}
+		else {
+			// Nothing to do
 		}
 	}
 }
 
 void PlayerMonsterCollision(const CompCollider::Coll &a,const CompCollider::Coll &b) {
-	Vec2 &speed=COMPMOVEp(GO(a.entity))->speed;
-	if (speed==Vec2{})return;
+	Vec2 &speed = COMPMOVEp(GO(a.entity))->speed;
+	if (speed == Vec2{})return;
 
-	Vec2 &totMove=COMPMOVEp(GO(a.entity))->move;
-	Vec2 move=a.Collides(b,totMove);
+	Vec2 &totMove = COMPMOVEp(GO(a.entity))->move;
+	Vec2 move = a.Collides(b,totMove);
 
-	if (move!=totMove)COMPHPp(GO(a.entity))->Damage(1);
+	if (move != totMove) {
+		COMPHPp(GO(a.entity))->Damage(1);
+	}
+	else {
+		// Nothing to do
+	}
 }
 
 void PlayerBlockCollision(const CompCollider::Coll &a,const CompCollider::Coll &b) {
 	CompMovement *compMove = COMPMOVEp(GO(a.entity));
 	CompMemory *mem = COMPMEMORYp(GO(a.entity));
 
-	Vec2 &speed=compMove->speed;
-	Vec2 &totMove=compMove->move;
-	Vec2 move;
+	Vec2 &speed = compMove->speed;
+	Vec2 &totMove = compMove->move;
+	Vec2 move = null; // Initializing variable move
 
-	if (totMove==Vec2{})return;
+	if (totMove == Vec2{}) {
+		return;
+	}
+	else {
+		// Nothing to do
+	}
 
 	move.x = a.Collides(b,{totMove.x,0.0f},move).x;
-	if (move.x != totMove.x)speed.x=0.0f;
-
+	if (move.x != totMove.x) {
+		speed.x = 0.0f;
+	}
+	else {
+		// Nothing to do
+	}
 	move.y = a.Collides(b,{0.0f,totMove.y},move).y;
 	if (move.y != totMove.y) {
-		speed.y=0.0f;
-		if (totMove.y>0)mem->ints["onAir"]=0;
+		speed.y = 0.0f;
+		if (totMove.y > 0) {
+			mem->ints["onAir"] = 0;
+		}
+		else {
+			// Nothing to do
+		}
 	}
-	else if (equals(totMove.y,0.0f) && equals(a.Collides(b,{0.0f,10},move).y,0.0f))mem->ints["onAir"]=0;
-
-	totMove=move;
+	else if (equals(totMove.y,0.0f) && equals(a.Collides(b,{0.0f,10},move).y,0.0f)) {
+		mem->ints["onAir"] = 0;
+	}
+	totMove = move;
 }
 
 /*!
@@ -1226,12 +1290,12 @@ uint GameObject::MakePlayer(const Vec2 &pos) {
 	GameObject* player = new GameObject{pos,0.0f,Hotspot::BOTTOM};
 
 	CompCollider coll{CompCollider::collType::t_player};
-	coll.colls[0].useDefault[CompCollider::collType::t_bullet]=EmptyCollision;
-	coll.colls[0].useDefault[CompCollider::collType::t_monster]=PlayerMonsterCollision;
-	coll.colls[0].useDefault[CompCollider::collType::t_any]=PlayerBlockCollision;
+	coll.colls[0].useDefault[CompCollider::collType::t_bullet] = EmptyCollision;
+	coll.colls[0].useDefault[CompCollider::collType::t_monster] = PlayerMonsterCollision;
+	coll.colls[0].useDefault[CompCollider::collType::t_any] = PlayerBlockCollision;
 
-	CompAnimControl* animControl = new CompAnimControl{"player",&coll};
-	Vec2 size{(float)animControl->get_current().sp.GetWidth(),(float)animControl->get_current().sp.GetHeight()};
+	CompAnimControl* animControl = new CompAnimControl{"player", &coll};
+	Vec2 size{(float)animControl->get_current().sp.GetWidth(), (float)animControl->get_current().sp.GetHeight()};
 	player->AddComponent(animControl);
 
 
@@ -1273,6 +1337,7 @@ uint GameObject::Create(const string& blueprint, const Vec2& pos, const Vec2& au
 	if (blueprint == "porco")	return MakePorco(pos);
 
 	GameObject* obj = new GameObject{pos};
+	obj = null; // Initializing the variable obj
 	CompStaticRender* img = new CompStaticRender{Sprite{blueprint}};
 	Vec2 size{(float)img->sp.GetWidth(),(float)img->sp.GetHeight()};
 	obj->AddComponent(img);
@@ -1305,9 +1370,9 @@ uint GameObject::MakeTarget(const Vec2 &pos) {
 	target->AddComponent(img);
 
 	target->AddComponent(new CompCollider{CompCollider::collType::t_solid});
-	target->AddComponent(new CompHP{100,100,true,false});
+	target->AddComponent(new CompHP{100, 100, true, false});
 
-	target->team=Team::other;
+	target->team = Team::other;
 	target->size = size;
 	return target->uid;
 }
@@ -1323,10 +1388,10 @@ uint GameObject::MakeTarget(const Vec2 &pos) {
 */
 
 uint GameObject::MakeMike(const Vec2 &pos) {
-	GameObject* mike = new GameObject{pos,0.0f,Hotspot::BOTTOM};
+	GameObject* mike = new GameObject{pos, 0.0f, Hotspot::BOTTOM};
 
 	CompCollider coll{CompCollider::collType::t_monster};
-	coll.colls[0].useDefault[CompCollider::collType::t_bullet]=EmptyCollision;
+	coll.colls[0].useDefault[CompCollider::collType::t_bullet] = EmptyCollision;
 	coll.colls[0].useDefault[CompCollider::collType::t_player]=EmptyCollision;
 	coll.colls[0].useDefault[CompCollider::collType::t_monster]=EmptyCollision;
 
@@ -1337,11 +1402,11 @@ uint GameObject::MakeMike(const Vec2 &pos) {
 	mike->AddComponent(new CompMovement{});
 	mike->AddComponent(new CompGravity{2500.0f});
 	mike->AddComponent(new CompHP{100,100,true,false});
-	mike->AddComponent(new CompAI{HostileAIfunc<5,500,1>});
+	mike->AddComponent(new CompAI{HostileAIfunc < 5, 500, 1 > });
 
 	CompMemory *memory = new CompMemory{};
-	memory->ints["state"]=CompAI::state::idling;
-	memory->ints["target"]=PLAYER_UID;
+	memory->ints["state"] = CompAI::state::idling;
+	memory->ints["target"] = PLAYER_UID;
 	mike->AddComponent(memory);
 
 	mike->team = Team::enemy;
@@ -1363,13 +1428,13 @@ uint GameObject::MakeBanshee(const Vec2 &pos,const Vec2 &pos2) {
 	GameObject* banshee = new GameObject{pos,0.0f,Hotspot::BOTTOM};
 
 	CompCollider coll{CompCollider::collType::t_monster};
-	coll.colls[0].useDefault[CompCollider::collType::t_ground]=EmptyCollision;
-	coll.colls[0].useDefault[CompCollider::collType::t_bullet]=EmptyCollision;
-	coll.colls[0].useDefault[CompCollider::collType::t_player]=EmptyCollision;
-	coll.colls[0].useDefault[CompCollider::collType::t_monster]=EmptyCollision;
+	coll.colls[0].useDefault[CompCollider::collType::t_ground] = EmptyCollision;
+	coll.colls[0].useDefault[CompCollider::collType::t_bullet] = EmptyCollision;
+	coll.colls[0].useDefault[CompCollider::collType::t_player] = EmptyCollision;
+	coll.colls[0].useDefault[CompCollider::collType::t_monster] = EmptyCollision;
 
 	CompAnimControl* animControl = new CompAnimControl{"banshee",&coll};
-	Vec2 size{(float)animControl->get_current().sp.GetWidth(),(float)animControl->get_current().sp.GetHeight()};
+	Vec2 size{(float)animControl->get_current().sp.GetWidth(), (float)animControl->get_current().sp.GetHeight()};
 	banshee->AddComponent(animControl);
 
 	banshee->AddComponent(new CompMovement{});
@@ -1379,13 +1444,13 @@ uint GameObject::MakeBanshee(const Vec2 &pos,const Vec2 &pos2) {
 	banshee->AddComponent(new CompAI{PassiveAIfunc});
 
 	CompMemory *memory = new CompMemory{};
-	memory->floats["pos0x"]=pos.x;
-	memory->floats["pos0y"]=pos.y;
-	memory->floats["pos1x"]=pos2.x;
-	memory->floats["pos1y"]=pos2.y;
-	memory->ints["state"]=CompAI::state::idling;
-	memory->ints["nextPos"]=0;
-	memory->ints["posCount"]=2;
+	memory->floats["pos0x"] = pos.x; // position in axis x
+	memory->floats["pos0y"] = pos.y; // position in axis y
+	memory->floats["pos1x"] = pos2.x; // Second position in axis x
+	memory->floats["pos1y"] = pos2.y; //// position in axis x
+	memory->ints["state"] = CompAI::state::idling;
+	memory->ints["nextPos"] = 0;
+	memory->ints["posCount"] = 2;
 	banshee->AddComponent(memory);
 
 	banshee->team = Team::enemy;
@@ -1406,11 +1471,11 @@ uint GameObject::MakeMask(const Vec2 &pos) {
 	GameObject* mask = new GameObject{pos,0.0f,Hotspot::BOTTOM};
 
 	CompCollider coll{CompCollider::collType::t_monster};
-	coll.colls[0].useDefault[CompCollider::collType::t_bullet]=EmptyCollision;
-	coll.colls[0].useDefault[CompCollider::collType::t_player]=EmptyCollision;
-	coll.colls[0].useDefault[CompCollider::collType::t_monster]=EmptyCollision;
+	coll.colls[0].useDefault[CompCollider::collType::t_bullet] = EmptyCollision;
+	coll.colls[0].useDefault[CompCollider::collType::t_player] = EmptyCollision;
+	coll.colls[0].useDefault[CompCollider::collType::t_monster] = EmptyCollision;
 
-	CompAnimControl* animControl = new CompAnimControl{"mascara",&coll};
+	CompAnimControl* animControl = new CompAnimControl{"mascara", &coll};
 	Vec2 size{(float)animControl->get_current().sp.GetWidth(),(float)animControl->get_current().sp.GetHeight()};
 	mask->AddComponent(animControl);
 
@@ -1420,7 +1485,7 @@ uint GameObject::MakeMask(const Vec2 &pos) {
 	mask->AddComponent(new CompAI{HostileAIfunc<500,1000,2>});
 
 	CompMemory *memory = new CompMemory{};
-	memory->ints["target"]=PLAYER_UID;
+	memory->ints["target"] = PLAYER_UID;
 	mask->AddComponent(memory);
 
 	mask->team = Team::enemy;
@@ -1454,8 +1519,8 @@ uint GameObject::MakePorco(const Vec2 &pos) {
 	pumba->AddComponent(new CompAI{PumbaAiFunc<8,800,2,3,1>});
 
 	CompMemory *memory = new CompMemory{};
-	memory->ints["state"]=CompAI::state::idling;
-	memory->ints["target"]=PLAYER_UID;
+	memory->ints["state"] = CompAI::state::idling;
+	memory->ints["target"] = PLAYER_UID;
 	pumba->AddComponent(memory);
 
 	pumba->team = Team::enemy;
