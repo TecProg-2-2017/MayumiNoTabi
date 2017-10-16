@@ -33,6 +33,7 @@
 
 # Temporary files
 .tmp
+*.swp
 
 #executavel
 JOGO
