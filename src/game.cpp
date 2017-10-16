@@ -5,6 +5,8 @@
  *  The class implemented provides the flow of the game
  *
  *  @sa game.hpp
+ *
+ *  @warning All variables are initialized
  */
 
 
@@ -21,7 +23,6 @@
 #include <vector>
 
 #include <game.hpp>
-
 #include <gameException.hpp>
 #include <inputManager.hpp>
 #include <resources.hpp>
@@ -39,22 +40,28 @@ Game* Game::instance = NULL;
 	@warning Method that requires review of comment
 */
 
-Game::Game(string title,int width,int height):frameStart{0},deltatime{0},windowSize{(float)width,(float)height} {
+Game::Game(string title, int width, int height):frameStart{0},deltatime{0},windowSize{
+																												(float)width,(float)height} {
 
 	srand(time(NULL));
 
 	if (instance) {
+
 		cerr << "Erro, mais de uma instancia de 'Game' instanciada, o programa ira encerrar agora" << endl;
+
 		exit(EXIT_FAILURE);
 	}
 
-	instance=this;
+	instance = this;
 
+	// Check all SDL outputs and if can't be initialize display a error messege
 	bool success = SDL_Init(SDL_INIT_VIDEO | SDL_INIT_AUDIO | SDL_INIT_TIMER) == 0;
 
 	if (!success) {
+
 		string error_msg(error_messege = SDL_GetError());
 		error_messege = "Could not initialize SDL:\n" + error_messege;
+
 		throw GameException(error_messege);
 	}
 
@@ -63,6 +70,7 @@ Game::Game(string title,int width,int height):frameStart{0},deltatime{0},windowS
 	map<int, string> code_name_map = {{IMAGE_INIT_TIF, "tif"},
 									  {IMAGE_INIT_JPG, "jpg"},
 									  {IMAGE_INIT_PNG, "png"}};
+
 	vector<int> image_formats{IMAGE_INIT_TIF, IMAGE_INIT_JPG, IMAGE_INIT_PNG};
 
 	// Initialize image module or between all desired formats
@@ -82,12 +90,15 @@ Game::Game(string title,int width,int height):frameStart{0},deltatime{0},windowS
 	 */
 
 	if (image_settings != res) {
+
 		string error_messege_main = SDL_GetError();
 		string error_messege = "Could not initiazlie image libary for type:";
+
 		for (auto format : image_formats)
 			if ((format & res) == 0) {
 				error_messege += code_name_map[format];
 			}
+
 		error_messege += "\n";
 		error_messege = error_messege_main + error_messege;
 
@@ -102,30 +113,52 @@ Game::Game(string title,int width,int height):frameStart{0},deltatime{0},windowS
 	 */
 
 	if (res != audio_modules) {
-		if ((MIX_INIT_OGG & res ) == 0 )cerr << "OGG flag not in res!" << endl;
-		if ((MIX_INIT_MP3 & res ) == 0 )cerr << "MP3 flag not in res!" << endl;
+
+		if ((MIX_INIT_OGG & res ) == 0 ){
+			cerr << "OGG flag not in res!" << endl;
+		}
+
+		if ((MIX_INIT_MP3 & res ) == 0 ){
+			cerr << "MP3 flag not in res!" << endl;
+		}
+
 		throw GameException("Problem when initiating SDL audio!");
+
 	}
 
 	res = Mix_OpenAudio(MIX_DEFAULT_FREQUENCY, MIX_DEFAULT_FORMAT, MIX_DEFAULT_CHANNELS, 1024);
 
-	if (res != 0)throw GameException("Problem when initiating SDL audio!");
+	if (res != 0){
+		throw GameException("Problem when initiating SDL audio!");
+	}
 
 	res = TTF_Init();
-	if (res != 0)cerr << "Could not initialize TTF module!" << endl;
+
+	if (res != 0){
+		cerr << "Could not initialize TTF module!" << endl;
+	}
 
 	// Creating the window that will contain the game interface
 
 
-	window = SDL_CreateWindow(title.c_str(),SDL_WINDOWPOS_CENTERED,SDL_WINDOWPOS_CENTERED,width,height,SDL_WINDOW_FULLSCREEN);
+	window = SDL_CreateWindow(title.c_str(),
+														SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED,
+														width, height, SDL_WINDOW_FULLSCREEN);
 
-	if (!window)throw GameException("Window nao foi carregada)!");
+	if (!window){
+		throw GameException("Window nao foi carregada)!");
+	}
 
 	renderer = SDL_CreateRenderer(window,-1,SDL_RENDERER_ACCELERATED);
-	if (!renderer)throw GameException("Erro ao instanciar renderizador da SDL!");
+
+	if (!renderer){
+		throw GameException("Erro ao instanciar renderizador da SDL!");
+	}
 
 	storedState = nullptr;
+
 	SDL_SetRenderDrawBlendMode(GAMERENDER, SDL_BLENDMODE_BLEND);
+
 };
 
 /*!
@@ -135,21 +168,31 @@ Game::Game(string title,int width,int height):frameStart{0},deltatime{0},windowS
 */
 
 Game::~Game() {
+
 	while (stateStack.size()) {
 		delete stateStack.top().get();
 		stateStack.pop();
 	}
-	if (storedState)delete storedState;
+
+	if (storedState) {
+		delete storedState;
+	}
+
 	Resources::ClearImages();
 	Resources::ClearMusics();
 	Resources::ClearFonts();
+
 	TTF_Quit();
+
 	Mix_CloseAudio();
 	Mix_Quit();
+
 	IMAGE_Quit();
+
 	SDL_DestroyRenderer(renderer);
 	SDL_DestroyWindow(window);
 	SDL_Quit();
+
 }
 
 /*!
@@ -195,7 +238,11 @@ SDL_Renderer* Game::GetRenderer() {
 */
 
 void Game::Push(State* state) {
-	if (storedState)delete storedState;
+
+	if (storedState){
+		delete storedState;
+	}
+
 	storedState=state;
 }
 
@@ -210,34 +257,46 @@ void Game::Push(State* state) {
 void Game::Run() {
 
 	if (storedState) {
+
 		stateStack.push(unique_ptr<State>(storedState));
 		storedState=nullptr;
+
 		GetCurrentState().Begin();
 	}
+
 	while (!stateStack.empty()) {
 		CalculateDeltaTime();
-		INPUT.update(deltatime);
+
+		// Update the state of the game elements and set it
+
+		INPUT.input_event_handler(deltatime);
 		//if (INPUT.KeyPress(KEY_F(11))) SwitchWindowMode();
+
 		GetCurrentState().update(deltatime);
 		GetCurrentState().render();
 
 		SDL_RenderPresent(renderer);
 
-		if (GetCurrentState().QuitRequested()) {
+		if (GetCurrentState().get_quit_requested()) {
 				break;
 		}
 
+		/* If the user press Pause button the system change the status to paused
+			or press End button stop the game and reset
+			*/
 		if (GetCurrentState().PopRequested()) {
 			GetCurrentState().Pause();
 			GetCurrentState().End();
 			stateStack.pop();
-			Resources::ClearImages();
-			Resources::ClearMusics();
-			Resources::ClearFonts();
+
+			Resources::game_clear_images();
+			Resources::game_clear_musics();
+			Resources::game_clear_fonts();
 
 			if (stateStack.size()) {
 				GetCurrentState().Resume();
 			}
+
 		}
 
 		if (storedState) {
@@ -249,6 +308,7 @@ void Game::Run() {
 
 		SDL_Delay(17);
 	}
+
 	while (stateStack.size()) {
 		GetCurrentState().End();
 		stateStack.pop();
@@ -267,7 +327,10 @@ float Game::GetDeltaTime() {
 */
 
 void Game::CalculateDeltaTime() {
+
 	unsigned int tmp = frameStart;
+
+	//Define the response time of a frame
 	frameStart = SDL_GetTicks();
 	deltatime = max((frameStart - tmp) / 1000.0, 0.001);
 }

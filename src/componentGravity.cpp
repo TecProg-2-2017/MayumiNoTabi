@@ -12,10 +12,10 @@
 /*!
 	* @fn CompGravity::CompGravity(float g)
 	* @brief Constructor Method for component collider
-	* @param float g
+	* @param float gravity
 */
 
-CompGravity::CompGravity(float g):gravity{g} {
+CompGravity::CompGravity(float gravity):gravity{gravity} {
 
 }
 

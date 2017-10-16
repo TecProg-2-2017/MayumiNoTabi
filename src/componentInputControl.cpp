@@ -7,7 +7,14 @@
 #include <componentInputControl.hpp>
 #include <game.hpp>
 
+/*!
+  * @fn CompInputControl::CompInputControl()
+  * @brief No params constructor method
+  * @param No params
+*/
+
 CompInputControl::CompInputControl(function<void(GameObject*,float)> f):func{f} {
+
 }
 
 /*!
@@ -21,7 +28,7 @@ CompInputControl::~CompInputControl() {
 }
 
 /*!
-  * @fn CompInputControl::Update(float time)
+  * @fn CompInputControl::update(float time)
   * @brief Updates input control according to the time param
   * @param float time
 */
@@ -31,7 +38,7 @@ void CompInputControl::update(float time) {
 }
 
 /*!
-  * @fn CompInputControl::Render()
+  * @fn CompInputControl::render()
   * @brief Renders input control, obviously not necessary
   * @param No params
 */

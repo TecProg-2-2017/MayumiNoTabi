@@ -23,15 +23,16 @@
  *  @brief Constructor method of Level 
  *  @return A Level object
  */
-Level::Level() : background{Sprite(DEFAULT_BACKGROUND)}, 
-    tileSet{TileSet(DEFAULT_TILE_SIZE, DEFAULT_TILE_SIZE, DEFAULT_TILESET)},
-    tileMap{TileMap(DEFAULT_MAP_WIDTH, DEFAULT_MAP_HEIGHT, &tileSet)} {
+Level::Level() : background_sprite{Sprite(DEFAULT_BACKGROUND)}, 
+    level_tile_set{TileSet(DEFAULT_TILE_SIZE, DEFAULT_TILE_SIZE, DEFAULT_TILESET)},
+    level_tile_map{TileMap(DEFAULT_MAP_WIDTH, DEFAULT_MAP_HEIGHT, &level_tile_set)} {
 
-    collisionLayer.clear();
-    collisionLayer.resize(DEFAULT_MAP_WIDTH*DEFAULT_MAP_HEIGHT);
+    level_collision_layer.clear();
+    level_collision_layer.resize(DEFAULT_MAP_WIDTH*DEFAULT_MAP_HEIGHT);
+
     FOR(y,DEFAULT_MAP_HEIGHT) {
         FOR(x,DEFAULT_MAP_WIDTH) {
-            collisionLayer[(y*DEFAULT_MAP_WIDTH)+x] = EMPTY_TILE;
+            level_collision_layer[(y*DEFAULT_MAP_WIDTH)+x] = EMPTY_TILE;
         }
     }
 }
@@ -42,7 +43,7 @@ Level::Level() : background{Sprite(DEFAULT_BACKGROUND)},
  *  @param string file
  *  @return A Level object
  */
-Level::Level(string file) : tileSet{TileSet()}, tileMap{TileMap(DEFAULT_MAP_WIDTH, DEFAULT_MAP_HEIGHT, &tileSet)} { 
+Level::Level(string file) : level_tile_set{TileSet()}, level_tile_map{TileMap(DEFAULT_MAP_WIDTH, DEFAULT_MAP_HEIGHT, &level_tile_set)} { 
     Load(file);
 }
 
@@ -56,172 +57,184 @@ Level::~Level() {
 }
 
 /*!
- *  @fn void Level::Load(const string& file) 
+ *  @fn void Level::load_level_from_file(const string& file) 
  *  @brief Load level from the level file 
  *  @param const string& file
  *  @return The method returns no param
  */
-void Level::Load(const string& file) {
-  ifstream in;//! <Receive input from level file
+void Level::load_level_from_file(const string& file) {
+    ifstream file_input = NULL;//! <Receive input from level file
     
-    in.open(LEVEL_PATH + file + ".txt");
+    file_input.open(LEVEL_PATH + file + ".txt");
 
     //! Get an error while opening the file
     //! TODO: Insert else to do nothing
-    if (!in.is_open()) {
+    if (!file_input.is_open()) {
         cerr << "Erro ao abrir o arquivo \"" << file << "\", o programa ira encerrar agora" << endl;
         exit(EXIT_FAILURE);
     }
     
-    string parameters; //! <Store parameters readed from level file
+    string file_parameters = ""; //! <Store parameters readed from level file
 
     //! Loading the background
-    getline(in,backgroundFilename);
+    getline(file_input,background_file_name);
 
     //! Load background to the level if it's not empty
     //! TODO: Insert else to do nothing
-    if (!backgroundFilename.empty()) { 
-        background.Open(backgroundFilename);
+    if (!background_file_name.empty()) { 
+        background_sprite.Open(background_file_name);
     }
-    in.ignore(1);
-    background.StretchToFit(WINSIZE);
+
+    file_input.ignore(1);
+    background_sprite.StretchToFit(WINSIZE);
     
-    int tileWidth, tileHeight; //! <Tile level width and height
+    int level_tile_width = 0;//! <Tile level width 
+    int level_tile_height = 0; //! <Tile level height
 
     //! Loading the tileset
-    getline(in, tileSetFilename);
-    getline(in, parameters);
-    sscanf(parameters.c_str(), " %d,%d", &tileWidth, &tileHeight);
-    tileSet.Load(tileWidth, tileHeight, tileSetFilename);
-    in.ignore(1);
+    getline(file_input, level_tile_set_filename);
+    getline(file_input, file_parameters);
+    sscanf(file_parameters.c_str(), " %d,%d", &level_tile_width, &level_tile_height);
+    level_tile_set.Load(level_tile_width, level_tile_height, level_tile_set_filename);
+    file_input.ignore(1);
     
     //! Loading the tilemap
-    tileMap.Load(in);
+    level_tile_map.Load(file_input);
     
     //! Loading the collision layer
-    int mapWidth = tileMap.get_width();
-    int mapHeight = tileMap.get_height();
-    collisionLayer.clear();
-    collisionLayer.resize(mapWidth*mapHeight);
+    int level_map_width = level_tile_map.get_width();
+    int level_map_height = level_tile_map.get_height();
+
+    level_collision_layer.clear();
+    level_collision_layer.resize(level_map_width*level_map_height);
     
-    int t,g;
-    collisionGroups.clear();
-    collisionGroups.reserve(mapWidth*mapHeight);
-    FOR(y,mapHeight) {
-        FOR(x,mapWidth) {
-            in >> t;
-            in.ignore(1);
-            collisionLayer[(y*mapWidth)+x] = t-1;
+    int t = 0;
+    int g = 0;
+
+    level_collision_groups.clear();
+    level_collision_groups.reserve(level_map_width*level_map_height);
+
+    FOR(y,level_map_height) {
+        FOR(x,level_map_width) {
+            file_input >> t;
+            file_input.ignore(1);
+            level_collision_layer[(y*level_map_width)+x] = t-1;
+
             if (t == EMPTY_TILE) {
-                collisionGroups[(y*mapWidth)+x] = 0;
+                level_collision_groups[(y*level_map_width)+x] = 0;
             }
             else {
-                in >> g;
-                in.ignore(1);
-                collisionGroups[(y*mapWidth)+x] = g;
+                file_input >> g;
+                file_input.ignore(1);
+                level_collision_groups[(y*level_map_width)+x] = g;
             }
         }
     }
-    in.ignore(1);
+    file_input.ignore(1);
 
     //! Loading the object list
-    objectList.clear();
+    level_object_list.clear();
 
     //! Iterate through objects from the file
-    for(string object;getline(in, object);) {
+    for(string object;getline(file_input, object);) {
 
-        //! Add not empty objects to objectList
+        //! Add not empty objects to level_object_list
         //! TODO: Insert else to do nothing
         if (!object.empty()) {
-            objectList.push_back(object);
+            level_object_list.push_back(object);
         }
     }
 
     //! <End of Loading the object list
 
-    in.close();
+    file_input.close();
 }
 
 /*!
- *  @fn string Level::Save(const string& file) 
+ *  @fn string Level::save_level_to_file(const string& file) 
  *  @brief Save the level on a file 
  *  @param const string& file
  *  @return string 
  */
-string Level::Save(const string& file) {
-    stringstream out;//! <To get the level output
-    ofstream output;//! <To write level output on a file
+string Level::save_level_to_file(const string& file) {
+    stringstream level_stream_out = NULL;//! <To get the level output
+    ofstream file_output = NULL;//! <To write level output on a file
 
     //! Open file with a valid name
     //! TODO: Insert else to do nothing
     if (file != "") { 
-        output.open(LEVEL_PATH + file + ".txt");
+        file_output.open(LEVEL_PATH + file + ".txt");
 
         //! Get an error while opening the file
         //! TODO: Insert else to do nothing
-        if (!output.is_open()) {
+        if (!file_output.is_open()) {
             cerr << "Erro ao abrir o arquivo \"" << file << "\", o programa ira encerrar agora" << endl;
             exit(EXIT_FAILURE);
         }
     }
     
     //! Saving the background:
-    out<<backgroundFilename<<endl<<endl;
+    level_stream_out<<background_file_name<<endl<<endl;
     
     //! Saving the tileset:
-    out<<tileSetFilename<<endl;
-    out<<tileSet.get_width()<<","<<tileSet.get_height()<<endl<<endl;
+    level_stream_out<<level_tile_set_filename<<endl;
+    level_stream_out<<level_tile_set.get_width()<<","<<level_tile_set.get_height()<<endl<<endl;
     
     //! Saving the tilemap:
-    tileMap.Save(out);
+    level_tile_map.Save(level_stream_out);
     
     //! Saving the collision layer:
-    int mapWidth = tileMap.get_width();
-    int mapHeight = tileMap.get_height();
-    FOR(y,mapHeight) {
-        FOR(x,mapWidth) {
-            char s[200];
-            sprintf(s,"%02d-%03d, ",collisionLayer[(y*mapWidth)+x]+1,collisionGroups[(y*mapWidth)+x]);
+    int level_map_width = level_tile_map.get_width();
+    int level_map_height = level_tile_map.get_height();
+
+    FOR(y,level_map_height) {
+        FOR(x,level_map_width) {
+            char s[200] = {0};
+
+            sprintf(s,"%02d-%03d, ",level_collision_layer[(y*level_map_width)+x]+1,level_collision_groups[(y*level_map_width)+x]);
             string str(s);
-            out << str;
+
+            level_stream_out << str;
         }
-        out << endl;
+        level_stream_out << endl;
     }
-    out << endl;
+    level_stream_out << endl;
     
     //! TODO: Insert else to do nothing
     if (file == "") {
-        return out.str();
+        return level_stream_out.str();
     }
-    output<<out.str();
-    output.close();
+
+    file_output << out.str();
+    file_output.close();
 
     return "";
 }
 
 /*!
- *  @fn void Level::LoadObjects(bool collisors) 
+ *  @fn void Level::load_level_objects(bool collisors) 
  *  @brief Load objects on the level 
  *  @param bool collisors 
  *  @return The method returns no param
  */
-void Level::LoadObjects(bool collisors) {    
+void Level::load_level_objects(bool collisors) {    
     
-    char objType[50]; //! <Object type
-    Vec2 objPos; //! <Object position
-    int layer; //! <Level layer
-    uint uid;
+    char object_type[50] = {0}; //! <Object type
+    Vec2 object_position() :x(0), y(0) {}; //! <Object position
+    int layer = 0; //! <Level layer
+    uint uid = 0;
 
     //! Creating the objects
-    for(auto& i:objectList) {
+    for(auto& i:level_object_list) {
         
         //! Continue for empty object
         //! TODO: Insert else to do nothing
         if (i.empty()) {
              continue;
         }
-        sscanf(i.c_str(), " %s %f %f %d", objType, &objPos.x, &objPos.y, &layer);
-        uid = GameObject::Create(objType, objPos);
+
+        sscanf(i.c_str(), " %s %f %f %d", object_type, &object_position.x, &objPos.y, &layer);
+        uid = GameObject::Create(object_type, object_position);
         GAMESTATE.AddObject(uid,layer);
     }
     
@@ -230,24 +243,27 @@ void Level::LoadObjects(bool collisors) {
     if (!collisors) { 
         return;
     }
-    
-    int tileWidth = tileSet.get_width(); //! <Tile level width
-    int tileHeight = tileSet.get_height(); //! <Tile level Height
-    int mapWidth = tileMap.get_width(); //! <Map width
-    int mapHeight = tileMap.get height(); //! <Map height
+
+  
+    int level_tile_width = level_tile_set.get_width(); //! <Tile level width
+    int level_tile_height = level_tile_set.get_height(); //! <Tile level Height
+    int level_map_width = level_tile_map.get_width(); //! <Map width
+    int level_map_height = level_tile_map.get_height(); //! <Map height
     map<int,pair<Rect,int>> mp;
 
     //! TODO: Understand this paragraph
-    FOR(y,mapHeight) {
-        FOR(x,mapWidth) {
-            int t = collisionLayer[(y*mapWidth)+x]+1;
-            int g = collisionGroups[(y*mapWidth)+x];
+    FOR(y,level_map_height) {
+        FOR(x,level_map_width) {
+            int t = level_collision_layer[(y*level_map_width)+x]+1;
+            int g = level_collision_groups[(y*level_map_width)+x];
+
             if (t) {
                 if (!mp.count(g)) {
                     //! Default vals to make min and max work
-                    mp[g]=make_pair(Rect{(float)mapWidth+1,(float)mapHeight+1,
+                    mp[g]=make_pair(Rect{(float)level_map_width+1,(float)level_map_height+1,
                                 (float)-1,(float)-1},t);
                 }
+
                 mp[g].first.x=min(mp[g].first.x,(float)x);
                 mp[g].first.y=min(mp[g].first.y,(float)y);
                 mp[g].first.w=max(mp[g].first.w,(float)x);
@@ -261,10 +277,10 @@ void Level::LoadObjects(bool collisors) {
 
         r.w-=r.x-1;
         r.h-=r.y-1;
-        r.x*=tileWidth;
-        r.w*=tileWidth;
-        r.y*=tileHeight;
-        r.h*=tileHeight;
+        r.x*=level_tile_width;
+        r.w*=level_tile_width;
+        r.y*=level_tile_height;
+        r.h*=level_tile_height;
 
         //! Instantiate a new game object 
         //! TODO: Insert else to do nothing
@@ -277,28 +293,30 @@ void Level::LoadObjects(bool collisors) {
 }
 
 /*!
- *  @fn void Level::SaveObjects(const vector<pair<ii,ii>>& grouped) 
+ *  @fn void Level::save_level_objects(const vector<pair<ii,ii>>& grouped) 
  *  @brief Save objects on the level 
  *  @param const vector<pair<ii,ii>>& grouped
  *  @return The method returns no param
  *  @warning Understand better this method
  */
-void Level::SaveObjects(const vector<pair<ii,ii>>& grouped) {
+void Level::save_level_objects(const vector<pair<ii,ii>>& grouped) {
     
     //! Saving the collision groups:
-    int mapWidth = tileMap.get_width(); //! <Level map width
-    int mapHeight = tileMap.get_height(); //! <Level map height 
+    int level_map_width = level_tile_map.get_width(); //! <Level map width
+    int level_map_height = level_tile_map.get_height(); //! <Level map height 
+
     int id=1;
     map<ii,int> ids;
-    FOR(y,mapHeight) {
-        FOR(x,mapWidth) {
-            if (collisionLayer[(y*mapWidth)+x]==EMPTY_TILE) {
-                collisionGroups[(y*mapWidth)+x] = 0;
+
+    FOR(y,level_map_height) {
+        FOR(x,level_map_width) {
+            if (level_collision_layer[(y*level_map_width)+x]==EMPTY_TILE) {
+                level_collision_groups[(y*level_map_width)+x] = 0;
             }
             else{
-                auto &group = grouped[(mapWidth*y)+x];
+                auto &group = grouped[(level_map_width*y)+x];
                 if (group.first.first==x && group.first.second==y)ids[group.first]=id++;
-                collisionGroups[(y*mapWidth)+x] = ids[group.first];
+                level_collision_groups[(y*level_map_width)+x] = ids[group.first];
             }
         }
     }
@@ -313,8 +331,9 @@ void Level::SaveObjects(const vector<pair<ii,ii>>& grouped) {
 bool Level::operator==(Level& level) {
     
     //! TODO: Insert else to do nothing
-    if (Save() == level.Save()){ 
+    if (Save() == level.save_level_to_file()){ 
         return true;
     }
+
     return false;
 }

@@ -13,7 +13,7 @@
 #define GUI_DIV() GUI_MAP[GUI_CURRENT].push_back(nullptr)
 #define GUI_CLEAR() GUI_MAP.erase(GUI_CURRENT)
 #define GUI_GET(container) GUI_MAP[#container]
-#define GUI_CREATE(element) gui.PushElement(new GUI_ ## element)
+#define GUI_CREATE(element) gui.push_gui_element(new GUI_ ## element)
 
 #define GUI_NONE 0
 #define GUI_CLOSE (uint)-1

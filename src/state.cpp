@@ -43,7 +43,7 @@ bool State::PopRequested() {
 	return popRequested;
 }
 bool State::QuitRequested() {
-	return quitRequested;
+	return quit_requested;
 }
 
 void State::UpdateArray(float time) {

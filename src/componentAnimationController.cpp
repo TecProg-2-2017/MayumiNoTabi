@@ -19,8 +19,9 @@
   */
 
 CompAnimControl::CompAnimControl(string filename, CompCollider* collider) {
-  // TODO: variable declaration indent and comment
-  string name, animation_filename;
+
+  string name = "";
+  string animation_filename = "";
 
   ifstream in(ANIMATION_PATH + filename + ".txt");
 
@@ -31,11 +32,10 @@ CompAnimControl::CompAnimControl(string filename, CompCollider* collider) {
   }
   else {
     in >> name >> animation_filename;
-
-    animations[name] = make_unique<CompAnim>(animation_filename, collider);
-
     cur = prev = name;
-
+    
+    animations[name] = make_unique<CompAnim>(animation_filename, collider);
+    
     while (in >> name >> animation_filename) {
       animations[name] = make_unique<CompAnim>(animation_filename, collider);
     }
@@ -76,7 +76,6 @@ void CompAnimControl::change_current(string animation_name,
       }
 
       repeat = repeat_animation;
-
       cur = animation_name;
 
       get_current().set_current_frame(0);
@@ -152,8 +151,8 @@ void CompAnimControl::update(float time) {
       }
       else {
         get_current().sp.looped = false;
-
         change_current(prev);
+        
         get_current().update(time);
       }
     }
@@ -223,7 +222,6 @@ bool CompAnimControl::kills_component(float time) { // range: unknown
   }
   else {
     change_current("die", false);
-
     dying = true;
   }
 

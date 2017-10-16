@@ -51,7 +51,7 @@ void Sound::Stop() {
 */
 
 void Sound::Open(string file) {
-	chunk=Resources::GetSound(file);
+	chunk=Resources::game_get_sound(file);
 }
 
 /*!

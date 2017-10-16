@@ -23,8 +23,8 @@
 // uint is actually the short for unsigned int
 uint Camera::camera_focus = 0; //!<  Global variable defining camera focus value
 
-Vec2 Camera::camera_position;         //!<  Global variable defining camera pos
-Vec2 Camera::camera_speed;       //!<  Global variable defining camera speed
+Vec2 Camera::camera_position = 0;    //!<  Global variable defining camera pos
+Vec2 Camera::camera_speed = 0;       //!<  Global variable defining camera speed
 Vec2 Camera::camera_size{100, 50}; //!<  Global variable defining camera size
 
 float Camera::camera_zoom = 1.0f; //!< Global variable defining camera zoom
@@ -83,8 +83,7 @@ void Camera::update_camera(float time) {
   Vec2 center = camera_position + (WINSIZE/2/camera_zoom); //!< Newvalue for center
 
       // Zooms in if z key is pressed
-      if (INPUT.IsKeyDown(KEY(z)))
-  {
+  if (INPUT.IsKeyDown(KEY(z))) {
     camera_zoom += 0.5 * time;
     camera_zoom = min(camera_zoom, MAX_ZOOM);
 
@@ -92,7 +91,8 @@ void Camera::update_camera(float time) {
   }
 
   // Zooms out if x key is pressed
-  if (INPUT.IsKeyDown(KEY(x))) {
+
+  if (INPUT.key_is_down(KEY(x))) {
     camera_zoom -= 0.5 * time;
     camera_zoom = max(camera_zoom, MIN_ZOOM);
 
@@ -112,25 +112,25 @@ void Camera::update_camera(float time) {
 
     // defines camera speed according to the arrow key that has been pressed.
     // (left)
-    if (INPUT.IsKeyDown(KEY_LEFT)) {
+    if (INPUT.key_is_down(KEY_LEFT)) {
       camera_speed.x -= CAMERA_SPEED;
     }
 
     // defines camera speed according to the arrow key that has been pressed.
     // (right)
-    if (INPUT.IsKeyDown(KEY_RIGHT)){
+    if (INPUT.key_is_down(KEY_RIGHT)){
       camera_speed.x += CAMERA_SPEED;
     }
 
     // defines camera speed according to the arrow key that has been pressed.
     // (up)
-    if (INPUT.IsKeyDown(KEY_UP)) {
+    if (INPUT.key_is_down(KEY_UP)) {
       camera_speed.y -= CAMERA_SPEED;
     }
 
     // defines camera speed according to the arrow key that has been pressed.
     // (down)
-    if (INPUT.IsKeyDown(KEY_DOWN)) {
+    if (INPUT.key_is_down(KEY_DOWN)) {
       camera_speed.y += CAMERA_SPEED;
     }
 
@@ -157,12 +157,13 @@ void Camera::center_camera_to(const Vec2& vec2_vector) {
   // TODO: break down math
   Vec2 target = vec2_vector - (WINSIZE/2/camera_zoom); //!< Updates the camera 
                                                        //!< target
-
-  camera_position.x = max(camera_position.x, target.x - camera_size.x);
+  // Minimum values
   camera_position.x = min(camera_position.x, target.x + camera_size.x);
-
-  camera_position.y = max(camera_position.y, target.y - camera_size.y);
   camera_position.y = min(camera_position.y, target.y + camera_size.y);
+
+  // maximum vaues
+  camera_position.x = max(camera_position.x, target.x - camera_size.x);
+  camera_position.y = max(camera_position.y, target.y - camera_size.y);
 }
 
 /*!

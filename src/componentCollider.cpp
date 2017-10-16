@@ -18,42 +18,44 @@ CompCollider::CompCollider() {
 }
 
 /*!
-  * @fn CompCollider::CompCollider(collType t,const Rect &r)
+  * @fn CompCollider::CompCollider(collType type,const Rect &rectangle)
   * @brief Constructor Method for component collider
-  * @param Generic component and positioning values
+  * @param Generic component type and positioning values
 */
 
-CompCollider::CompCollider(collType t,const Rect &r) {
-	colls.emplace_back(entity,t,r);
+CompCollider::CompCollider(collType type,const Rect &rectangle) {
+	colls.emplace_back(entity,type,rectangle);
 }
 
 /*!
-  * @fn CompCollider::CompCollider(collType t,const Vec2 &p,const Vec2 &sz)
+  * @fn CompCollider::CompCollider(collType type,const Vec2 &p,const Vec2 &sz)
   * @brief Constructor Method for component collider
   * @param Generic component, positioning values for 3D elements
 */
 
-CompCollider::CompCollider(collType t,const Vec2 &p,const Vec2 &sz) {
-	colls.emplace_back(entity,t,p,sz);
+CompCollider::CompCollider(collType type,const Vec2 &position,const Vec2 &sz) {
+	colls.emplace_back(entity,type,position,sz);
 }
 
 /*!
-  * @fn CompCollider::CollisionCheck(CompCollider *other)
+  * @fn CompCollider::collision_check(CompCollider *other_component)
   * @brief Checks if components has suffered an collision
   * @param An collidable component
 */
 
-void CompCollider::CollisionCheck(CompCollider *other) {
+void CompCollider::collision_check(CompCollider *other_component) {
 	//! TODO: simplify decision structure
 	//! Verifies if the the element is in the 'dead' state
-	if(GO(entity)->dead || GO(other->entity)->dead)return;
-}
+	if(GO(entity)->dead || GO(other_component->entity)->dead)return;
+
 	//! If the element is 'dead' it checks checks if the collision are enabled
-	for(Coll &collA:colls)for(Coll &collB:other->colls)collA.CollisionCheck(collB);
+	//! TODO: simplify repetition structure
+	for(Coll &collA:colls)for(Coll &collB:otherComponent->colls)collA.CollisionCheck(collB);
+}
 
 /*!
-  * @fn CompCollider::update(float time)
-	* @brief Updates the collision
+  * @fn void CompCollider::Update(float currentTime)
+	* @brief Verifies if an collision has happened
   * @param float time
 */
 
@@ -62,14 +64,15 @@ void CompCollider::update(float time) {
 	//! Iterates throughout the collisons to update its range of verification
 	for(Coll &coll:colls) {
 		if(coll.active) {
-			int x1 = coll.Box().x-10;
-			int x2 = coll.Box().x2()+10;
-			set<uint> ent = GAMESTATE.GetEntitiesInRange(x1,x2);
+
+			int lowerRange = coll.Box().x-10; //!< Creates variable that sets the lower range of the game box
+			int upperRange = coll.Box().x2()+10; //!< Creates variable that sets the upper range of the game box
+			set<uint> ent = GAMESTATE.GetEntitiesInRange(lowerRange,upperRange);
 			//! Iterates throughout the screen elements to check if there has been collisions
-			FOR(uint go:ent) {
+			FOR(uint object:ent) {
 			//! Checks if the object in analysis is an collidable component
-				if(go != entity && GO(go)->HasComponent(Component::type::t_collider)) {
-					CollisionCheck(COMPCOLLIDERp(GO(go)));
+				if(object != entity && GO(object)->HasComponent(Component::type::t_collider)) {
+					collision_check(COMPCOLLIDERp(GO(object)));
 				}
 			}
 		}
@@ -77,55 +80,56 @@ void CompCollider::update(float time) {
 }
 
 /*!
-* @fn CompCollider::Render()
-* @brief Render graphics in order to display collisions
-* @param No params
+ * @fn CompCollider::render()
+ * @brief Render graphics in order to display collisions
+ * @param No params
 */
 
 void CompCollider::render() {
 	if (SETTINGS.showCollision)
-		
+
 		//! Iterates throughout the Collision objects in order to update the rendering
 			for (Coll coll:colls) {
+
       //! TODO: Refactorate decision structures
 			if     (coll.cType==CompCollider::collType::t_player) SET_COLOR4(255,0,0,100);
 			else if (coll.cType==CompCollider::collType::t_monster)SET_COLOR4(0,255,0,100);
 			else if (coll.cType==CompCollider::collType::t_bullet) SET_COLOR4(0,0,255,100);
 			else if (coll.cType==CompCollider::collType::t_ground) SET_COLOR4(255,255,0,100);
 			else SET_COLOR4(255,255,255,100);
-			SDL_Rect r = (coll.Box().renderBox().sdlRect());
-			FILL_RECT(&r);
+			SDL_Rect rectangle = (coll.Box().renderBox().sdlRect()); //!< Creates an rectangle entity to be fulfilled
+
+			FILL_RECT(&rectangle);
 		}
 };
 
 /*!
   * @fn CompCollider::own()
 	* @brief Verifies if an Object has an collision associated to it
-	* @param GameObject *go
+	* @param GameObject *object
 */
 
-void CompCollider::own(GameObject *go) {
-	entity = go->uid;
+void CompCollider::own(GameObject *object) {
+	entity = object->uid; //! uid is equivalent to UserID
   //! Verifies if the element is empty or not
-	if(go != nullptr) {
+	if(object != nullptr) {
 		//! Verifies the size of the collisions
 		if(colls.size()) {
-
-			Rect r{};
+      Rect rectangle{};
 			//! Verifies if the element size is equal to the collisions size
-			for(Coll coll:colls)r = r.sum(Rect{coll.pos,coll.size});
-			go->curPos = r.corner();
-			go->curSize = r.size();
+			for(Coll coll:colls)rectangle = rectangle.sum(Rect{coll.position,coll.size});
+			object->curPos = rectangle.corner(); //!< Updates the value of the current position of the object
+			object->curSize = rectangle.size(); //!< Updates the value of the current size of the object
 		}
 		else { //! If collision has no size it gives 'zero' values to it
-			go->curPos = Vec2{};
-			go->curSize = Vec2{0.0f,0.0f};
+			object->curPos = Vec2{}; //!< Updates the value of the current position of the object
+			object->curSize = Vec2{0.0f,0.0f}; //!< Updates the value of the current size of the object
 		}
 	}
 }
 
 /*!
-  * @fn CompCollider::Die()
+  * @fn CompCollider::kills_component()
 	* @brief Checks if the component has died in the game, has time of death as a param
 	* @param float time
 */
@@ -149,23 +153,23 @@ Component::type CompCollider::get_type() const{
 }
 
 /*!
-* @param const uint &e,collType t,const Rect &r
-  * @fn CompCollider::Coll::Coll(const uint &e,collType t,const Rect &r)
+	* @fn CompCollider::Coll::Coll(const uint &e,collType type,const Rect &r)
 	* @brief TODO : Comment this structure
+	* @param const uint &e,collType type,const Rect &r
 */
 
-CompCollider::Coll::Coll(const uint &e,collType t,const Rect &r):
-	entity{e},pos{r.corner()},size{r.size()},cType{t} {
+CompCollider::Coll::Coll(const uint &e,collType type,const Rect &rectangle): //! uint is equivalent to unsigned int
+	entity{e},pos{rectangle.corner()},size{rectangle.size()},cType{t} {
 	}
 
 /*!
-  * @fn CompCollider::Coll::Coll(const uint &e,collType t,const Vec2 &p,const Vec2 &sz)
+  * @fn CompCollider::Coll::Coll(const uint &e,collType type,const Vec2 &p,const Vec2 &sz)
 	* @brief TODO : Comment this structure
-  * @param const uint &e,collType t,const Vec2 &p,const Vec2 &sz
+  * @param const uint &e,collType type,const Vec2 &p,const Vec2 &sz
 */
 
-CompCollider::Coll::Coll(const uint &e,collType t,const Vec2 &p,const Vec2 &sz):
-	entity{e},pos{p},size{sz},cType{t} {
+CompCollider::Coll::Coll(const uint &e,collType type,const Vec2 &position,const Vec2 &sz):
+	entity{e},pos{position},size{sz},cType{type} {
 	}
 
 /*!
@@ -175,21 +179,21 @@ CompCollider::Coll::Coll(const uint &e,collType t,const Vec2 &p,const Vec2 &sz):
 */
 
 Rect CompCollider::Coll::Box() const {
-	Rect r = GO(entity)->Box(pos,size);
-	return r;
+	Rect rectangle = GO(entity)->Box(pos,size);
+	return rectangle;
 }
 
 /*!
 	* @fn CompCollider::Coll::CollisionCheck(const CompCollider::Coll &other)
 	* @brief Checks if components has suffered an collision, generic type of element as a param
-	* @param CompCollider::Coll &other
+	* @param CompCollider::Coll &otherComponent
 */
 
-void CompCollider::Coll::CollisionCheck(const CompCollider::Coll &other) {
+void CompCollider::Coll::collision_check(const CompCollider::Coll &other_component) {
 	//! Verifies the collision type and if is whether
 	//! TODO: Refactorate decision structures
-	if(useDefault.count(other.cType))useDefault[other.cType](*this,other);
-	else if(useDefault.count(collType::t_any))useDefault[collType::t_any](*this,other);
+	if(useDefault.count(other.cType))useDefault[other.cType](*this,otherComponent);
+	else if(useDefault.count(collType::t_any))useDefault[collType::t_any](*this,otherComponent);
 	else if(GO(entity)->HasComponent(Component::type::t_movement)) {
 
 		CompMovement *compMove = COMPMOVEp(GO(entity));
@@ -201,14 +205,14 @@ void CompCollider::Coll::CollisionCheck(const CompCollider::Coll &other) {
 		//! TODO : Comment this structure
 		if(totMove == Vec2{}) return;
 
-		move.x = Collides(other,{totMove.x,0.0f},move).x;
+		move.x = collides(otherComponent,{totMove.x,0.0f},move).x;
 
 		//! Verifies if object in x axis has collided
 		if(move.x != totMove.x) {
 			speed.x=0.0f;
 		}
 
-		move.y = Collides(other,{0.0f,totMove.y},move).y;
+		move.y = collides(other_component,{0.0f,totMove.y},move).y;
 
 		//! Verifies if object in y axis has collided
 		if(move.y != totMove.y) {
@@ -219,23 +223,24 @@ void CompCollider::Coll::CollisionCheck(const CompCollider::Coll &other) {
 }
 
 /*!
-	* @fn CompCollider::Coll::Collides(const Coll &other,const Vec2 &move,const Vec2 &moved)
+	* @fn CompCollider::Coll::collides(const Coll &otherComponent,const Vec2 &move,const Vec2 &moved)
 	* @brief Defines an collision field range, has generic elements and 'rangeable' screen spaces params
 	* @param Coll &other,const Vec2 &move,const Vec2 &moved
 */
 
-Vec2 CompCollider::Coll::Collides(const Coll &other,const Vec2 &move,const Vec2 &moved) const {
-	const int precision = 100;
-	Rect box1 = Box()+moved;
-	Rect box2 = other.Box();
+Vec2 CompCollider::Coll::collides(const Coll &other_component,const Vec2 &move,const Vec2 &moved) const {
+	const int precision = 100; //!< TODO: Refactorate this magic number
+
+	Rect rectangle = Box()+moved; //!< Updates the current value of the rectangle
+	Rect another_rectangle = other_component.Box(); //!< Updates the value of another rectangle
 	Vec2 moveSafe,move100=move/precision,moveTry;
 
 	//! Iterates throughout the 'rangeable' variables to identify collision
-	for(i,precision+1) {
-		moveTry = move100*i;
+	for(counter,precision+1) {
+		moveTry = move100*counter;
 		//! Checks if a collision has happened
 		//! TODO: Refactorate decision structure
-		if((box1+moveTry).collides(box2))return moveSafe;
+		if((rectangle+moveTry).collides(box2))return moveSafe;
 		moveSafe = moveTry;
 	}
 	return move;

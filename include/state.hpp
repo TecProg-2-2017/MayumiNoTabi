@@ -12,7 +12,7 @@ class State{
 protected:
 
 	bool popRequested=false;
-	bool quitRequested=false;
+	bool quit_requested=false;
 	uint lastGO=-1;
 
 	virtual void UpdateArray(float time);

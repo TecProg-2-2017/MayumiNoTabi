@@ -1,9 +1,9 @@
 /*!
-*  \file File stateTitle.cpp
-*  \brief Implementation of the class StateTitle
+*  @file File stateTitle.cpp
+*  @brief Implementation of the class StateTitle
 *
 *  Auxiliary documentation
-*  \sa stateTitle.hpp
+*  @sa stateTitle.hpp
 */
 #include <stateTitle.hpp>
 #include <camera.hpp>
@@ -83,6 +83,7 @@ void StateTitle::Begin() {
 	@return The execution of this method returns no value
 */
 void StateTitle::update(float time) {
+
 	//! Checks if the user tried to quit
 	if (INPUT.QuitRequested() || INPUT.KeyPress(KEY_ESC)){
 		quitRequested = true;
@@ -95,6 +96,15 @@ void StateTitle::update(float time) {
 	}
 	//! Checks if the user pressed the 'e' key
 	if (INPUT.KeyPress(KEY(e))) {
+
+	if (INPUT.get_quit_requested() || INPUT.key_pressed(KEY_ESC)) quit_requested=true;
+
+	if (INPUT.key_pressed(KEY_SPACE)) {
+		bt2.set_frame(1);
+		GAMEINST.Push(new StateStage{"level_0"});
+	}
+	if (INPUT.key_pressed(KEY(e))) {
+
 		bt1.set_frame(1);
 		GAMEINST.Push(new StateEditor{});
 	}

@@ -22,75 +22,75 @@ GUIManager::GUIManager() {
  *  @brief Destructor method for general user interface
  */
 GUIManager::~GUIManager() {
-    elements.clear();
+    gui_elements.clear();
 }
 
 /*!
- *  @fn void GUIManager::Update()
+ *  @fn void GUIManager::update_gui_elements()
  *  @brief Updates general user interface
  *  @return The method returns no param
  */
-void GUIManage::update() {
+void GUIManager::update_gui_elements() {
 
     //! TODO: Insert else to do nothing
     //! Remove last element if requested
-    if (popRequested) {
-        selectedWindow = nullptr;
-        selectedButton = nullptr;
+    if (element_pop_requested) {
+        selected_gui_window = nullptr;
+        selected_gui_button = nullptr;
 
-        elements.pop_back();
+        gui_elements.pop_back();
     }
 
     //! TODO: Insert else to do nothing
     //! If there's element stored puts it in gui elements vector
-    if (storedElement) {
-        selectedWindow = nullptr;
+    if (stored_gui_element) {
+        selected_gui_window = nullptr;
 
         //! TODO: Insert else to do nothing
         //! Reset the button if it is selected 
-        if (selectedButton) {
-            selectedButton->Reset();
-            selectedButton = nullptr;
+        if (selected_gui_button) {
+            selected_gui_button->Reset();
+            selected_gui_button = nullptr;
         }
 
-        elements.emplace_back(unique_ptr<GUI_Element>(storedElement));
-        storedElement = nullptr;
+        gui_elements.emplace_back(unique_ptr<GUI_Element>(stored_gui_element));
+        stored_gui_element = nullptr;
     }
 
     //! TODO: Insert else to do nothing
     //! If there's no elements in the gui, returns 
-    if (elements.empty()) {
+    if (gui_elements.empty()) {
          return;
     }
     
-    popRequested = false;
+    element_pop_requested = false;
     
-    previousButtonState = currentButtonState;
+    previous_button_state = current_button_state;
     
     //! TODO: Insert else to do nothing
-    //! Check if current button is pressed and assings it to currentButtonState
-    if (selectedButton) {
-        GUI_Button* selectedButtonCopy = selectedButton;
+    //! Check if current button is pressed and assings it to current_button_state
+    if (selected_gui_button) {
+        GUI_Button* selected_gui_buttonCopy = selected_gui_button;
 
-        selectedButton = nullptr;
+        selected_gui_button = nullptr;
 
-        selectedButtonCopy->update();
-        selectedButton = selectedButtonCopy;
-        currentButtonState = selectedButton->IsPressed();
+        selected_gui_buttonCopy->Update();
+        selected_gui_button = selected_gui_buttonCopy;
+        current_button_state = selected_gui_button->IsPressed();
     }
     
-    elements.back()->update();  
+    gui_elements.back()->Update();  
 }
 
 /*!
- *  @fn void GUIManager::render()
+ *  @fn void GUIManager::render_gui_elements()
  *  @brief Renders general user interface
  *  @return The method returns no param
  */
-void GUIManager::render() {
+void GUIManager::render_gui_elements() {
     
     //! Iterates trough elements of interface to render it
-    for (auto& it:elements){
+    for (auto& it:gui_elements){
 
         //! TODO: Insert else to do nothing
         //! If elements is visible renders it
@@ -101,70 +101,70 @@ void GUIManager::render() {
 }
  
 /*!
- *  @fn void GUIManager::PushElement(GUI_Element* element)
+ *  @fn void GUIManager::push_gui_element(GUI_Element* element)
  *  @brief Push element to the general user interface 
  *  @param GUI_Element* element
  *  @return The method returns no param
  */
-void GUIManager::PushElement(GUI_Element* element) {
+void GUIManager::push_gui_element(GUI_Element* element) {
 
     //! TODO: Insert else to do nothing
     //! Checks if there's an element alredy stored, and deletes it
-    if (storedElement) { 
-        delete storedElement;
+    if (stored_gui_element) { 
+        delete stored_gui_element;
     }
 
-    storedElement = element;
+    stored_gui_element = element;
 }
 
 /*!
- *  @fn void GUIManager::RequestPop(GUI_Element* element)
- *  @brief Changes popRequested value if requested  
+ *  @fn void GUIManager::request_gui_element_pop(GUI_Element* element)
+ *  @brief Changes element_pop_requested value if requested  
  *  @param GUI_Element* element
  *  @return The method returns no param
  */
-void GUIManager::RequestPop(GUI_Element* element) {
+void GUIManager::request_gui_element_pop(GUI_Element* element) {
    
     //! TODO: Insert else to do nothing
     //! If last object of elements vector is equal to the param
-    //! Change popRequested value
-    if (element == elements.back().get()) {
-        popRequested = true;
+    //! Change element_pop_requested value
+    if (element == gui_elements.back().get()) {
+        element_pop_requested = true;
     }
 }
 
 /*!
- *  @fn void GUIManager::SelectWindow(GUI_Window* window)
+ *  @fn void GUIManager::select_gui_window(GUI_Window* window)
  *  @brief Select window in the general user interface
  *  @param GUI_Window* window
  *  @return The method returns no param
  */
-void GUIManager::SelectWindow(GUI_Window* window) {
-    selectedWindow = window;
+void GUIManager::select_gui_window(GUI_Window* window) {
+    selected_gui_window = window;
 }
 
 /*!
- *  @fn bool GUIManager::IsWindowSelected(GUI_Window* window)const 
+ *  @fn bool GUIManager::gui_window_is_selected(GUI_Window* window)const 
  *  @brief Return if window is select 
  *  @param GUI_Window* window
  *  @return true of false 
  */
-bool GUIManager::IsWindowSelected(GUI_Window* window)const {
-    return window==selectedWindow;
+bool GUIManager::gui_window_is_selected(GUI_Window* window)const {
+    return window==selected_gui_window;
 }
 
 /*!
- *  @fn int GUIManager::GetSelectedWindowID()const 
+ *  @fn int GUIManager::get_gui_selected_window_ID()const 
  *  @brief Get selected window ID of general user interface
  *  @return integer 
  */
-int GUIManager::GetSelectedWindowID()const {
+int GUIManager::get_gui_selected_window_ID()const {
 
     //If there's a window selected, returns it ID
-    if (selectedWindow){
-        return selectedWindow->id;
+    if (selected_gui_window){
+        return selected_gui_window->id;
     }
-    else if (elements.size() == 1) { 
+    else if (gui_elements.size() == 1) { 
         return 0;
     }
     else {
@@ -173,108 +173,108 @@ int GUIManager::GetSelectedWindowID()const {
 }
 
 /*!
- *  @fn void GUIManager::SelectButton(GUI_Button* button) 
- *  @brief Assing button object to selectedButton attribute
+ *  @fn void GUIManager::select_gui_button(GUI_Button* button) 
+ *  @brief Assing button object to selected_gui_button attribute
  *  @param GUI_Button* button
  *  @return The method returns no param
  */
-void GUIManager::SelectButton(GUI_Button* button) {
-    selectedButton = button;
+void GUIManager::select_gui_button(GUI_Button* button) {
+    selected_gui_button = button;
 }
 
 /*!
- *  @fn bool GUIManager::IsButtonSelected(GUI_Button* button)const   
+ *  @fn bool GUIManager::gui_button_is_selected(GUI_Button* button)const   
  *  @brief Avaliate if button is selected 
  *  @param GUI_Button* button
  *  @return True of False 
  */
-bool GUIManager::IsButtonSelected(GUI_Button* button)const{
-    return button && button==selectedButton;
+bool GUIManager::gui_button_is_selected(GUI_Button* button)const{
+    return button && button==selected_gui_button;
 }
 
 /*!
- *  @fn bool GUIManager::ButtonPress(uint action)const    
+ *  @fn bool GUIManager::gui_button_was_pressed(uint action)const    
  *  @brief Avaliate if button was pressed 
  *  @param unsigned int action 
  *  @return True of False 
  *  @warning Simplify return of the method
  */
-bool GUIManager::ButtonPress(uint action)const{
+bool GUIManager::gui_button_was_pressed(uint action)const{
 
     //! TODO: Insert else to do nothing
-    //! Return false for empty selectedButton
-    if (!selectedButton) {
+    //! Return false for empty selected_gui_button
+    if (!selected_gui_button) {
         return false;
     }
     
     //! TODO: Insert else to do nothing
     //! Return false for action different from the selected button 
-    if (action && selectedButton->action != action) {
+    if (action && selected_gui_button->action != action) {
         return false;
     }
-    return (!previousButtonState && currentButtonState);
+    return (!previous_button_state && current_button_state);
 }
 
 /*!
- *  @fn bool GUIManager::ButtonPress(uint action)const    
+ *  @fn bool GUIManager::gui_button_was_released(uint action)const    
  *  @brief Avaliate if button was released 
  *  @param unsigned int action 
  *  @return True of False 
  *  @warning Simplify return of the method
  */
-bool GUIManager::ButtonRelease(uint action)const{
+bool GUIManager::gui_button_was_released(uint action)const{
 
     //! TODO: Insert else to do nothing
-    if (!selectedButton) { 
+    if (!selected_gui_button) { 
         return false;
     }
     
     //! TODO: Insert else to do nothing
-    if (action && selectedButton->action != action) {
+    if (action && selected_gui_button->action != action) {
         return false;
     }
-    return (previousButtonState && !currentButtonState);
+    return (previous_button_state && !current_button_state);
 }
 
 /*!
- *  @fn bool GUIManager::ButtonClick(uint action)const    
+ *  @fn bool GUIManager::gui_button_was_clicked(uint action)const    
  *  @brief Avaliate if button was clicked 
  *  @param unsigned int action 
  *  @return True of False 
  *  @warning Simplify return of the method
  */
-bool GUIManager::ButtonClick(uint action)const{
+bool GUIManager::gui_button_was_clicked(uint action)const{
 
     //! TODO: Insert else to do nothing
-    if (!selectedButton) {
+    if (!selected_gui_button) {
         return false;
     }
 
     //! TODO: Insert else to do nothing
-    if (action && selectedButton->action != action) { 
+    if (action && selected_gui_button->action != action) { 
         return false;
     }
 
-    return (previousButtonState && !currentButtonState && selectedButton->IsHovered());
+    return (previous_button_state && !current_button_state && selected_gui_button->IsHovered());
 }
 
 /*!
- *  @fn bool GUIManager::IsButtonDown(uint action)const    
+ *  @fn bool GUIManager::gui_button_is_down(uint action)const    
  *  @brief Avaliate if button is down 
  *  @param unsigned int action 
  *  @return True of False 
  */
-bool GUIManager::IsButtonDown(uint action)const{
+bool GUIManager::gui_button_is_down(uint action)const{
 
     //! TODO: Insert else to do nothing
-    if (!selectedButton) {
+    if (!selected_gui_button) {
         return false;
     }
 
     //! TODO: Insert else to do nothing
-    if (action && selectedButton->action != action) { 
+    if (action && selected_gui_button->action != action) { 
         return false;
     }
 
-    return currentButtonState;
+    return current_button_state;
 }

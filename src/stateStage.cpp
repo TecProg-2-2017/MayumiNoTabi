@@ -1,9 +1,9 @@
 /*!
-*  \file File stateStage.cpp
-*  \brief Implementation of the class StateStage
+*  @file File stateStage.cpp
+*  @brief Implementation of the class StateStage
 *
 *  Auxiliary documentation
-*  \sa stateStage.hpp
+*  @sa stateStage.hpp
 */
 #include <stateStage.hpp>
 #include <common.hpp>
@@ -46,12 +46,13 @@ StateStage::~StateStage() {}
 	@return The execution of this method returns no value
 */
 void StateStage::Begin() {
+
 	//! Loads the level and the player
 	level.Load(levelName);
 	player = GameObject::MakePlayer(Vec2{550.0f,430.0f});
 	AddObject(player);
 	Camera::Follow(player);
-	level.LoadObjects();
+	level.load_level_objects();
 }
 
 /*!
@@ -115,11 +116,13 @@ void StateStage::Update(float time) {
 }
 
 
+
 /*!
 	@fn void StateStage::render()
 	@brief Virtual method that renders the stage background
 	@return The execution of this method returns no value
 */
+
 void StateStage::render() {
 	level.background.render(0, 0);
 	// floresta_bg1.render(RENDERPOS(Vec2(0,0)));
@@ -132,7 +135,7 @@ void StateStage::render() {
 	floresta_bg2.render(RENDERPOS(Vec2(4032*4,0)));
 	floresta_bg2.render(RENDERPOS(Vec2(4032*5,0)));
 	floresta_bg3.render(RENDERPOS(Vec2(4032*6,0)));
-	level.tileMap.render();
+	level.level_tile_map.render();
 	RenderArray();
 }
 
@@ -160,30 +163,30 @@ void StateStage::Resume() {
 	@return The execution of this method returns no value
 */
 void StateStage::LoadAssets() {
-	Resources::GetImage("img/porco/porco-chifrada.png");
-	Resources::GetImage("img/porco/porco-correndo.png");
-	Resources::GetImage("img/porco/porco-idle.png");
-	Resources::GetImage("img/porco/porco-morte.png");
-	Resources::GetImage("img/porco/porco-stun.png");
-	Resources::GetImage("img/porco/porco-virando.png");
-	Resources::GetImage("img/porco/porco-chifrada-virado.png");
-	Resources::GetImage("img/porco/porco-correndo-virado.png");
-	Resources::GetImage("img/porco/porco-idle-virado.png");
-	Resources::GetImage("img/porco/porco-morte-virado.png");
-	Resources::GetImage("img/porco/porco-stun-virado.png");
-	Resources::GetImage("img/porco/porco-virando-virado.png");
-	Resources::GetImage("img/porco/rage/porco-chifrada.png");
-	Resources::GetImage("img/porco/rage/porco-correndo.png");
-	Resources::GetImage("img/porco/rage/porco-idle.png");
-	Resources::GetImage("img/porco/rage/porco-morte.png");
-	Resources::GetImage("img/porco/rage/porco-stun.png");
-	Resources::GetImage("img/porco/rage/porco-virando.png");
-	Resources::GetImage("img/porco/rage/porco-chifrada-virado.png");
-	Resources::GetImage("img/porco/rage/porco-correndo-virado.png");
-	Resources::GetImage("img/porco/rage/porco-idle-virado.png");
-	Resources::GetImage("img/porco/rage/porco-morte-virado.png");
-	Resources::GetImage("img/porco/rage/porco-stun-virado.png");
-	Resources::GetImage("img/porco/rage/porco-virando-virado.png");
+	Resources::game_get_image("img/porco/porco-chifrada.png");
+	Resources::game_get_image("img/porco/porco-correndo.png");
+	Resources::game_get_image("img/porco/porco-idle.png");
+	Resources::game_get_image("img/porco/porco-morte.png");
+	Resources::game_get_image("img/porco/porco-stun.png");
+	Resources::game_get_image("img/porco/porco-virando.png");
+	Resources::game_get_image("img/porco/porco-chifrada-virado.png");
+	Resources::game_get_image("img/porco/porco-correndo-virado.png");
+	Resources::game_get_image("img/porco/porco-idle-virado.png");
+	Resources::game_get_image("img/porco/porco-morte-virado.png");
+	Resources::game_get_image("img/porco/porco-stun-virado.png");
+	Resources::game_get_image("img/porco/porco-virando-virado.png");
+	Resources::game_get_image("img/porco/rage/porco-chifrada.png");
+	Resources::game_get_image("img/porco/rage/porco-correndo.png");
+	Resources::game_get_image("img/porco/rage/porco-idle.png");
+	Resources::game_get_image("img/porco/rage/porco-morte.png");
+	Resources::game_get_image("img/porco/rage/porco-stun.png");
+	Resources::game_get_image("img/porco/rage/porco-virando.png");
+	Resources::game_get_image("img/porco/rage/porco-chifrada-virado.png");
+	Resources::game_get_image("img/porco/rage/porco-correndo-virado.png");
+	Resources::game_get_image("img/porco/rage/porco-idle-virado.png");
+	Resources::game_get_image("img/porco/rage/porco-morte-virado.png");
+	Resources::game_get_image("img/porco/rage/porco-stun-virado.png");
+	Resources::game_get_image("img/porco/rage/porco-virando-virado.png");
 }
 
 /*!

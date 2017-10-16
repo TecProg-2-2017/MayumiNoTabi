@@ -6,21 +6,35 @@
 #include <game.hpp>
 #include <resources.hpp>
 
-Sprite::Sprite():texture{nullptr}{}
+Sprite::Sprite():texture{nullptr}{
+
+}
+
 Sprite::Sprite(const string& file,int fCountX,int fCountY,float fTime,int fCount):texture{nullptr}{
-	if (fCount==-1)fCount=fCountX*fCountY;
+	if (fCount==-1) { 
+        fCount=fCountX*fCountY;
+    }
+
 	Open(file,fCountX,fCountY,fTime,fCount);
 }
 Sprite::Sprite(const string& file,int fCountX,float fTime,int fCount):texture{nullptr}{
-	if (fCount==-1)fCount=fCountX;
+	if (fCount==-1) {
+        fCount=fCountX;
+    }
+
 	Open(file,fCountX,1,fTime,fCount);
 }
-Sprite::~Sprite() {}
+Sprite::~Sprite() {
+
+}
 
 void Sprite::Open(const string& file,int fCountX,int fCountY,float fTime,int fCount) {
-	if (fCount==-1)fCount=fCountX*fCountY;
+	if (fCount==-1) {
+        fCount=fCountX*fCountY;
+    }
 
-	texture = Resources::GetImage(file);
+	texture = Resources::game_get_image(file);
+
 	if (SDL_QueryTexture(texture.get(),nullptr,nullptr,&width,&height)) {
 		cerr << "Erro ao carregar as dimensões da textura \"" << file << "\", o programa ira encerrar agora" << endl;
 		exit(EXIT_FAILURE);
@@ -38,7 +52,7 @@ void Sprite::SetClip(int x,int y,int w,int h) {
 }
 
 void Sprite::render(float x,float y,float angle, float extScale) {
-	SDL_Rect dest;
+	SDL_Rect dest = NULL;
 	
 	dest.x=(x);
 	dest.y=(y);
@@ -46,9 +60,16 @@ void Sprite::render(float x,float y,float angle, float extScale) {
 	dest.h=ceil(clipRect.h * scaleY * extScale);
 	
 	SDL_RendererFlip flip = SDL_FLIP_NONE;
-	if (flipH && flipV)angle += (angle<180?180:-180);
-	else if (flipH)flip = SDL_FLIP_HORIZONTAL;
-	else if (flipV)flip = SDL_FLIP_VERTICAL;
+
+	if (flipH && flipV) {
+        angle += (angle<180?180:-180);
+    }
+	else if (flipH) {
+        flip = SDL_FLIP_HORIZONTAL;
+    }
+	else if (flipV) {
+        flip = SDL_FLIP_VERTICAL;
+    }
 	//cout << "rendering with size " << dest.w << "," << dest.h << " fCount = " << frameCount << endl;
 	//SDL_RenderCopyEx(GAMERENDER,texture,nullptr,nullptr,angle,nullptr,SDL_FLIP_NONE);
 	SDL_RenderCopyEx(GAMERENDER,texture.get(),&clipRect,&dest,angle,nullptr,flip);
@@ -59,8 +80,12 @@ void Sprite::render(const Vec2& v, float angle, float extScale) {
 }
 
 void Sprite::update(float time) {
-	if (get_frame_count()==1 || frameTime<0)return;
+	if (get_frame_count()==1 || frameTime<0) {
+        return;
+    }
+
 	timeElapsed+=time;
+
 	if (timeElapsed>frameTime) {
 		timeElapsed-=frameTime;
 		set_frame((currentFrame+1)%get_frame_count());
@@ -72,7 +97,10 @@ void Sprite::set_frame(int frame) {
 	SetClip((frame%frameCountX)*GetWidth(),(frame/frameCountX)*GetHeight(),GetWidth(),GetHeight());
 }
 void Sprite::SetFrameCount(int fCountX,int fCountY,int fCount) {
-	if (fCount==-1)fCount=fCountX*fCountY;
+	if (fCount==-1) {
+        fCount=fCountX*fCountY;
+    }
+
 	frameCountX=fCountX;
 	frameCountY=fCountY;
 	frameCount=fCount;
@@ -122,10 +150,12 @@ void Sprite::SetScaleY(float scale) {
 }
 
 void Sprite::SetScaleToFit(float w, float h) {
-	if (w > h)
+	if (w > h) {
 		scaleX = scaleY = (w/width);
-	else
+    }
+	else {
 		scaleX = scaleY = (h/height); 
+    }
 }
 
 void Sprite::SetScaleToFit(Vec2 v) {
@@ -158,6 +188,10 @@ void Sprite::SetFlipV(bool f) {
 }
 
 void Sprite::SetBlend(bool b) {
-	if (b) SDL_SetTextureBlendMode(texture.get(), SDL_BLENDMODE_BLEND);
-	else  SDL_SetTextureBlendMode(texture.get(), SDL_BLENDMODE_NONE);
+	if (b) {
+        SDL_SetTextureBlendMode(texture.get(), SDL_BLENDMODE_BLEND);
+    }
+	else {
+        SDL_SetTextureBlendMode(texture.get(), SDL_BLENDMODE_NONE);
+    }
 }

@@ -49,3 +49,6 @@ JOGO
 html/*
 latex/*
 
+#Vim swp
+*.swp
+*.swo

@@ -12,7 +12,7 @@ class CompGravity : public Component{
 	float gravity;
 public:
 	//public members
-	CompGravity(float g=GRAVITY);
+	CompGravity(float gravity=GRAVITY);
 	~CompGravity();
 
 	void update(float time);

@@ -33,12 +33,23 @@ CompAnim::CompAnim() {
 
   CompAnim::CompAnim(string filename, CompCollider* temporary_collider) {
 
-  // TODO: separate variable declarations and comment them all 
-	string name, img_file, function_name, /* animFile, unused */ type;
+  string name = "";
+  string img_file = "";
+  string function_name = "";
+  string animFile = "";
+  string type = "";
 
-	int f_count, f_counter_x, f_counter_y, collider_counter, function_counter;
+  int f_count = 0;
+  int f_counter_x = 0;
+  int f_counter_y = 0;
+  int collider_counter = 0;
+  int function_counter = 0;
 
-	float f_time, x_axis, y_axis, width, height, r;
+  float f_timex_axis = 0f;
+  float y_axis = 0f;
+  float width = 0f;
+  float height = 0f;
+  float r = 0f;
 
 	ifstream in(ANIMATION_PATH + filename + ".txt");
 
@@ -65,11 +76,11 @@ CompAnim::CompAnim() {
 					//TODO: different collider types for each coll
 					in >> x_axis >> y_axis >> width >> height >> r;
 
-					colliders[i]->colls.emplace_back(entity, temporary_collider->colls[0].cType,
-																						Rect{x_axis, y_axis, width, height});
+          colliders[i]->colls.emplace_back(entity, 
+                                           temporary_collider->colls[0].cType,
+                                           Rect{x_axis, y_axis, width, height});
 
 					colliders[i]->colls[j].useDefault = temporary_collider->colls[0].useDefault;
-
 					colliders[i]->colls[j].active = temporary_collider->colls[0].active;
 				}
 			}
@@ -90,8 +101,8 @@ CompAnim::CompAnim() {
 
 	// Changes called value to false if frameFunc has no elements in it
 	if (frameFunc.count(0)) {
-		called = false
-	};
+		called = false;
+	}
 }
 
 //! A destructor.
@@ -105,8 +116,8 @@ CompAnim::~CompAnim() {
 
 		// Ignores deletion if current collider equals current frame
 		if (i == GetCurFrame()) {
-			continue
-		};
+			continue;
+		}
 
 		delete colliders[i];
 	}
@@ -194,7 +205,7 @@ bool CompAnim::Looped()const {
 */
 
 void CompAnim::Update(float time) {
-	int frame1 = GetCurFrame(); //!< Used later for comparrison with next frame
+	int frame1 = get_current_frame(); //!< Used later for comparrison with next frame
 
 	// Checks if the animation has not been called and calls it
 	if (!called) {
@@ -209,14 +220,14 @@ void CompAnim::Update(float time) {
 
 	sp.Update(time);
 
-  int frame2 = GetCurFrame(); //!< Assigns the new frame to this variable for
+  int frame2 = get_current_frame(); //!< Assigns the new frame to this variable for
                               //!< comparing with the previous one
 
   // Checks if current frames is the same as the next one, if they're not the
 	// next frame is set
 	if (frame1 != frame2) {
 		called = false;
-		SetCurFrame(frame2, true);
+		set_current_frame(frame2, true);
 	}
 }
 
@@ -255,9 +266,9 @@ void CompAnim::own(GameObject* go) {
 		}
 	}
 
-  int frame = GetCurFrame();
+  int frame = get_current_frame();
 
-  SetCurFrame(frame, true);
+  set_current_frame(frame, true);
 }
 
 /*!

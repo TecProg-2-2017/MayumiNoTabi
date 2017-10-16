@@ -9,10 +9,10 @@ public:
 	Music();
 	Music(string file);
 
-	void Play(int times);
-	void Stop();
-	void Open(string file);
-	bool IsOpen();
+	void play_music(int times);
+	void stop_music();
+	void open_music_file(string file);
+	bool music_is_open();
 };
 
 #endif//MUSICHPP

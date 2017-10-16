@@ -258,6 +258,7 @@ void Text::SetStyle(Style st) {
 	RemakeTexture();
 }
 
+
 /*!
 	@fn void Text::SetFontSize(int fSize)
 	@brief A setter for the size of the text font
@@ -268,20 +269,10 @@ void Text::SetStyle(Style st) {
 void Text::SetFontSize(int fSize) {
 	fontSize = fSize;
 	font = Resources::GetFont(fontName,fontSize);
+
 	RemakeTexture();
 }
 
-/*!
-	@fn void Text::SetAlignment(Align al)
-	@brief A setter for the text alignment
-	@param al
-	@brief A Align, that represents the new text alignment
-  @return The execution of this method returns no value
-*/
-void Text::SetAlignment(Align al) {
-	alignment = al;
-	RemakeTexture();
-}
 
 /*!
 	@fn void Text::SetHotspot(Hotspot h)
