@@ -158,27 +158,35 @@ void TileMap::render_layer(int layer,int position_x ,int position_y) {
 	//! @var tile
 	int tile; //! a integer that represents a tile
   //! @var firstX
-	int firstX=0; //!< a integer that represents the beginning of the layer in the axis x
+	//!< a integer that represents the beginning of the layer in the axis x
+	int firstX=0;
   //! @var firstY
-  int firstY=0; //!< a integer that represents the beginning of the layer in the axis y
+	//!< a integer that represents the beginning of the layer in the axis y
+  int firstY=0;
   //! @var lastX
-  int lastX=map_width; //!< a integer that represents the end of the layer in the axis x
+	//!< a integer that represents the end of the layer in the axis x
+  int lastX=map_width;
   //! @var lastY
-  int lastY=map_height; //!< a integer that represents the end of the layer in the axis y
+	//!< a integer that represents the end of the layer in the axis y
+  int lastY=map_height;
 
   //! Checks if the camera is ahead of the posX in axis x
 	if (position_x<CAMERA.x){
     //! Reallocates the beginning of the layer in the axis x
 		firstX = (CAMERA.x-position_x)/width;
   }
-	//! \warning else (do nothing)
+	else{
+		// do nothing
+	}
 
   //! Checks if the camera is ahead of the posy in axis y
   if (position_y<CAMERA.y){
     //! Reallocates the beginning of the layer in the axis y
 		firstY = (CAMERA.y-position_y)/height;
    }
-   //! \warning else (do nothing)
+	 else{
+		 // do nothing
+	 }
 
   //! Defines the map and camera corners
 	//! @var map_corner_x
@@ -198,13 +206,18 @@ void TileMap::render_layer(int layer,int position_x ,int position_y) {
 		//! Reallocates the end of the layer in the axis x
     lastX -= (mapCorner.x-cameraCorner.x)/width;
   }
-  //! \warning else (do nothing)
-
+	else{
+		// do nothing
+	}
+	//! Checks if the coner of the map is ahead of the coner of the camera in axis
+  //! y
   if (mapCorner.y>cameraCorner.y){
     //! Reallocates the end of the layer in the axis y
 		lastY -= (mapCorner.y-cameraCorner.y)/height;
   }
-  //! \warning else (do nothing)
+  else{
+		//do nothing
+	}
 
   //! Iterates the height of the layer
 	for (int y_iterator=firstY;y_iterator<=lastY;y_iterator++) {
@@ -213,9 +226,15 @@ void TileMap::render_layer(int layer,int position_x ,int position_y) {
 
 			tile = at(x_iterator, y_iterator, layer);
       //! Checks if the tile is empty
-			if (tile != EMPTY_TILE)
-        //! Render the tile
-				tile_set->render(tile, RENDERPOSX(position_x+(x_iterator*width)), RENDERPOSY(position_y+(y_iterator*height)), CAMERAZOOM);
+			if (tile != EMPTY_TILE){
+				//! Render the tile
+				tile_set->render(tile, RENDERPOSX(position_x+(x_iterator*width)),
+													RENDERPOSY(position_y+(y_iterator*height)),
+													CAMERAZOOM);
+			}
+			else{
+				// do nothing
+			}
 		}
 	}
 	LOG_METHOD_CLOSE("TileMap::render_layer","void");

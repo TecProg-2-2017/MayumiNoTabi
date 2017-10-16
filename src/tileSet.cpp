@@ -77,7 +77,9 @@ void TileSet::render(unsigned int index,float position_x,float position_y, float
 		tileSet.SetClip(setclip_start_x,setclip_start_y,tile_width,tile_height);
 		tileSet.render(position_x,position_y,0,extended_scale);
 	}
-	//! \warning else (do nothing)
+	else{
+		// do nothing
+	}
 	LOG_METHOD_CLOSE("TileSet::render","void");
 }
 
