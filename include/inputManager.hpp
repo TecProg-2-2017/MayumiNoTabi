@@ -59,6 +59,11 @@ public:
     int get_mouse_x_position();
     int get_mouse_y_position();
 
+    void update_mouse_button_state(SDL_Event event);
+    void update_key_button_state(SDL_Event event);
+    void insert_text(SDL_Event event);
+    void erase_text(SDL_Event event);
+
     void start_text_input(string* t);
     void stop_text_input(string* t);
     uint get_text_cursor_position();
