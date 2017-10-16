@@ -28,6 +28,8 @@ public:
 	int& at(int position_x,int position_y,int position_z);
 	int  at(int position_x,int position_y,int position_z) const;
 
+	void define_corners(int *firstX, int *firstY, int *lastX, int *lastY,
+											int width, int height)
 	void render(Vec2 position = {0,0});
 	void render_layer(int layer,int position_x=0,int position_y=0);
 

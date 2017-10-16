@@ -130,17 +130,27 @@ void TileMap::save(stringstream& output_file) {
 }
 
 /*!
-	@fn void TileMap::render_layer(int layer,int position_x ,int position_y)
-	@brief Method that reders a layer of the tile map
-  @param layer
-	@brief A positive integer, that represents the layer that will be rendered
-  @param position_x
-  @brief A positive integer, that recives a position in the x axis
-  @param position_Y
-  @brief A positive integer, that recives a position in the y axis
+	@fn void TileMap::define_map_conner(int *lastX,int *lastY,int width,
+	 																		int height)
+	@brief Method that defines the map and camera corners
+	@param firstX
+	@brief A positive integer, that represents the beginning of the layer in the
+	axis x
+	@param firstY
+	@brief A positive integer, that represents the beginning of the layer in the
+	axis y
+	@param lastX
+	@brief A positive integer, that represents the end of the layer in the axis x
+	@param lastY
+	@brief A positive integer, that represents the end of the layer in the axis y
+	@param width
+	@brief A positive integer, that represents the tile set width
+  @param height
+  @brief A positive integer, that recives the tile set height
   @return The execution of this method returns no value
-  @warning Method that requires review of comment
 */
+void TileMap::define_corners(int *firstX, int *firstY, int *lastX, int *lastY,
+															int width, int height){
 
 void TileMap::render_layer(int layer,int position_x ,int position_y) {
 	LOG_METHOD_START("TileMap::render_layer");
@@ -172,18 +182,18 @@ void TileMap::render_layer(int layer,int position_x ,int position_y) {
 
   //! Checks if the camera is ahead of the posX in axis x
 	if (position_x<CAMERA.x){
-    //! Reallocates the beginning of the layer in the axis x
+		//! Reallocates the beginning of the layer in the axis x
 		firstX = (CAMERA.x-position_x)/width;
-  }
+	}
 	else{
 		// do nothing
 	}
 
-  //! Checks if the camera is ahead of the posy in axis y
-  if (position_y<CAMERA.y){
-    //! Reallocates the beginning of the layer in the axis y
+	//! Checks if the camera is ahead of the posy in axis y
+	if (position_y<CAMERA.y){
+		//! Reallocates the beginning of the layer in the axis y
 		firstY = (CAMERA.y-position_y)/height;
-   }
+	 }
 	 else{
 		 // do nothing
 	 }
@@ -218,6 +228,45 @@ void TileMap::render_layer(int layer,int position_x ,int position_y) {
   else{
 		//do nothing
 	}
+}
+
+/*!
+	@fn void TileMap::render_layer(int layer,int position_x ,int position_y)
+	@brief Method that reders a layer of the tile map
+  @param layer
+	@brief A positive integer, that represents the layer that will be rendered
+  @param position_x
+  @brief A positive integer, that recives a position in the x axis
+  @param position_Y
+  @brief A positive integer, that recives a position in the y axis
+  @return The execution of this method returns no value
+  @warning Method that requires review of comment
+*/
+
+void TileMap::render_layer(int layer,int position_x ,int position_y) {
+  //! @var width
+	//!< a integer that represents the tile set width
+	int width=tile_set->get_width();
+  //! @var height
+	//!< a integer that represents the tile set height
+	int height=tile_set->get_height();
+  //! @var tile
+	//! a integer that represents a tile
+	int tile;
+  //! @var firstX
+	//!< a integer that represents the beginning of the layer in the axis x
+	int firstX=0;
+  //! @var firstY
+	//!< a integer that represents the beginning of the layer in the axis y
+  int firstY=0;
+  //! @var lastX
+	//!< a integer that represents the end of the layer in the axis x
+  int lastX=map_width;
+  //! @var lastY
+	//!< a integer that represents the end of the layer in the axis y
+  int lastY=map_height;
+
+	define_corners(firstX,firstY,lastX,lastY,width,height);
 
   //! Iterates the height of the layer
 	for (int y_iterator=firstY;y_iterator<=lastY;y_iterator++) {
@@ -364,7 +413,8 @@ void TileMap::change_size(int new_width,int new_height) {
 	assert(map_height >= 0);
 	LOG_VARIABLE("new_height",new_height);
 	//! @var new_matrix
-  vector<int> new_matrix(new_width*new_height*map_depth, EMPTY_TILE); //!<  A integer vector, that represents the tile map with the new size
+	//!<  A integer vector, that represents the tile map with the new size
+  vector<int> new_matrix(new_width*new_height*map_depth, EMPTY_TILE);
 	//! @var max_x
   int max_x = min(new_width, map_width); //!< A integer, that represents the lower value between newWidth and mapWidth
 	assert(max_x >= 0);
