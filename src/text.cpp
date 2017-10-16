@@ -76,6 +76,9 @@ Text::~Text() {
 			//! Destroies the line texture
 			SDL_DestroyTexture(i.texture);
 		}
+		else{
+			//do nothing
+		}
 	}
 	LOG_METHOD_CLOSE("Text::~Text","destructor");
 }
@@ -118,8 +121,9 @@ void Text::render(Vec2 camera, Rect* clipRect) {
 	//! Checks if the text box rectangle exist
 	if (clipRect) {
 		//! @var
+		//!< A Vec2, that represents the end position of the text box rectangle
 		Vec2 clipRectEnd(clipRect->x + clipRect->w - 1,
-			clipRect->y + clipRect->h - 1); //!< A Vec2, that represents the end position of the text box rectangle
+			clipRect->y + clipRect->h - 1);
 
 		//! Iterates through all the line_array lines
 		for (auto& i : line_array) {
@@ -128,18 +132,23 @@ void Text::render(Vec2 camera, Rect* clipRect) {
 			if (clipRectEnd.y < i.box.y) {
 				break;
 			}
-			//! \warning else (do nothing)
-
-			//! @var lineBoxEnd
-			Vec2 lineBoxEnd(i.box.x2()-1, i.box.y2()-1); //!< A Vec2 that recivies the end positions in the line
-
-			//! Checks if the end position of the line is lower that the text box rectangle end position in the axis
-			//! \warning: Useless decision structure
-			if (lineBoxEnd.y < clipRect->y) {
-				continue;
+			else{
+				// do nothing
 			}
 
-			//! \warning else (do nothing)
+			//! @var lineBoxEnd
+			//!< A Vec2 that recivies the end positions in the line
+			Vec2 lineBoxEnd(i.box.x2()-1, i.box.y2()-1);
+
+			//! Checks if the end position of the line is lower that the text box
+			//! rectangle end position in the axis
+			if (lineBoxEnd.y < clipRect->y) {
+				//! Ends this iteration
+				continue;
+			}
+			else{
+				// do nothing
+			}
 
 			SDL_Rect clip;
 			SDL_Rect dest;
@@ -313,6 +322,9 @@ void Text::set_text(string txt) {
 		//! Attributes a white space to txt
 		txt = " ";
 	}
+	else{
+		// do nothing
+	}
 	//! @var text
 	stringstream text(txt); //!< A stringstream that recivies the txt
 	line_array.clear();
@@ -322,6 +334,9 @@ void Text::set_text(string txt) {
 		if (line.text=="") {
 			//! Attributes a white space to the line text
 			line.text = " ";
+		}
+		else{
+			// do nothing
 		}
 		line_array.push_back(line);
 	}
@@ -353,6 +368,9 @@ void Text::set_line(int line, string txt) {
 		remake_texture();
 	}
 	LOG_METHOD_CLOSE("Text::set_line","void");
+}
+else{
+	// do nothing
 }
 
 void Text::set_alignment(Align al){
