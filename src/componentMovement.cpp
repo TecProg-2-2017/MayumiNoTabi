@@ -30,9 +30,11 @@ CompMovement::CompMovement(const Vec2& sprite,moveType movetype):
     /*!
       This is a destructor method of componentMovement class
     */
+
 CompMovement::~CompMovement() {
 	// Method body its empty
 }
+
 
 /*!
 	@fn void CompMovement::Update(float time)
@@ -41,6 +43,7 @@ CompMovement::~CompMovement() {
 	@return The execution of this method returns no value
 	@warning Method that requires review of comment
 */
+
 void CompMovement::update(float time) {
 
 	UNUSED(time);
@@ -58,9 +61,11 @@ void CompMovement::update(float time) {
 	@warning Method that requires review of comment
 */
 
+
 void CompMovement::render() {
 	// Method body its empty
 }
+
 
 
 /*!

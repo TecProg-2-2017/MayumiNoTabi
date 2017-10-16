@@ -1,37 +1,111 @@
+ /*!
+ *  \file File text.cpp
+ *  \brief Implementation of the class Text
+ *
+ *  Auxiliary documentation
+ *  \sa text.hpp
+ */
 #include <text.hpp>
-
 #include <camera.hpp>
 #include <game.hpp>
 #include <resources.hpp>
 
-Text::Text(const string& text,int fSize,SDL_Color color,Style  font_style,string file_path,int box_position_x,int box_position_y):font_name{file_path}{
-	SetColor(color);
-	SetText(text);
-	SetStyle(style);
-	Setfont_size(fSize);
-	box.x=box_position_x;
-	box.y=box_position_y;
+/*!
+	@class Text
+	@brief This class provides the all the text and text box related methods
+
+*/
+
+
+//! A constructor.
+    /*!
+    *	This is a constructor method of Text
+		*	\param txt
+		*	\brief A address to string, that represents the text message
+		*	\param fSize
+		*	\brief A positive integer, that represents the size of the text font
+		*	\param c
+		*	\brief A SDL_Color, that represents the text color
+		*	\param st
+		*	\brief A Style, that represents the style of the text
+		*	\param file
+		*	\brief A string, that represents the name of the the text font
+		*	\param x
+		*	\brief A positive integer, that represents the width of the text box
+		*	\param y
+		*	\brief A positive integer, that represents the height of the text box
+    */
+Text::Text(const string& txt, int fSize, SDL_Color c, Style st,
+		string file, int x, int y) : fontName{file} {
+	SetColor(c);
+	SetText(txt);
+	SetStyle(st);
+	SetFontSize(fSize);
+	box.x = x;
+	box.y = y;
 }
+
+//! A destructor.
+    /*!
+      This is a destructor method of Text class
+    */
 
 Text::~Text() {
-	for (auto& line : line_array)
-		if (line.texture)SDL_DestroyTexture(line.texture);
+	//! Iterates through all the lineArray lines
+	for (auto& i : lineArray) {
+		//! Checks if that line has texture
+		if (i.texture){
+			//! Destroies the line texture
+			SDL_DestroyTexture(i.texture)
+		}
+	}
 }
 
-void Text::render(Vec2 camera, Rect* clipRect) {
-	Vec2 position = box.hotspot(hotspot);
+/*!
+	@fn void Text::Render(Vec2 camera, Rect* clipRect)
+	@brief Method that renders the text box and the text
+	@param camera
+	@brief A Vec2, that represents the camera positions
+	@param clipRect
+	@brief A pointer Rect, that represents rectangle of the text box
+	@return The execution of this method returns no value
+	@warning Method that requires review of comment
+*/
+void Text::Render(Vec2 camera, Rect* clipRect) {
+	//! @var pos
+	Vec2 pos = box.hotspot(hotspot); //!< A Vec2 that representes the position of the text box hotspot
 
-	int position_x = position.x-(camera.x*CAMERAZOOM);
-	int position_y = position.y-(camera.y*CAMERAZOOM);
+	//! @var x
+	int x = pos.x - (camera.x * CAMERAZOOM); //!< A positive integer that represents the beginning of the text box rectangle in the axis x
+	//! @var y
+	int y = pos.y - (camera.y * CAMERAZOOM); //!< A positive integer that represents the beginning of the text box rectangle in the axis y
 
+	//! \warning modularize decision structure
+	//! Checks if the text box rectangle exist
 	if (clipRect) {
-		Vec2 clipRectEnd(clipRect->x+clipRect->w-1, clipRect->y+clipRect->h-1);
-		for (auto& i : line_array) {
-			if (clipRectEnd.y < i.box.y)
+		//! @var
+		Vec2 clipRectEnd(clipRect->x + clipRect->w - 1,
+			clipRect->y + clipRect->h - 1); //!< A Vec2, that represents the end position of the text box rectangle
+
+		//! Iterates through all the lineArray lines
+		for (auto& i : lineArray) {
+			//! Checks if the text box rectangle end position in the axis y is lower
+			//! that teh box position in the axis y
+			if (clipRectEnd.y < i.box.y) {
 				break;
-			Vec2 lineBoxEnd(i.box.x2()-1, i.box.y2()-1);
-			if (lineBoxEnd.y < clipRect->y)
+			}
+			//! \warning else (do nothing)
+
+			//! @var lineBoxEnd
+			Vec2 lineBoxEnd(i.box.x2()-1, i.box.y2()-1); //!< A Vec2 that recivies the end positions in the line
+
+			//! Checks if the end position of the line is lower that the text box rectangle end position in the axis
+			//! \warning: Useless decision structure
+			if (lineBoxEnd.y < clipRect->y) {
 				continue;
+			}
+
+			//! \warning else (do nothing)
 
 			SDL_Rect clip;
 			SDL_Rect dest;
@@ -79,21 +153,55 @@ void Text::render(Vec2 camera, Rect* clipRect) {
 	}
 }
 
-void Text::set_box_position(int position_x,int position_y) {
-	box.x=position_x;
-	box.y=position_y;
+/*!
+	@fn void Text::SetPos(int x,int y)
+	@brief A setter for the text box position
+  @param x
+  @brief A positive integer, that represents the new text box positon in the
+	axis x
+	@param y
+  @brief A positive integer, that represents the new text box positon in the
+	axis y
+
+  @return The execution of this method returns no value
+*/
+void Text::SetPos(int x,int y) {
+	box.x = x;
+	box.y = y;
 }
 
-void Text::set_box_position(Vec2 position) {
-	set_box_position(position.x, position.y);
+/*!
+	@fn void Text::SetPos(Vec2 v)
+	@brief A setter for the text box position
+  @param v
+  @brief A Vec2, that represents the new text box position
+  @return The execution of this method returns no value
+*/
+void Text::SetPos(Vec2 v) {
+	SetPos(v.x, v.y);
 }
 
-void Text::set_text(string text) {
-	if (text=="") text = " ";
-	stringstream new_text(text);
-	line_array.clear();
-	for (TextLine line;getline(new_text, line.text);) {
+/*!
+	@fn void Text::SetText(string txt)
+	@brief A setter for attribute text
+  @param txt
+  @brief A string, that represents the new text of the text box
+  @return The execution of this method returns no value
+*/
+void Text::SetText(string txt) {
+	//! Checks if the txt is empty
+	if (txt == ""){
+		//! Attributes a white space to txt
+		txt = " ";
+	}
+	//! @var text
+	stringstream text(txt); //!< A stringstream that recivies the txt
+	lineArray.clear();
+	//! Iterates through all lines in text
+	for (TextLine line;getline(text, line.text);) {
+		//! Checks if the text in the line is empty
 		if (line.text=="") {
+			//! Attributes a white space to the line text
 			line.text = " ";
 		}
 		line_array.push_back(line);
@@ -102,72 +210,155 @@ void Text::set_text(string text) {
 	RemakeTexture();
 }
 
-void Text::set_line(int line, string text) {
-	if (line>=0 && line<(int)line_array.size()) {
-		line_array[line].text = text;
+
+/*!
+	@fn void Text::SetLine(int line, string txt)
+	@brief A setter for a line in the text
+	@param line
+	@brief A positive integer, that represents the the number of the line that
+	will be replaced
+  @param txt
+  @brief A string, that represents the new line text
+  @return The execution of this method returns no value
+*/
+void Text::SetLine(int line, string txt) {
+	//! Checks if the line number exists in the array of lines
+	if (line >= 0 && line < (int)lineArray.size()) {
+		//! Replaces the line text for the new line text
+		lineArray[line].text = txt;
+
 		RemakeTexture();
 	}
 }
 
-void Text::set_color(SDL_Color color) {
-	this.color.r=color.r;
-	this.color.g=color.g;
-	this.color.b=color.b;
-	this.color.a=color.a;
+/*!
+	@fn void Text::SetColor(SDL_Color c))
+	@brief A setter for the text color
+	@param c
+	@brief A SDL_Color, that represents the new color
+  @return The execution of this method returns no value
+*/
+void Text::SetColor(SDL_Color c) {
+	color.r = c.r;
+	color.g = c.g;
+	color.b = c.b;
+	color.a = c.a;
 	RemakeTexture();
 }
 
-void Text::set_style(Style style) {
-	this.style=style;
+/*!
+	@fn void Text::SetStyle(Style st)
+	@brief A setter for the text style
+	@param st
+	@brief A Style, that represents the new style
+  @return The execution of this method returns no value
+*/
+void Text::SetStyle(Style st) {
+	style = st;
 	RemakeTexture();
 }
 
-void Text::set_font_size(int fSize) {
-	font_size=fSize;
-	font = Resources::game_get_font(font_name,font_size);
+
+/*!
+	@fn void Text::SetFontSize(int fSize)
+	@brief A setter for the size of the text font
+	@param fSize
+	@brief A positive integer, that represents the new font size
+  @return The execution of this method returns no value
+*/
+void Text::SetFontSize(int fSize) {
+	fontSize = fSize;
+	font = Resources::GetFont(fontName,fontSize);
+
 	RemakeTexture();
 }
 
-void Text::set_alignment(Align alignment) {
-	this.alignment = alignment;
-	RemakeTexture();
+
+/*!
+	@fn void Text::SetHotspot(Hotspot h)
+	@brief A setter for the text box hotspot
+	@param h
+	@brief A Hotspot, that represents the new box hotspot
+  @return The execution of this method returns no value
+*/
+void Text::SetHotspot(Hotspot h) {
+	hotspot = h;
 }
 
-void Text::set_hotspot(Hotspot hotspot) {
-	this.hotspot = hotspot;
-}
-
-Rect Text::get_box()const {
+/*!
+	@fn Rect Text::GetBox()const
+	@brief A getter of the attribute box
+	@return A Rect, that represents the text box
+*/
+Rect Text::GetBox()const {
 	return box;
 }
 
-void Text::remake_texture() {
+/*!
+	@fn void Text::RemakeTexture()
+	@brief Method that remakes the texture of the text box
+	@return The execution of this method returns no value
+*/
+void Text::RemakeTexture() {
+	//! Checks if the font was initialized
 	if (font.get()) {
-		SDL_Surface *surface=nullptr;
+		//! @var surface
+		SDL_Surface *surface = nullptr; //!< A pointer to SDL_Surface, that represents a surface
 		box.w = box.h = 0;
-		for (auto& line : line_array) {
-			if (line.texture)SDL_DestroyTexture(line.texture);
-			if (style==Style::SOLID)surface=TTF_RenderText_Solid(font.get(),line.text.c_str(),color);
-			else if (style==Style::SHADED)surface=TTF_RenderText_Shaded(font.get(),line.text.c_str(),color,SDL_COLOR_BLACK);
-			else if (style==Style::BLENDED)surface=TTF_RenderText_Blended(font.get(),line.text.c_str(),color);
-			line.texture = SDL_CreateTextureFromSurface(GAMERENDER,surface);
+		//! Iterates through all lines of the lineArray
+		for (auto& i : lineArray) {
+			//! Checks if the line has texture
+			if (i.texture){
+				//! Destroies the line texture
+				SDL_DestroyTexture(i.texture);
+			}
+			//! Checks if the style is SOLID
+			if (style == Style::SOLID){
+				//! Applies the style is SOLID
+				surface = TTF_RenderText_Solid(font.get(), i.text.c_str(), color);
+			}
+			//! Checks if the style is SHADED
+			else if (style==Style::SHADED){
+				//! Applies the style is SHADED
+				surface = TTF_RenderText_Shaded(font.get(), i.text.c_str(),
+																					color,SDL_COLOR_BLACK);
+			}
+			//! Checks if the style is BLENDED
+			else if (style == Style::BLENDED){
+				//! Applies the style is BLENDED
+				surface = TTF_RenderText_Blended(font.get(), i.text.c_str(), color);
+			}
+			i.texture = SDL_CreateTextureFromSurface(GAMERENDER, surface);
 
-			line.box.w=surface->w;
-			line.box.h=surface->h;
-			if (line.box.w>box.w) box.w=line.box.w;
-			line.box.y=box.h;
-			box.h+=line.box.h;
-			//cout<<"\""<<i.text<<"\" "<<i.box.x<<","<<i.box.y<<" "<<i.box.w<<","<<i.box.h<<endl;
+			//! Resize the text box
+			i.box.w = surface->w;
+			i.box.h = surface->h;
+			//!Checks if the width of the line is bigger than the box width
+			if (i.box.w > box.w){
+				box.w = i.box.w;
+			}
+			i.box.y = box.h;
+			box.h += i.box.h;
 		}
 		SDL_FreeSurface(surface);
 
+		//! Checks if the alignment is CENTERED
 		if (alignment == Align::CENTERED) {
-			for (auto& line : line_array)
-				line.box.x=(box.w-line.box.w)/2;
+			//! Iterates through the lineArray
+			for (auto& i : lineArray){
+				//! Applies the alignment is CENTERED
+				i.box.x=(box.w-i.box.w)/2;
+			}
+
 		}
+		//! Checks if the alignment is RIGHT
 		else if (alignment == Align::RIGHT) {
-			for (auto& line : line_array)
-				line.box.x=(box.w-line.box.w);
+			//! Iterates through the lineArray
+			for (auto& i : lineArray){
+				//! Applies the alignment is RIGHT
+				i.box.x=(box.w-i.box.w);
+			}
+
 		}
 	}
 }
