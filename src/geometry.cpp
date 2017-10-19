@@ -187,7 +187,12 @@ bool Vec2::operator!= (const Vec2& b) const {
 */
 
 bool Vec2::operator< (const Vec2& b) const {
-	if (x_axis == b.x_axis)return (y_axis < b.y_axis);
+	if (x_axis == b.x_axis) {
+		return (y_axis < b.y_axis);
+	}
+	else {
+		// Nothing to do
+	}
 	return x_axis < b.x_axis;
 }
 
@@ -252,7 +257,12 @@ float Vec2::distance(const Vec2 &b) const{
 */
 
 float Vec2::angle(const Vec2 &position) const{
-	if (*this == position)return 0.0f;
+	if (*this == position) {
+		return 0.0f;
+	}
+	else {
+		// Nothing to do
+	}
 	return (position - (*this)).angle();
 }
 
@@ -263,7 +273,7 @@ float Vec2::angle(const Vec2 &position) const{
 	@warning Method that requires review of comment
 */
 
-Vec2 Vec2::unit() const{
+Vec2 Vec2::unit() const {
 	return (*this)/lenght(); // lenght of vector
 }
 
@@ -274,7 +284,7 @@ Vec2 Vec2::unit() const{
 	@warning Method that requires review of comment
 */
 
-Vec2 Vec2::renderPosition() const{
+Vec2 Vec2::renderPosition() const {
 	return RENDERPOS(*this);
 }
 
@@ -527,17 +537,17 @@ Vec2 Rect::distEdge(const Rect& b) const{
 					rectangle.x_axis = min(abs(x_axis-(b.x2())),abs((x2())-b.x_axis));
 		}
 		else {
-			// Nothing to do
+			//! Nothing to do
 		}
 		if (!BETWEEN(y_axis,b.y_axis,b.y2()) && !BETWEEN(b.y_axis,y_axis,y2())) {
 			rectangle.y_axis = min(abs(y_axis-(b.y2())),abs((y2())-b.y_axis));
 		}
 		else {
-			// Nothing to do
+			//! Nothing to do
 		}
 	}
 	else {
-		// Nothing to do
+		//! Nothing to do
 	}
 	return rectangle;
 }
@@ -744,15 +754,31 @@ bool Rect::contains(const float &i,const float &j) const{
 	if (i < x) {
 		return false;
 	}
+	else {
+		//! Nothing to do
+	}
+
 	if (i > x2()) {
 		return false;
 	}
+	else {
+		// Nothing to do
+	}
+
 	if (j < y) {
 		return false;
 	}
+	else {
+		// Nothing to do
+	}
+
 	if (j > y2()) {
 		return false;
 	}
+	else {
+		// Nothing to do
+	}
+
 	return true;
 }
 
@@ -768,15 +794,31 @@ bool Rect::contains(const Vec2& b) const{
 	if (b.x < x) {
 		return false;
 	}
+	else {
+		// Nothing to do
+	}
+
 	if (b.x > x2()) {
 		return false;
 	}
+	else {
+		// Nothing to do
+	}
+
 	if (b.y < y) {
 		return false;
 	}
+	else {
+		// Nothing to do
+	}
+
 	if (b.y > y2()) {
 		return false;
 	}
+	else {
+		// Nothing to do
+	}
+
 	return true;
 }
 
@@ -795,10 +837,34 @@ bool Rect::collides(const Rect& b) const{
 	// if (BETWEEN(b.y,y,y2()))return true;
 	// return false;
 
-	if (x > (b.x2())) return false;
-	if (y > (b.y2())) return false;
-	if (b.x > (x2())) return false;
-	if (b.y > (y2())) return false;
+	if (x > (b.x2())) {
+		return false;
+	}
+	else {
+		// Nothing to do
+	}
+
+	if (y > (b.y2())) {
+		return false;
+	}
+	else {
+		// Nothing to do
+	}
+
+	if (b.x > (x2())) {
+		return false;
+	}
+	else {
+		// Nothing to do
+	}
+
+	if (b.y > (y2())) {
+		return false;
+	}
+	else {
+		// Nothing to do
+	}
+
 	return true;
 }
 
@@ -827,7 +893,7 @@ Circle::Circle(float xx,float yy,float rr):x{xx},y{yy},r{rr}{}
 	@warning Method that requires review of comment
 */
 
-bool Circle::contains(const Vec2 &p)const{
+bool Circle::contains(const Vec2 &p)const {
 	Vec2 center(x,y) = new Vec2(); // Initializing the vector
 	return (center - p).len() <= r;
 }
@@ -872,7 +938,7 @@ bool ConvexPolygon::AddPoint(Vec2 p) {
 	p -= GetSource();
 
 	if (!count)boundingRect += p;
-	else{
+	else {
 		if (boundingRect.x > p.x)boundingRect.x = p.x;
 		else if (boundingRect.x2() < p.x) {
 			boundingRect.w = p.x - boundingRect.x;
@@ -1003,7 +1069,12 @@ int ConvexPolygon::GetCount()const{
 }
 
 float ConvexPolygon::GetPointAng(const Vec2& p)const{
-	if (pointsAng.count(p))return pointsAng.at(p);
+	if (pointsAng.count(p)) {
+		return pointsAng.at(p);
+	}
+	else {
+		// Nothing to do
+	}
 	return 0.0f;
 }
 
@@ -1012,7 +1083,12 @@ float ConvexPolygon::GetPointAng(int ind)const{
 }
 
 bool ConvexPolygon::IsConvex(const Vec2 &p)const{
-	if (count<3)return true;
+	if (count < 3) {
+		return true;
+	}
+	else {
+		// Nothing to do
+	}
 	vector<Vec2> v = points;
 	map<Vec2,float> vAng = pointsAng;
 	v.push_back(p - GetSource());
