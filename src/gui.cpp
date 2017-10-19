@@ -149,6 +149,9 @@ void GUI_CheckButton::Update() {
 		if (INPUT.mouse_button_pressed(MBUTTON_LEFT)) {
 			press = true;
 		}
+		else {
+			// Nothing to do
+		}
 	}
 	else {
 		// Nothing to do
@@ -156,6 +159,9 @@ void GUI_CheckButton::Update() {
 	if (press && INPUT.mouse_button_released(MBUTTON_LEFT)) {
 		if (hover) {
 			value = !value;
+		}
+		else {
+			// Nothing to do
 		}
 		press = false;
 	}
@@ -219,10 +225,16 @@ GUI_InputBox::GUI_InputBox(const Vec2& pos,Size s): \
 	if (s == SHORT_SIZE) {
 		box.w /= 2;
 	}
-	else if (s == LONG_SIZE) box.w *= 2;
+	else if (s == LONG_SIZE) {
+		box.w *= 2;
+	}
+	else {
+		// Nothing to do
+	}
 	text.set_hotspot(Hotspot::LEFT);
 	text.set_alignment(Text::Align::LEFT);
 }
+
 
 GUI_InputBox::~GUI_InputBox() {
 		INPUT.stop_text_input(&input);
@@ -266,7 +278,12 @@ void GUI_InputBox::Update() {
 	else {
 		// Nothing to do
 	}
-	if (!press) return;
+	if (!press) {
+		return;
+	}
+	else {
+		// Nothing to do
+	}
 
 	if (closed || INPUT.key_pressed(KEY_ENTER)) {
 		press = false;
@@ -275,8 +292,12 @@ void GUI_InputBox::Update() {
 			input.erase(0,1);
 		while (input[input.size()-1] == ' ')
 			input.pop_back();
-		if (!input.empty())
+		if (!input.empty()) {
 			SetValue();
+		}
+		else {
+			// Nothing to do
+		}
 		input.clear();
 	}
 	else if (INPUT.key_pressed(KEY_ESC)) {
@@ -462,16 +483,20 @@ GUI_HBar::GUI_HBar(vector<GUI_Element*>& v,uint width,const Vec2& pos): \
 	else {
 		box.w = 0;
 		for (auto& it:array) {
-			if (it) box.w += it->GetBox().w;
-			else box.w += DIVISOR_WIDTH;
+			if (it) {
+				box.w += it->GetBox().w;
+			}
+			else {
+				box.w += DIVISOR_WIDTH;
+			}
 		}
 	}
 	int h;
 	for (auto& it:array) {
 		if (it) {
 			h = it->GetBox().h;
-			if (h>box.h) {
-				box.h=h;
+			if (h > box.h) {
+				box.h = h;
 			}
 			else {
 				// Nothing to do
@@ -613,7 +638,7 @@ void GUI_Window::update() {
 		// Nothing to do
 	}
 
-	bool hover=box.contains(INPUT.get_mouse_position());
+	bool hover = box.contains(INPUT.get_mouse_position());
 	if (!hover) {
 		if (INPUT.mouse_button_pressed(MBUTTON_LEFT)) {
 			GUI.select_gui_window(nullptr);
