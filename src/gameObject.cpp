@@ -65,7 +65,7 @@ GameObject::GameObject (const Rect &rect,float r,Hotspot hs,bool a):
 						hotspot{hs},
 						anchored{a} {
 	components.fill(nullptr);
-	entities[uid]=unique_ptr<GameObject>(this);
+	entities[uid] = unique_ptr<GameObject>(this);
 }
 
 
@@ -78,9 +78,21 @@ GameObject::~GameObject() {
 	UnAttach();
 	for (GameObject* obj:attachedObjs) {obj->dead = true;
 
-	FOR(i,Component::type::t_count) if (HasComponent(i)) delete components[i];
+	FOR(i,Component::type::t_count) {
+		if (HasComponent(i)) {
+			delete components[i];
+		}
+		else {
+			// Nothing to do
+		}
+	} 
 
-	if (Camera::GetFocus() == uid)Camera::Unfollow();
+	if (Camera::GetFocus() == uid) {
+		Camera::Unfollow();
+	}
+	else {
+		// Nothing to do
+	}
 
 	entities.erase(uid);
 }
@@ -557,6 +569,9 @@ template<int atkDist,int seeDist,
                     music.open_music_file("audio/mike-arrastando-clava.wav");
                     music.play_music(1);
                 }
+								else {
+									// Nothing to do
+								}
 			}
 			cd.Restart();
 			return;
@@ -564,8 +579,12 @@ template<int atkDist,int seeDist,
 	}
 	else if (state == CompAI::state::walking) {
 		CompMovement *movement = COMPMOVEp(GO(ai->entity));
-		if (id == 1) // Mike
+		if (id == 1) {// Mike
 			music.open_music_file("audio/mike-arrastando-clava.wav");
+		}
+		else {
+			// Nothing to do
+		}
 		if (al.Get() > 10 && cd.Get() > 5) {
 			state = CompAI::state::looking;
 			movement->speed.x = 0;
@@ -616,7 +635,7 @@ template<int atkDist,int seeDist,
 				GO(ai->entity)->flipped = true;
 				movement->speed.x = 100.0f;
 			}
-			else{
+			else {
 				GO(ai->entity)->flipped = false;
 				movement->speed.x = -100.0f;
 			}
@@ -766,12 +785,18 @@ template<int atkDist,int seeDist,int stCD,int atkCount,int stompCount>
 			curAnim = curAnim.substr(0,curAnim.size()-2);
 			ac->GetCur().SetCurFrame(frame);
 		}
+		else {
+			// Nothing to do
+		}
 	}
 	//! If the entity cans flipped
 	else if (GO(ai->entity)->flipped) {
 		int frame = ac->get_current().get_current_frame();
 		curAnim = curAnim+"_r";
 		ac->get_current().set_current_frame(frame);
+	}
+	else {
+		// Nothing to do
 	}
 
 	if (mem->ints["hit"]) {
@@ -1029,8 +1054,12 @@ template<int atkDist,int seeDist,int stCD,int atkCount,int stompCount>
 			else if (dist < 2*atkDist + abs(move->speed.x)*time && cd.Get() < 1.5
 			          && stompCD.Get() > stCD) {
 				move->speed.x = 0;
-				if (GO(ai->entity)->Box().x < target->Box().x)move->move=dist-(2*atkDist);
-				else	move->move = -dist + (2*atkDist);
+				if (GO(ai->entity)->Box().x < target->Box().x) {
+					move->move=dist-(2*atkDist);
+				}
+				else {
+					move->move = -dist + (2 * atkDist);
+				}
 
 				state = CompAI::state::stomping;
 				cd.Restart();
@@ -1214,7 +1243,12 @@ void PlayerControlFunc(GameObject* go, float time) {
 
 void PlayerMonsterCollision(const CompCollider::Coll &a,const CompCollider::Coll &b) {
 	Vec2 &speed = COMPMOVEp(GO(a.entity))->speed;
-	if (speed == Vec2{})return;
+	if (speed == Vec2{}) {
+		return;
+	}
+	else {
+		// Nothing to do
+	}
 
 	Vec2 &totMove = COMPMOVEp(GO(a.entity))->move;
 	Vec2 move = a.Collides(b,totMove);
@@ -1331,10 +1365,27 @@ uint GameObject::MakePlayer(const Vec2 &pos) {
 */
 
 uint GameObject::Create(const string& blueprint, const Vec2& pos, const Vec2& aux) {
-	if (blueprint == "mike")		return MakeMike(pos);
-	if (blueprint == "banshee")	return MakeBanshee(pos,aux);
-	if (blueprint == "mask")		return MakeMask(pos);
-	if (blueprint == "porco")	return MakePorco(pos);
+	if (blueprint == "mike") {
+		return MakeMike(pos);
+	}
+	else {
+		// Nothing to do
+	}
+	if (blueprint == "banshee") {
+		return MakeBanshee(pos,aux);
+	}
+	if (blueprint == "mask") {
+		return MakeMask(pos);
+	}
+	else {
+		// Nothing to do
+	}
+	if (blueprint == "porco") {
+		return MakePorco(pos);
+	}
+	else {
+		// Nothing to do
+	}
 
 	GameObject* obj = new GameObject{pos};
 	obj = null; // Initializing the variable obj
