@@ -4,13 +4,15 @@ TileSet::TileSet() {
 }
 
 TileSet::TileSet(int width, int height, string file_path) {
-	Load(width, height, file_path);
+	load(width, height, file_path);
 }
 
 void TileSet::load(int  width, int height, string file_path) {
 	tile_width = width;
 	tile_height = height;
+
 	tileSet.Open(file_path);
+
 	rows = tileSet.GetHeight()/tile_height;
 	columns = tileSet.GetWidth()/tile_width;
 }
