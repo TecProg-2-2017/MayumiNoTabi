@@ -33,8 +33,8 @@ void Text::render(Vec2 camera, Rect* clipRect) {
 			if (lineBoxEnd.y < clipRect->y)
 				continue;
 
-			SDL_Rect clip;
-			SDL_Rect dest;
+			SDL_Rect clip = nullptr;
+			SDL_Rect dest = nullptr;
 			if (clipRect->x > i.box.x) {
 				clip.x = clipRect->x - i.box.x;
 				dest.x = position_x + clipRect->x;
@@ -69,7 +69,7 @@ void Text::render(Vec2 camera, Rect* clipRect) {
 	}
 	else {
 		for (auto& i : line_array) {
-			SDL_Rect dest;
+			SDL_Rect dest = nullptr;
 			dest.x=position_x+i.box.x;
 			dest.y=position_y+i.box.y;
 			dest.w=i.box.w;
