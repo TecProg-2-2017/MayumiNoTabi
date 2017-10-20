@@ -51,6 +51,7 @@ Vec2 Vec2::makeVec2(const float &object_lenght,const float &angle) {
 Vec2 Vec2::operator= (const Vec2& b) {
 	x_axis = b.x_axis; // x_axis is the axis x in cordinates.
 	y_axis = b.y_axis; // y_axis is the axis y in cordinates.
+
 	return *this;
 }
 
@@ -87,7 +88,7 @@ void Vec2::operator+= (const Vec2& b) {
 	@warning Method that requires review of comment
 */
 
-Vec2 Vec2::operator- (const Vec2& b)const{
+Vec2 Vec2::operator- (const Vec2& b)const {
 	return {x_axis - b.x_axis, y_axis - b.y_axis};
 }
 
@@ -231,6 +232,7 @@ float Vec2::std::vector_lenght() const {
 
 float Vec2::angle() const {
 	float f = DEGREES(atan(y / x) + (x < 0 ? PI : 0));
+
 	return ((f < 0) ? (360 + f) : (f));
 }
 
@@ -263,6 +265,7 @@ float Vec2::angle(const Vec2 &position) const{
 	else {
 		// Nothing to do
 	}
+
 	return (position - (*this)).angle();
 }
 
@@ -303,6 +306,7 @@ Vec2 Vec2::rotate(float angle) {
 
 	vector.x_axis = x_axis*cos(angle) - y_axis*sin(angle);
 	vector.y_axis = y_axis*cos(angle) + x_axis*sin(angle);
+
 	return vector;
 }
 
@@ -317,6 +321,7 @@ ConvexPolygon Vec2::polygon() {
 	ConvexPolygon polygon = new ConvexPolygon(); // Initializing the polygon
 	polygon.AddPoint({});
 	polygon.AddPoint(*this);
+
 	return polygon;
 }
 
@@ -331,6 +336,7 @@ ConvexPolygon Vec2::polygon() {
 
 std::ostream& operator<< (std::ostream& os, const Vec2& obj) {
 	os << "(" << obj.x << "," << obj.y << ")";
+
 	return os;
 }
 
@@ -345,7 +351,9 @@ std::ostream& operator<< (std::ostream& os, const Vec2& obj) {
 		*/
 
 Rect::Rect(const float &side_a,const float &side_b,const float &side_c,
-	         const float &side_d):x{a},y{b},w{c},h{d}{}
+	         const float &side_d):x{a},y{b},w{c},h{d} {
+	// Nothing to do
+}
 
 //! A constructor.
      /*!
@@ -355,8 +363,14 @@ Rect::Rect(const float &side_a,const float &side_b,const float &side_c,
 				@warning Method that requires review of comment
 			*/
 
-Rect::Rect(const Vec2 &position,const Vec2 &object_size):x{pos.x},y{pos.y},w{sz.x},h{sz.y}{}
-Rect::Rect(const Rect &b):x{b.x},y{b.y},w{b.w},h{b.h}{}
+Rect::Rect(const Vec2 &position,const Vec2 &object_size):x{pos.x}, \
+                                       y{pos.y},w{sz.x},h{sz.y} {
+//Nothing to do
+}
+
+Rect::Rect(const Rect &b):x{b.x},y{b.y},w{b.w},h{b.h} {
+// Nothing to do
+}
 
 /*!
 	@fn Rect Rect::operator= (const Rect& b)
@@ -371,6 +385,7 @@ Rect Rect::operator= (const Rect& b) {
 	y_axis = b.y_axis;
 	w_axis = b.w_axis;
 	h_axis = b.h_axis;
+
 	return *this;
 }
 
@@ -532,6 +547,7 @@ Vec2 Rect::distCenter(const Rect& b) const{
 
 Vec2 Rect::distEdge(const Rect& b) const{
 	Vec2 rectangle;
+
 	if (!collides(b)) {
 		if (!BETWEEN(x_axis,b.x_axis,b.x2()) && !BETWEEN(b.x_axis,x_axis,x2())) {
 					rectangle.x_axis = min(abs(x_axis-(b.x2())),abs((x2())-b.x_axis));
@@ -565,6 +581,7 @@ Vec2 Rect::hotspot(Hotspot object_hotspot) {
 	auto &add = HotspotPos[object_hotspot];
 	object_vector.x_axis -= weight * add.first;
 	object_vector.y_axis -= height * add.second;
+
 	return object_vector;
 }
 
@@ -619,7 +636,7 @@ Vec2 Rect::corner4() const{
 	@warning Method that requires review of comment
 */
 
-Vec2 Rect::center() const{
+Vec2 Rect::center() const {
 	return {x_axis + (weight/2), y_axis + (height/2)};
 }
 
@@ -630,7 +647,7 @@ Vec2 Rect::center() const{
 	@warning Method that requires review of comment
 */
 
-Vec2 Rect::size() const{
+Vec2 Rect::size() const {
 	return {weight, height};
 }
 
@@ -643,7 +660,7 @@ Vec2 Rect::size() const{
 	@warning Method that requires review of comment
 */
 
-Vec2 Rect::relativePosition(const Vec2 &relative, bool inverted) const{
+Vec2 Rect::relativePosition(const Vec2 &relative, bool inverted) const {
 	Vec2 positon {x_axis, y_axis};
 	if (inverted) {
 		position.x_axis +=  relative.x_axis  * weight;
@@ -652,6 +669,7 @@ Vec2 Rect::relativePosition(const Vec2 &relative, bool inverted) const{
 		 position.x_axis += (1-relative.x_axis) * weight;
 	}
 	position.y_axis += relative.y_axis * height;
+
 	return position;
 }
 
@@ -676,6 +694,7 @@ Rect Rect::relativeBox(const Rect &relative,bool inverted) const{
 	box.y_axis += relative.y_axis * height;
 	box.weight *= relative.weight;
 	box.height *= relative.height;
+
 	return box;
 }
 
@@ -704,6 +723,7 @@ Rect Rect::sum(const Rect &other) const{
 	float y_axis = min(min(y,y2()),min(other.y,other.y2()));
 	float xx = max(max(x,x2()),max(other.x,other.x2()));
 	float yy = max(max(y,y2()),max(other.y,other.y2()));
+
 	return Rect{x,y,xx - x,yy - y};
 }
 
@@ -722,6 +742,7 @@ ConvexPolygon Rect::polygon(const float &r) const{
 	polygon.AddPoint(Vec2{0.0f,h}.rotate(r));
 	polygon.AddPoint(Vec2{w,h}.rotate(r));
 	polygon.MoveSource(corner());
+
 	return polygon;
 }
 
@@ -738,6 +759,7 @@ SDL_Rect Rect::sdlRect()const{
 	rect.y_axis = y_axis;
 	rect.w = w;
 	rect.h = h;
+
 	return rect;
 }
 
@@ -870,6 +892,7 @@ bool Rect::collides(const Rect& b) const{
 
 std::ostream& operator<<(std::ostream& os, const Rect& obj) {
 	os << "(" << obj.x << "," << obj.y << "," << obj.w << "," << obj.h << ")";
+
 	return os;
 }
 
@@ -895,6 +918,7 @@ Circle::Circle(float xx,float yy,float rr):x{xx},y{yy},r{rr}{}
 
 bool Circle::contains(const Vec2 &p)const {
 	Vec2 center(x,y) = new Vec2(); // Initializing the vector
+
 	return (center - p).len() <= r;
 }
 
@@ -911,6 +935,7 @@ bool Circle::contains(const Vec2 &p)const {
 bool Circle::contains(const float &px,const float &py)const{
 	Vec2 center(x,y);
 	Vec2 p(px,py);
+
 	return (center-p).len() <= r;
 }
 
@@ -961,6 +986,7 @@ bool ConvexPolygon::AddPoint(Vec2 p) {
 	ReorderPoints();
 	pointsAng[p] = points[0].angle(p);
 	count++;
+
 	return true;
 }
 
@@ -978,11 +1004,13 @@ bool ConvexPolygon::AddPoints(const vector<Vec2> &pts,bool all) {
 			AddPoint(p);
 		}
 	}
+
 	return true;
 }
 
 bool ConvexPolygon::RemovePoint(Vec2 p) {
 	auto it = find(points.begin(), points.end(), p);
+
 	return RemovePoint(it - points.begin());
 }
 
@@ -1050,17 +1078,28 @@ void ConvexPolygon::ReorderPoints(vector<Vec2> &pts,map<Vec2,float> &ptsAng)cons
 }
 
 vector<Vec2> ConvexPolygon::GetPoints()const{
+
 	vector<Vec2> v;
-	for (auto p:points)v.push_back(p + GetSource());
+
+	for (auto p:points) {
+		v.push_back(p + GetSource());
+	}
+
 	return v;
 }
-const Vec2& ConvexPolygon::GetSource()const{
+
+const Vec2& ConvexPolygon::GetSource()const {
 	return source;
 }
-Vec2 ConvexPolygon::GetCenter()const{
+
+Vec2 ConvexPolygon::GetCenter()const {
 	Vec2 sum;
-	for (auto p:points)sum += p;
+
+	for (auto p:points) {
+		sum += p;
+	}
 	sum /= points.size();
+
 	return sum + GetSource();
 }
 
@@ -1112,7 +1151,10 @@ bool ConvexPolygon::IsConvex(const Vec2 &p)const{
 bool ConvexPolygon::IsConvex(const vector<Vec2> &pts)const{
 	vector<Vec2> v = points;
 	map<Vec2,float> vAng = pointsAng;
-	for (auto p:pts)v.push_back(p - GetSource());
+
+	for (auto p:pts) {
+		v.push_back(p - GetSource());
+	}
 	ReorderPoints(v,vAng);
 	v.push_back(v[0]);
 
@@ -1180,30 +1222,39 @@ bool ConvexPolygon::Collides(const ConvexPolygon& other)const {
 ConvexPolygon ConvexPolygon::operator+(const Vec2& p)const{
 	ConvexPolygon polygon =* this;
 	polygon.AddPoint(p);
+
 	return polygon;
 }
 
 ConvexPolygon ConvexPolygon::operator*(const float& f)const{
 	ConvexPolygon polygon =  null;
-	for (auto p:points)pol.AddPoint(p*-f);
+	for (auto p:points) {
+		pol.AddPoint(p*-f);
+	}
 	pol.MoveSource(GetSource());
+
 	return polygon;
 }
 
 void ConvexPolygon::Floor() {
-	for (auto &p:points)p.floor();
+	for (auto &p:points) {
+		p.floor();
+	}
 	source.floor();
 }
 
-Rect ConvexPolygon::BoundingRect()const{
+Rect ConvexPolygon::BoundingRect()const {
 	return boundingRect + GetSource();
 }
-ConvexPolygon ConvexPolygon::AtOrigin()const{
+
+ConvexPolygon ConvexPolygon::AtOrigin()const {
 	ConvexPolygon polygon =* this;
 	pol.MoveSource(Vec2{});
+
 	return polygon;
 }
-ConvexPolygon ConvexPolygon::MinkowskySum(const ConvexPolygon& polygon)const{
+
+ConvexPolygon ConvexPolygon::MinkowskySum(const ConvexPolygon& polygon)const {
 	if (count <= 0 || polygon.count <= 0) {
 		return ConvexPolygon();
 	}
@@ -1255,6 +1306,7 @@ ConvexPolygon ConvexPolygon::MinkowskySum(const ConvexPolygon& polygon)const{
 			it2++;
 		}
 	}
+
 	while (next(it1) != vPol1.end()) {
 		Vec2 v = (*next(it1)) - (*it1);
 		vPol3.push_back(vPol3.back() + v);
@@ -1290,8 +1342,11 @@ std::ostream& operator<<(std::ostream& os, const ConvexPolygon& obj) {
 		// Nothing to do
 	}
 	os << "{" << pts[0];
-	FOR2(i,1,pts.size())os << "," << pts[i];
+	FOR2(i,1,pts.size()) {
+		os << "," << pts[i];
+	}
 	os << "}";
+
 	return os;
 
 	// auto pts=obj.GetPoints();
