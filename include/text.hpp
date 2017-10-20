@@ -29,6 +29,8 @@ public:
 
 	SDL_Surface* remake_surface(SDL_Surface *surface);
 	SDL_Surface* define_surface(SDL_Surface *surface);
+	void align_text();
+	
 	void render_line_texture (Rect* clipRect, TextLine line,Vec2 clipRectEnd,
 														Vec2 lineBoxEnd);
 	void render(Vec2 camera = {0,0}, Rect* clipRect=nullptr);
