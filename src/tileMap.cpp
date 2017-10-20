@@ -9,10 +9,12 @@
 
 TileMap::TileMap(int width, int height, TileSet* tile_set) : tileSet{tile_set},map_width{width},map_height{height},map_depth{1} {
 	tile_matrix.reserve(map_width*map_height);
+
 	FOR(height_iterator, map_height)
 		FOR(width_iterator, map_width)
 			at(width_iterator, height_iterator, 0) = EMPTY_TILE;
 }
+
 TileMap::TileMap(TileSet* tile_set):tileSet{tile_set}{
 }
 

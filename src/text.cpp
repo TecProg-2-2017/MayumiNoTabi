@@ -43,6 +43,7 @@ void Text::render(Vec2 camera, Rect* clipRect) {
 				clip.x = 0;
 				dest.x = position_x + i.box.x;
 			}
+
 			if (clipRect->y > i.box.y) {
 				clip.y = clipRect->y - i.box.y;
 				dest.y = position_y + clipRect->y;
@@ -51,12 +52,14 @@ void Text::render(Vec2 camera, Rect* clipRect) {
 				clip.y = 0;
 				dest.y = position_y + i.box.y;
 			}
+
 			if (clipRectEnd.x < lineBoxEnd.x) {
 				clip.w = dest.w = clipRectEnd.x - i.box.x - clip.x +1;
 			}
 			else {
 				clip.w = dest.w = lineBoxEnd.x - i.box.x - clip.x +1;
 			}
+
 			if (clipRectEnd.y < lineBoxEnd.y) {
 				clip.h = dest.h = clipRectEnd.y - i.box.y - clip.y +1;
 			}
