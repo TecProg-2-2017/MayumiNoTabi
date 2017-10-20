@@ -66,6 +66,7 @@ void GUI_Button::Update() {
 	Rect button = box;
 	CLIP_RECT(button, DEFAULT_MARGIN);
 	hover = button.contains(INPUT.get_mouse_position());
+
 	if (hover) {
 		gui.select_gui_button(this);
 		if (INPUT.mouse_button_pressed(MBUTTON_LEFT)) {
@@ -144,6 +145,7 @@ void GUI_CheckButton::Update() {
 	Rect button = box;
 	CLIP_RECT(button, DEFAULT_MARGIN*2);
 	hover = button.contains(INPUT.get_mouse_position());
+
 	if (hover) {
 		gui.select_gui_button(this);
 		if (INPUT.mouse_button_pressed(MBUTTON_LEFT)) {
@@ -306,6 +308,7 @@ void GUI_InputBox::Update() {
 		input.clear();
 	}
 }
+
 void GUI_InputBox::render() {
 	SDL_Rect rect = box.sdlRect();
 
@@ -379,13 +382,16 @@ GUI_StringBox::GUI_StringBox(string& v,Size s,const Vec2& pos): \
 void GUI_StringBox::SetValue() {
 	value = input;
 }
-string GUI_StringBox::GetValue()const{
+
+string GUI_StringBox::GetValue()const {
 	return value;
 }
 
 //GUI_IntBox
 GUI_IntBox::GUI_IntBox(int& v,int l,int h,Size s,const Vec2& pos): \
-                                 GUI_InputBox(pos,s),value{v},low{l},high{h}{}
+                                 GUI_InputBox(pos,s),value{v},low{l},high{h} {
+// Nothing to do
+}
 
 void GUI_IntBox::SetValue() {
 	while (!input.empty() && (input[0] < '0' || input[0] >'9'))
@@ -408,6 +414,7 @@ string GUI_IntBox::GetValue()const {
 GUI_Label::GUI_Label(const string& t,Snap s,const Vec2& pos):GUI_Element(pos),text{t,DEFAULT_FONT_SIZE,generate_color(LABEL_COLOR)},snap{s}{
 	text.set_hotspot();
 	box.w = text.get_box().w;
+
 	if (snap == SNAP_LEFT || snap == SNAP_RIGHT) {
 		box.w += DEFAULT_MARGIN;
 	}
@@ -416,7 +423,9 @@ GUI_Label::GUI_Label(const string& t,Snap s,const Vec2& pos):GUI_Element(pos),te
 	}
 }
 
-void GUI_Label::update() {}
+void GUI_Label::update() {
+	// Nothing to do
+}
 
 void GUI_Label::render() {
 	SDL_Rect rect = box.sdlRect();
@@ -438,10 +447,14 @@ void GUI_Label::render() {
 
 //GUI_Array
 GUI_Array::GUI_Array(vector<GUI_Element*>& v,const Vec2& pos): \
-                                     GUI_Element(pos),array{v}{}
+                                     GUI_Element(pos),array{v}{
+// Nothing to do
+}
 
 GUI_Array::GUI_Array(vector<GUI_Element*>& v): \
-                                     GUI_Element({0,0}),array{v}{}
+                                     GUI_Element({0,0}),array{v} {
+// Nothing to do
+}
 
 GUI_Array::~GUI_Array() {
 	for (auto& it:array) {
@@ -465,13 +478,14 @@ void GUI_Array::Update() {
 }
 
 void GUI_Array::render() {
-	for (auto& it:array)
+	for (auto& it:array) {
 		if (it->IsVisible()) {
 			it->render();
 		}
 		else {
 			// Nothing to do
 		}
+	}
 }
 
 //GUI_HBar
@@ -491,7 +505,9 @@ GUI_HBar::GUI_HBar(vector<GUI_Element*>& v,uint width,const Vec2& pos): \
 			}
 		}
 	}
+
 	int h;
+
 	for (auto& it:array) {
 		if (it) {
 			h = it->GetBox().h;
@@ -532,8 +548,10 @@ void GUI_HBar::render() {
 		}
 		else if (!empty) {
 			divX = pos.x + (DIVISOR_WIDTH / 2);
+
 			SET_COLOR(HIGHLIGHT_COLOR);
 			DRAW_LINE(divX,divY,divX,divY + divLen);
+
 			pos.x += DIVISOR_WIDTH;
 			empty = true;
 		}
@@ -549,7 +567,9 @@ GUI_VBar::GUI_VBar(vector<GUI_Element*>& v,uint height,const Vec2& pos):GUI_Arra
 		box.h = height;
 	}
 	else {
+
 		box.h = 0;
+
 		for (auto& it:array) {
 			if (it) {
 				box.h += it->GetBox().h;
@@ -561,6 +581,7 @@ GUI_VBar::GUI_VBar(vector<GUI_Element*>& v,uint height,const Vec2& pos):GUI_Arra
 	}
 
 	int w = 0;
+
 	for (auto& it:array) {
 		if (it) {
 			w = it->GetBox().w;
@@ -584,6 +605,7 @@ void GUI_VBar::render() {
 
 	SET_COLOR(BASE_COLOR);
 	FILL_RECT(&bg);
+
 	for (auto& it:array) {
 		if (it) {
 			if (it->IsVisible()) {

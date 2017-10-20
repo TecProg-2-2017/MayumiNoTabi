@@ -85,7 +85,6 @@ void GUIManager::update_gui_elements() {
         GUI_Button* selected_gui_buttonCopy = selected_gui_button;
 
         selected_gui_button = nullptr;
-
         selected_gui_buttonCopy->Update();
         selected_gui_button = selected_gui_buttonCopy;
         current_button_state = selected_gui_button->IsPressed();
@@ -106,7 +105,6 @@ void GUIManager::render_gui_elements() {
 
     //! Iterates trough elements of interface to render it
     for (auto& it:gui_elements){
-
         //! TODO: Insert else to do nothing
         //! If elements is visible renders it
         if (it->IsVisible()){
@@ -134,7 +132,6 @@ void GUIManager::push_gui_element(GUI_Element* element) {
     else {
       // Nothing to do
     }
-
     stored_gui_element = element;
 }
 
@@ -183,7 +180,6 @@ bool GUIManager::gui_window_is_selected(GUI_Window* window)const {
  *  @return integer
  */
 int GUIManager::get_gui_selected_window_ID()const {
-
     //If there's a window selected, returns it ID
     if (selected_gui_window){
         return selected_gui_window->id;
