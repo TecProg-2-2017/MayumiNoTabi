@@ -43,7 +43,7 @@ GameObject::GameObject (const Vec2 &pos_,float r,Hotspot hs,bool a):
 						hotspot{hs},
 						anchored{a} {
 	components.fill(nullptr);
-	entities[uid]=unique_ptr<GameObject>(this);
+	entities[uid] = unique_ptr<GameObject>(this);
 }
 
 //! A constructor.
@@ -76,7 +76,10 @@ GameObject::GameObject (const Rect &rect,float r,Hotspot hs,bool a):
 
 GameObject::~GameObject() {
 	UnAttach();
-	for (GameObject* obj:attachedObjs) {obj->dead = true;
+
+	for (GameObject* obj:attachedObjs) {
+		obj->dead = true;
+	}
 
 	FOR(i,Component::type::t_count) {
 		if (HasComponent(i)) {
@@ -85,7 +88,7 @@ GameObject::~GameObject() {
 		else {
 			// Nothing to do
 		}
-	} 
+	}
 
 	if (Camera::GetFocus() == uid) {
 		Camera::Unfollow();
@@ -107,6 +110,7 @@ GameObject::~GameObject() {
 
 void GameObject::update(float time) {
 	bool remove = false // Initializing the variabel remove
+
 	if (IsDead()) {
 		remove = true;
 		// for (auto i=Component::type::t_first+1;i!=Component::type::t_count;i++) {
@@ -116,9 +120,9 @@ void GameObject::update(float time) {
 				if (components[i]->Die(time)) {
 					RemoveComponent((Component::type)i);
 				}
-				else {
-					remove = false;
-				}
+				// else {
+				// 	remove = false;
+				// }
 			}
 			else {
 				//! Nothing to do
@@ -255,9 +259,9 @@ void GameObject::AddComponent(Component* component) {
 	else {
 		//! Nothing to do.
 	}
+
 	components[t] = component;
 	component->Own(this);
-
 }
 
 /*!
@@ -279,9 +283,9 @@ void GameObject::ReplaceComponent(Component* component) {
 	else {
 		delete components[t];
 	}
+
 	components[t] = component;
 	component->Own(this);
-
 }
 
 /*!
@@ -397,7 +401,7 @@ void GameObject::UnAttachObj(GameObject* obj) {
 
 void GameObject::UnAttach() {
 	//! If the attach exists, then the object is UnAttach
-	if (attachedTo!=nullptr) {
+	if (attachedTo != nullptr) {
 		auto temp = attachedTo;
 		attachedTo = nullptr;
 		temp->UnAttachObj(this);
@@ -443,10 +447,12 @@ bool GameObject::Remove() const{
 
 Rect GameObject::Box() const{
 	Rect r{pos,size}; // Vector r(rotation) with parameters position pos and size
+
 	r.x += curPos.x * r.w; // x - cordinate in axis x. w - weight
 	r.y += curPos.y * r.h; // y - cordinate in axis y. h - height
 	r.w *= curSize.x; // w - it's the object weight
 	r.h *= curSize.y; // h - it's the object height in game
+
 	return Rect{r.hotspot(hotspot),Vec2{r.w,r.h}};
 }
 
@@ -462,10 +468,12 @@ Rect GameObject::Box() const{
 
 Rect GameObject::Box(const Vec2& p,const Vec2 &sz) const{
 	Rect r{pos,size}; // Vector r(rotation) with parameters position pos and size
+
 	r.x += p.x * r.w; // x - cordinate in axis x. w - weight
 	r.y += p.y * r.h; // y - cordinate in axis y. h - height
 	r.w *= sz.x; // w - it's the object weight
 	r.h *= sz.y; // h - it's the objects height
+
 	return Rect{r.hotspot(hotspot),Vec2{r.w,r.h}};
 }
 
@@ -480,6 +488,7 @@ Rect GameObject::Box(const Vec2& p,const Vec2 &sz) const{
 
 Rect GameObject::FullBox() const{
 	Rect r{pos,size};
+
 	return Rect{r.hotspot(hotspot),size};
 }
 
@@ -573,7 +582,9 @@ template<int atkDist,int seeDist,
 									// Nothing to do
 								}
 			}
+
 			cd.Restart();
+
 			return;
 		}
 	}
@@ -681,6 +692,7 @@ template<int atkDist,int seeDist,
 		}
 	}
 }
+}
 
 /*!
 	@fn void PassiveAIfunc(CompAI* ai,float time)
@@ -752,9 +764,7 @@ template<int atkDist,int seeDist,int stCD,int atkCount,int stompCount>
                                void PumbaAiFunc(CompAI* ai,float time) {
 	Sound music = null; // Initializing variable music
 	Music music2 = null; // Initializing variable music2
-
 	CompAnimControl *ac = COMPANIMCONTp(GO(ai->entity)); // Component Control
-
 	CompMemory *mem = COMPMEMORYp(GO(ai->entity));
 	CompHP *hp = COMPHPp(GO(ai->entity)); // Power of boar
 
@@ -800,7 +810,7 @@ template<int atkDist,int seeDist,int stCD,int atkCount,int stompCount>
 	}
 
 	if (mem->ints["hit"]) {
-		mem->ints["hit"]=0;
+		mem->ints["hit"] = 0;
 		al.Restart();
 	}
 	else {
@@ -817,6 +827,7 @@ template<int atkDist,int seeDist,int stCD,int atkCount,int stompCount>
 			music.open_music_file("audio/porco-grunhido-3.wav");
 			music.play_music(1);
 			cd.Restart();
+
 			return;
 		}
 		else{
@@ -829,6 +840,7 @@ template<int atkDist,int seeDist,int stCD,int atkCount,int stompCount>
 		state = CompAI::state::idling;
 		ac->change_current("idle");
 		cd.Restart();
+
 		return;
 	}
 	//! If character is on state of looking
@@ -873,6 +885,7 @@ template<int atkDist,int seeDist,int stCD,int atkCount,int stompCount>
 			move->speed.x = 0;
 			ac->change_current("idle");
 			cd.Restart();
+
 			return;
 		}
 		else {
@@ -880,10 +893,11 @@ template<int atkDist,int seeDist,int stCD,int atkCount,int stompCount>
 
 			//TODO: make line of sight component
 			if (dist > (seeDist*2) || (!alerted && dist > seeDist)) {
-				state=CompAI::state::looking;
+				state = CompAI::state::looking;
 				move->speed.x = 0;
 				ac->change_current("idle");
 				cd.Restart();
+
 				return;
 			}
 
@@ -937,7 +951,7 @@ template<int atkDist,int seeDist,int stCD,int atkCount,int stompCount>
 			}
 		}
 	}
-
+}
 	//! The object is in attack.
 	else if (state == CompAI::state::attacking) {
 		if (!alerted && attacked > 3) {
@@ -957,6 +971,7 @@ template<int atkDist,int seeDist,int stCD,int atkCount,int stompCount>
 				attacked = 0;
 				ac->change_current("idle");
 				cd.Restart();
+
 				return;
 			}
 			else ac->change_current("attack",false);
@@ -995,8 +1010,9 @@ template<int atkDist,int seeDist,int stCD,int atkCount,int stompCount>
 				attacked = 0;
 				ac->change_current("idle");
 				music.open_music_file("audio/porco-grunhido-3.wav");
-                music.play_music(1);
+        music.play_music(1);
 				cd.Restart();
+
 				return;
 			}
 			else {
@@ -1025,6 +1041,7 @@ template<int atkDist,int seeDist,int stCD,int atkCount,int stompCount>
 			ac->change_current("idle");
 
 			cd.Restart();
+
 			return;
 		}
 		else {
@@ -1034,6 +1051,7 @@ template<int atkDist,int seeDist,int stCD,int atkCount,int stompCount>
 	//! State of character is walking
 	else if (state == CompAI::state::walking) {
 		CompMovement *move = COMPMOVEp(GO(ai->entity));
+
 		if (cd.Get() > 5) {
 			cd.Restart();
 			state = CompAI::state::idling;
@@ -1049,11 +1067,13 @@ template<int atkDist,int seeDist,int stCD,int atkCount,int stompCount>
 				state = CompAI::state::looking; //! Character is looking
 				ac->change_current("idle");
 				music.open_music_file("audio/porco-grunhido-3.wav");
-                music.play_music(1);
+        music.play_music(1);
 			}
 			else if (dist < 2*atkDist + abs(move->speed.x)*time && cd.Get() < 1.5
 			          && stompCD.Get() > stCD) {
+
 				move->speed.x = 0;
+
 				if (GO(ai->entity)->Box().x < target->Box().x) {
 					move->move=dist-(2*atkDist);
 				}
@@ -1073,22 +1093,22 @@ template<int atkDist,int seeDist,int stCD,int atkCount,int stompCount>
 					move->move = dist-atkDist;
 				}
 				else {
-					move->move = -dist+atkDist;
+					move->move = -dist + atkDist;
 				}
 
 				cd.Restart();
 				if (cd.Get() < 1.5) {
-                    state = CompAI::state::attacking;
-                    music.open_music_file("audio/porco-grunhido-3.wav");
-                    music.play_music(1);
+            state = CompAI::state::attacking;
+            music.open_music_file("audio/porco-grunhido-3.wav");
+            music.play_music(1);
 
-                    ac->change_current("idle");
+            ac->change_current("idle");
 				} else {
 					 state = CompAI::state::charging, ac->ChangeCur("charge");
 				}
 			}
 			else if (GO(ai->entity)->pos.x < target->pos.x) {
-				GO(ai->entity)->flipped=true;
+				GO(ai->entity)->flipped = true;
 				move->speed.x = 100.0f;
 			}
 			else {
@@ -1106,7 +1126,8 @@ template<int atkDist,int seeDist,int stCD,int atkCount,int stompCount>
 			ac->change_current("idle");
 
 			music.open_music_file("audio/porco-grunhido-3.wav");
-            music.play_music(1);
+      music.play_music(1);
+
 			return;
 		}
 		else {
@@ -1200,6 +1221,7 @@ void PlayerControlFunc(GameObject* go, float time) {
 		else {
 			//! Nothing to do
 		}
+
 		if (INPUT.key_pressed(KEY_UP) && !mem->ints["doubleJump"]) {
 			if (!mem->ints["onAir"])speed.y = -1000.0f;
 			else speed.y = -750.0f;
@@ -1243,6 +1265,7 @@ void PlayerControlFunc(GameObject* go, float time) {
 
 void PlayerMonsterCollision(const CompCollider::Coll &a,const CompCollider::Coll &b) {
 	Vec2 &speed = COMPMOVEp(GO(a.entity))->speed;
+
 	if (speed == Vec2{}) {
 		return;
 	}
@@ -1335,7 +1358,6 @@ uint GameObject::MakePlayer(const Vec2 &pos) {
 
 	player->AddComponent(new CompInputControl{PlayerControlFunc});
 	player->AddComponent(new CompMovement{});
-
 	player->AddComponent(new CompGravity{2500.0f});
 	player->AddComponent(new CompHP{100,100,true,false,0.75f});
 
@@ -1365,14 +1387,19 @@ uint GameObject::MakePlayer(const Vec2 &pos) {
 */
 
 uint GameObject::Create(const string& blueprint, const Vec2& pos, const Vec2& aux) {
+
 	if (blueprint == "mike") {
 		return MakeMike(pos);
 	}
 	else {
 		// Nothing to do
 	}
+
 	if (blueprint == "banshee") {
 		return MakeBanshee(pos,aux);
+	}
+	else {
+		// Nothing to do
 	}
 	if (blueprint == "mask") {
 		return MakeMask(pos);
@@ -1419,12 +1446,11 @@ uint GameObject::MakeTarget(const Vec2 &pos) {
 	CompStaticRender* img = new CompStaticRender{Sprite{"img/target.png"},Vec2{}};
 	Vec2 size{(float)img->sp.GetWidth(),(float)img->sp.GetHeight()};
 	target->AddComponent(img);
-
 	target->AddComponent(new CompCollider{CompCollider::collType::t_solid});
 	target->AddComponent(new CompHP{100, 100, true, false});
-
 	target->team = Team::other;
 	target->size = size;
+
 	return target->uid;
 }
 
@@ -1487,11 +1513,9 @@ uint GameObject::MakeBanshee(const Vec2 &pos,const Vec2 &pos2) {
 	CompAnimControl* animControl = new CompAnimControl{"banshee",&coll};
 	Vec2 size{(float)animControl->get_current().sp.GetWidth(), (float)animControl->get_current().sp.GetHeight()};
 	banshee->AddComponent(animControl);
-
 	banshee->AddComponent(new CompMovement{});
 	banshee->AddComponent(new CompGravity{250.0f});
 	// banshee->AddComponent(new CompHP{100,100,true,false});
-
 	banshee->AddComponent(new CompAI{PassiveAIfunc});
 
 	CompMemory *memory = new CompMemory{};
@@ -1503,7 +1527,6 @@ uint GameObject::MakeBanshee(const Vec2 &pos,const Vec2 &pos2) {
 	memory->ints["nextPos"] = 0;
 	memory->ints["posCount"] = 2;
 	banshee->AddComponent(memory);
-
 	banshee->team = Team::enemy;
 	banshee->size = size;
 
@@ -1538,7 +1561,6 @@ uint GameObject::MakeMask(const Vec2 &pos) {
 	CompMemory *memory = new CompMemory{};
 	memory->ints["target"] = PLAYER_UID;
 	mask->AddComponent(memory);
-
 	mask->team = Team::enemy;
 	mask->size = size;
 
