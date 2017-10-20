@@ -21,12 +21,14 @@ private:
 	Align alignment=Text::Align::LEFT;
 	Hotspot hotspot=Hotspot::TOP_LEFT;
 	Rect box;
-
 	void remake_texture();
+
 public:
 	Text(const string& text,int fSize,SDL_Color color =SDL_COLOR_WHITE,Style style=Style::BLENDED,string file_path="font/arial.ttf",int box_position_x=0,int box_position_y=0);
 	~Text();
 
+	SDL_Surface* remake_surface(SDL_Surface *surface);
+	SDL_Surface* define_surface(SDL_Surface *surface);
 	void render_line_texture (Rect* clipRect, TextLine line,Vec2 clipRectEnd,
 														Vec2 lineBoxEnd);
 	void render(Vec2 camera = {0,0}, Rect* clipRect=nullptr);

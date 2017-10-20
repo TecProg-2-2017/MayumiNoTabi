@@ -221,38 +221,7 @@ void Text::remake_texture() {
 			else{
 				// do nothing
 			}
-			//! Checks if the style is SOLID
-			if (style == Style::SOLID){
-				//! Applies the style is SOLID
-				surface = TTF_RenderText_Solid(font.get(), line.text.c_str(), color);
-			}
-			//! Checks if the style is SHADED
-			else if (style==Style::SHADED){
-				//! Applies the style is SHADED
-				surface = TTF_RenderText_Shaded(font.get(), line.text.c_str(),
-																					color,SDL_COLOR_BLACK);
-			}
-			//! Checks if the style is BLENDED
-			else if (style == Style::BLENDED){
-				//! Applies the style is BLENDED
-				surface = TTF_RenderText_Blended(font.get(), line.text.c_str(), color);
-			}
-			else{
-				// do nothing
-			}
-			line.texture = SDL_CreateTextureFromSurface(GAMERENDER, surface);
-			//! Resize the text box
-			line.box.w = surface->w;
-			line.box.h = surface->h;
-			//!Checks if the width of the line is bigger than the box width
-			if (line.box.w > box.w){
-				box.w = line.box.w;
-			}
-			else{
-				// do nothing
-			}
-			line.box.y = box.h;
-			box.h += line.box.h;
+			surface = remake_surface(surface);
 		}
 		SDL_FreeSurface(surface);
 
@@ -479,6 +448,51 @@ Rect Text::get_box()const {
 	LOG_METHOD_START("Text::get_box");
 	LOG_METHOD_CLOSE("Text::get_box",box);
 	return box;
+}
+
+SDL_Surface* define_surface(SDL_Surface *surface){
+	//! Checks if the style is SOLID
+	if (style == Style::SOLID){
+		//! Applies the style is SOLID
+		surface = TTF_RenderText_Solid(font.get(), line.text.c_str(), color);
+	}
+	//! Checks if the style is SHADED
+	else if (style==Style::SHADED){
+		//! Applies the style is SHADED
+		surface = TTF_RenderText_Shaded(font.get(), line.text.c_str(),
+																			color,SDL_COLOR_BLACK);
+	}
+	//! Checks if the style is BLENDED
+	else if (style == Style::BLENDED){
+		//! Applies the style is BLENDED
+		surface = TTF_RenderText_Blended(font.get(), line.text.c_str(), color);
+	}
+	else{
+		// do nothing
+	}
+
+	return surface
+}
+
+SDL_Surface* remake_surface(SDL_Surface *surface){
+	surface = define_surface(surface);
+
+	line.texture = SDL_CreateTextureFromSurface(GAMERENDER, surface);
+
+	//! Resize the text box
+	line.box.w = surface->w;
+	line.box.h = surface->h;
+	//!Checks if the width of the line is bigger than the box width
+	if (line.box.w > box.w){
+		box.w = i.box.w;
+	}
+	else{
+		// do nothing
+	}
+	line.box.y = box.h;
+	box.h += line.box.h;
+
+	return surface;
 }
 
 Text::TextLine::TextLine() {}
