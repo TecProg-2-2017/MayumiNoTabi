@@ -94,7 +94,7 @@ void GUIManager::assing_pressed_button_to_current() {
 
         selected_gui_button = nullptr;
 
-        selected_gui_buttonCopy->Update();
+        selected_gui_buttonCopy->update();
         selected_gui_button = selected_gui_buttonCopy;
         current_button_state = selected_gui_button->IsPressed();
     }
@@ -128,7 +128,7 @@ void GUIManager::update_gui_elements() {
 
     assing_pressed_button_to_current(); 
    
-    gui_elements.back()->Update();  
+    gui_elements.back()->update();  
 }
 
 /*!
@@ -143,7 +143,7 @@ void GUIManager::render_gui_elements() {
 
         //! If elements is visible renders it
         if (it->IsVisible()){
-            it->Render();
+            it->render();
         }
         else {
             // Do nothing
@@ -252,7 +252,7 @@ bool GUIManager::gui_button_is_selected(GUI_Button* button)const{
  *  @brief Avaliate if button is empty 
  *  @return True of False 
  */
-bool GUIManager::selected_button_is_empty() {
+bool GUIManager::selected_button_is_empty()const {
     
     //! Return false for empty selected_gui_button
     if (!selected_gui_button) {
@@ -269,7 +269,7 @@ bool GUIManager::selected_button_is_empty() {
  *  @param uint action
  *  @return True of False 
  */
-bool GUIManager::is_button_action_different(uint action) {
+bool GUIManager::is_button_action_different(uint action)const {
     
     //! Return false for action different from the selected button 
     if (action && selected_gui_button->action != action) {
@@ -290,7 +290,7 @@ bool GUIManager::is_button_action_different(uint action) {
 bool GUIManager::gui_button_was_pressed(uint action)const{
 
     if(selected_button_is_empty() || is_button_action_different(action)) {
-        return false
+        return false;
     }
     else {
         return (!previous_button_state && current_button_state);
@@ -307,7 +307,7 @@ bool GUIManager::gui_button_was_pressed(uint action)const{
 bool GUIManager::gui_button_was_released(uint action)const{
 
     if(selected_button_is_empty() || is_button_action_different(action)) {
-        return false
+        return false;
     }
     else {
         return (previous_button_state && !current_button_state);
@@ -324,7 +324,7 @@ bool GUIManager::gui_button_was_released(uint action)const{
 bool GUIManager::gui_button_was_clicked(uint action)const{
 
     if(selected_button_is_empty() || is_button_action_different(action)) {
-        return false
+        return false;
     }
     else {
         return (previous_button_state && !current_button_state && selected_gui_button->IsHovered());
@@ -340,7 +340,7 @@ bool GUIManager::gui_button_was_clicked(uint action)const{
 bool GUIManager::gui_button_is_down(uint action)const{
 
     if(selected_button_is_empty() || is_button_action_different(action)) {
-        return false
+        return false;
     }
     else {
         return current_button_state;

@@ -31,7 +31,7 @@ class InputManager{
     unordered_map<int,int>  key_updated_state;
     int update_counter=0;
     Vec2 mouse_position;
-    bool mouse_is_moving;
+    bool mouse_motion;
 
     string* text=nullptr;
     uint text_cursor;

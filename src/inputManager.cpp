@@ -124,7 +124,7 @@ void InputManager::input_event_handler(float time) {
 
     //! Get mouse position 
     SDL_GetMouseState(&x_position,&y_position);
-    mouse_is_moving = (mouse_position.x!=x_position || mouse_position.y!=y_position);
+    mouse_motion = (mouse_position.x!=x_position || mouse_position.y!=y_position);
     mouse_position.x = (float)x_position;
     mouse_position.y = (float)y_position;
     
