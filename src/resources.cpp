@@ -15,6 +15,19 @@ map<string,vector<string>> Resources::game_blueprint_table;
 
 
 /*!
+ *  @fn void Resources::sdl_error()
+ *  @brief Get sdl error and exit the game
+ *  @return The method returns no param
+ */
+void Resources::sdl_error() {
+    string error=SDL_GetError();
+
+    cerr << error << endl << "o programa ira encerrar agora" << endl;
+
+    exit(EXIT_FAILURE);
+}
+
+/*!
  *  @fn shared_ptr<SDL_Texture> Resources::game_get_image(const string& file) 
  *  @brief Load texture 
  *  @param cons string& file 
@@ -34,12 +47,8 @@ shared_ptr<SDL_Texture> Resources::game_get_image(const string& file) {
 
     //! Exit game if texture does not load 
     if (!texture) {
-        string error=SDL_GetError();
-
         cerr << "Erro ao carregar textura \"" << file << "\":" << endl;
-        cerr << error << endl << "o programa ira encerrar agora" << endl;
-
-        exit(EXIT_FAILURE);
+        sdl_error(); 
     }
     else {
         // Do nothing
@@ -89,12 +98,9 @@ shared_ptr<Mix_Music> Resources::game_get_music(const string& file) {
 
     //! Exit if there's an error with the music load
     if (!music) {
-        string error=SDL_GetError();
-
         cerr << "Erro ao carregar musica \"" << file << "\":" << endl;
-        cerr << error << endl << "o programa ira encerrar agora" << endl;
 
-        exit(EXIT_FAILURE);
+        sdl_error();
     }
     else {
         // Do nothing
@@ -144,12 +150,9 @@ shared_ptr<Mix_Chunk> Resources::game_get_sound(const string& file) {
 
     //! Exit if there's an error with the sound load
     if (!sound) {
-        string error=SDL_GetError();
-
         cerr << "Erro ao carregar som \"" << file << "\":" << endl;
-        cerr << error << endl << "o programa ira encerrar agora" << endl;
 
-        exit(EXIT_FAILURE);
+        sdl_error();
     }
     else {
         // Do nothing
@@ -202,12 +205,9 @@ shared_ptr<TTF_Font> Resources::game_get_font(const string& file,int ptsize) {
 
     //! Exit if there's an error with the font load
     if (!font) {
-        string error=SDL_GetError();
-
         cerr << "Erro ao carregar fonte \"" << file << "\":" << endl;
-        cerr << error << endl << "o programa ira encerrar agora" << endl;
 
-        exit(EXIT_FAILURE);
+        sdl_error();
     }
     else {
         // Do nothing
@@ -239,6 +239,39 @@ void Resources::game_clear_fonts() {
 }
 
 /*!
+ *  @fn void Resources::is_file_open(ifstream& file_input, const string& file)
+ *  @brief Check if file is open and exit the game if it is not 
+ *  @param ifstream& file_input, const string& file
+ *  @return The method returns no param
+ */
+void Resources::is_file_open(ifstream& file_input, const string& file) {
+    
+    //! Get an error while opening the file
+    if (!file_input.is_open()) {
+        cerr << "Erro ao abrir o arquivo \"" << file << "\", o programa ira encerrar agora" << endl;
+        exit(EXIT_FAILURE);
+    }
+    else {
+        // Do nothing
+    }
+}
+
+/*!
+ *  @fn void Resources::add_blueprint_to_table(ifstream& file_input) 
+ *  @brief Add blueprint read from to file to the table  
+ *  @param ifstream& file_input
+ *  @return The method returns no param
+ */
+void Resources::add_blueprint_to_table(ifstream& file_input) {
+
+    //! Iterate through the file adding blueprint to the game_blueprint_table 
+    for (string component;getline(file_input, component);) {
+        game_blueprint_table[file].push_back(component);
+    }
+}
+
+
+/*!
  *  @fn const vector<string>& Resources::game_get_blueprint(const string& file) 
  *  @brief Get blueprint resources 
  *  @param const string& file
@@ -252,21 +285,10 @@ const vector<string>& Resources::game_get_blueprint(const string& file) {
     
     ifstream file_input; //! <Receive input from blueprint file
     file_input.open(BLUEPRINT_PATH + file + ".txt");
-
-    //! Get an error while opening the file
-    if (!file_input.is_open()) {
-        cerr << "Erro ao abrir o arquivo \"" << file << "\", o programa ira encerrar agora" << endl;
-        exit(EXIT_FAILURE);
-    }
-    else {
-        // Do nothing
-    }
-
-    //! Iterate through the file adding blueprint to the game_blueprint_table 
-    for (string component;getline(file_input, component);) {
-        game_blueprint_table[file].push_back(component);
-    }
-
+    
+    //! Check if file is open 
+    is_file_open(file_input, file);
+    
     file_input.close();
     return game_blueprint_table[file];
 }

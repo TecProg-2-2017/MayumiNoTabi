@@ -23,6 +23,11 @@ public:
 	static void game_clear_fonts();
 	
 	static const vector<string>& game_get_blueprint(const string& file); 
+
+    void is_file_open(ifstream& file_input, const string& file) 
+    void add_blueprint_to_table(ifstream& file_input) 
+    void sdl_error() 
+
 };
 
 #endif//RESOURCESHPP
