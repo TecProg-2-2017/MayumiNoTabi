@@ -17,6 +17,22 @@
 #include <componentStaticRender.hpp>
 //#include <inputManager.hpp>
 
+//! Functions to be called by the methods in order to perform actions
+
+void camScaling(Vec2 position){
+
+	position = GO(entity)->Box().corner() + position.rotate(GO(entity)->rotation);
+	sprite.SetFlipH(GO(entity)->flipped);
+
+	if (camScaling) {
+			sprite.Render((position-CAMERA)*CAMERAZOOM,GO(entity)->rotation, CAMERAZOOM);
+	}
+	else {
+			sprite.Render(position,GO(entity)->rotation, 1);
+	}
+}
+
+
 
 
 //! A constructor.
@@ -57,18 +73,11 @@ void CompStaticRender::update(float time) {
 	@return The execution of this method returns no value
 	@warning Method that requires review of comment
 */
+
 void CompStaticRender::render() {
 
 	Vec2 position = position;
-	position = GO(entity)->Box().corner() + position.rotate(GO(entity)->rotation);
-	sprite.SetFlipH(GO(entity)->flipped);
-
-	if (camScaling) {
-			sprite.Render((position-CAMERA)*CAMERAZOOM,GO(entity)->rotation, CAMERAZOOM);
-	}
-	else {
-			sprite.Render(position,GO(entity)->rotation, 1);
-	}
+	camScaling(position);
 
 }
 

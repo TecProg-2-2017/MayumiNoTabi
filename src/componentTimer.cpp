@@ -17,6 +17,21 @@
 
 #include <gameObject.hpp>
 
+//! Functions to be called by the methods in order to perform actions
+
+void updateTimeByLimit(){
+
+	t.add_time(time);
+
+	if (t.get_time()>limit) {
+		GO(entity)->dead=true;
+	}
+	else {
+		//Nothing to do
+	}
+}
+
+
 //! A constructor.
     /*!
     This is a constructor method of componentTimer class
@@ -45,12 +60,7 @@ CompTimer::~CompTimer() {
 */
 
 void CompTimer::update(float time) {
-
-	t.add_time(time);
-
-	if (t.get_time()>limit) {
-		GO(entity)->dead=true;
-	}
+	updateTimeByLimit();
 }
 
 /*!

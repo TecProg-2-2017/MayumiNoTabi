@@ -17,6 +17,19 @@
 #include <componentText.hpp>
 //#include <inputManager.hpp>
 
+//! Functions to be called by the methods in order to perform actions
+
+void textPosition(){
+	Vec2 p = pos + GO(entity)->Box().corner();
+	txt.SetPos(p);
+
+	if (GO(entity)->anchored) {
+		txt.Render();
+	}
+	else {
+		txt.Render(CAMERA);
+	}
+}
 
 
 //! A constructor.
@@ -61,17 +74,9 @@ void CompText::update(float time) {
 	@return The execution of this method returns no value
 	@warning Method that requires review of comment
 */
+
 void CompText::render() {
-
-	Vec2 p = pos + GO(entity)->Box().corner();
-	txt.SetPos(p);
-
-	if (GO(entity)->anchored) {
-		txt.Render();
-	}
-		else {
-		txt.Render(CAMERA);
-	}
+	textPosition()
 }
 
 /*!
