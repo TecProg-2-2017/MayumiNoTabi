@@ -11,6 +11,8 @@ before_install:
         - docker pull codeclimate/codeclimate:latest
         - chmod +x analyze_code.sh
 
+install: export CXX="g++-14"
+
 script:
         - make -v
         - make        
