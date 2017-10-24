@@ -1,8 +1,5 @@
 language: cpp
 
-compiler:
-        - g++
-
 before_install:
         - sudo apt -qq update
         - sudo apt install libegl1-mesa-dev libgles2-mesa-dev
@@ -11,11 +8,8 @@ before_install:
         - docker pull codeclimate/codeclimate:latest
         - chmod +x analyze_code.sh
 
-install: export CXX="g++-14"
-
 script:
-        - make -v
-        - make        
+        - make -v      
 
 after_script:
         - ./analyze_code.sh 
