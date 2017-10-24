@@ -12,8 +12,8 @@ before_install:
         - chmod +x analyze_code.sh
 
 script:
-        - make -d
         - make -v
+        - make        
 
 after_script:
         - ./analyze_code.sh 
