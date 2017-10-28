@@ -7,6 +7,7 @@
 #include <guiManager.hpp>
 #include <gui.hpp>
 #include <inputManager.hpp>
+#include <assert.h>
 
 /*!
  *  @fn GUIManager::GUIManager()
@@ -52,6 +53,8 @@ void GUIManager::reset_gui_button() {
     
     //! Reset the button if it is selected 
     if (selected_gui_button) {
+        assert(selected_gui_button != NULL);
+
         selected_gui_button->Reset();
         selected_gui_button = nullptr;
     }
@@ -69,6 +72,8 @@ void GUIManager::add_stored_element_to_gui() {
     
     //! If there's element stored puts it in gui elements vector
     if (stored_gui_element) {
+        assert(stored_gui_element != NULL);
+
         selected_gui_window = nullptr;
 
         reset_gui_button();
@@ -91,6 +96,8 @@ void GUIManager::assing_pressed_button_to_current() {
     //! Check if current button is pressed and assings it to current_button_state
     if (selected_gui_button) {
         GUI_Button* selected_gui_buttonCopy = selected_gui_button;
+
+        assert(selected_gui_buttonCopy != NULL); 
 
         selected_gui_button = nullptr;
 
@@ -162,6 +169,8 @@ void GUIManager::push_gui_element(GUI_Element* element) {
     //! Checks if there's an element alredy stored, and deletes it
     if (stored_gui_element) { 
         delete stored_gui_element;
+
+        assert(stored_gui_element == NULL);
     }
     else {
         // Do nothing
@@ -195,6 +204,7 @@ void GUIManager::request_gui_element_pop(GUI_Element* element) {
  *  @return The method returns no param
  */
 void GUIManager::select_gui_window(GUI_Window* window) {
+    assert(window != NULL);
     selected_gui_window = window;
 }
 
@@ -205,6 +215,7 @@ void GUIManager::select_gui_window(GUI_Window* window) {
  *  @return true of false 
  */
 bool GUIManager::gui_window_is_selected(GUI_Window* window)const {
+    assert(window != NULL);
     return window==selected_gui_window;
 }
 
@@ -234,6 +245,7 @@ int GUIManager::get_gui_selected_window_ID()const {
  *  @return The method returns no param
  */
 void GUIManager::select_gui_button(GUI_Button* button) {
+    assert(button!= NULL);
     selected_gui_button = button;
 }
 
@@ -244,6 +256,7 @@ void GUIManager::select_gui_button(GUI_Button* button) {
  *  @return True of False 
  */
 bool GUIManager::gui_button_is_selected(GUI_Button* button)const{
+    assert(button!= NULL);
     return button && button==selected_gui_button;
 }
 
