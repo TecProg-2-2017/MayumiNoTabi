@@ -5,6 +5,7 @@
  */ 
 
 #include <inputManager.hpp>
+#include <assert.h>
 
 /*!
  *  @fn InputManager::InputManager() 
@@ -32,6 +33,8 @@ InputManager::~InputManager() {
 void InputManager::update_mouse_button_state(SDL_Event event) {
     bool mouse_state = true; //! <Mouse button state
   
+    assert(event != NULL); 
+
     if (event.type==SDL_MOUSEBUTTONDOWN) {
         mouse_state = true;
     }
@@ -59,6 +62,8 @@ void InputManager::update_mouse_button_state(SDL_Event event) {
 void InputManager::update_key_button_state(SDL_Event event) {
     bool key_state = true; //! <Key button state
 
+    assert(event != NULL); 
+
     if (event.type == SDL_KEYDOWN) {
         key_state = true;
     }
@@ -80,7 +85,11 @@ void InputManager::update_key_button_state(SDL_Event event) {
  *  @return The method returns no param
  */
 void InputManager::insert_text(SDL_Event event) {
+    assert(event != NULL); 
+
     string input(event.text.text);
+    assert(input != NULL); 
+
     text->insert(text_cursor,input);
     text_cursor += input.size();
 }
@@ -92,6 +101,7 @@ void InputManager::insert_text(SDL_Event event) {
  *  @return The method returns no param
  */
 void InputManager::erase_text(SDL_Event event) {
+    assert(event != NULL); 
 
     //! If event key is backspace and text is not empty
     if (event.key.keysym.sym == SDLK_BACKSPACE && 
@@ -101,6 +111,7 @@ void InputManager::erase_text(SDL_Event event) {
 
         if (text_cursor>text->size()) {
             text_cursor=text->size();
+            assert(text_cursor <= text->size());
         }
         else {
             // Do nothing
@@ -136,6 +147,7 @@ void InputManager::input_event_handler(float time) {
     
     //! Iterate through SDL events
     while(SDL_PollEvent(&event)) {
+        assert(event != NULL);
 
         //! Event is quit
         if (event.type==SDL_QUIT) {
