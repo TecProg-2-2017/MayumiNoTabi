@@ -24,6 +24,94 @@ InputManager::~InputManager() {
 }
 
 /*!
+ *  @fn void InputManager::update_mouse_button_state(SDL_Event event) 
+ *  @brief Update mouse button current state 
+ *  @param SDL_Event event
+ *  @return The method returns no param
+ */
+void InputManager::update_mouse_button_state(SDL_Event event) {
+    bool mouse_state = true; //! <Mouse button state
+  
+    if (event.type==SDL_MOUSEBUTTONDOWN) {
+        mouse_state = true;
+    }
+
+    else if (event.type==SDL_MOUSEBUTTONUP) {
+        mouse_state = false;
+    }
+
+    if (/*event.button.button>=0 && */event.button.button<6 && mouse_current_state[event.button.button]!=mouse_state) {
+        mouse_updated_state[event.button.button]=update_counter;
+        mouse_current_state[event.button.button]=mouse_state;
+    }
+    else {
+        // Do nothing
+    }
+
+}
+
+/*!
+ *  @fn void InputManager::update_key_button_state(SDL_Event event) 
+ *  @brief Update key button current state 
+ *  @param SDL_Event event
+ *  @return The method returns no param
+ */
+void InputManager::update_key_button_state(SDL_Event event) {
+    bool key_state = true; //! <Key button state
+
+    if (event.type == SDL_KEYDOWN) {
+        key_state = true;
+    }
+    else if (event.type == SDL_KEYUP) {
+        key_state = false;
+    }
+    else {
+        // Do nothing 
+    }
+
+    key_current_state[event.key.keysym.sym]=key_state;
+    key_updated_state[event.key.keysym.sym]=update_counter;
+}
+
+/*!
+ *  @fn void InputManager::insert_text(SDL_Event event) 
+ *  @brief Insert text to the text input 
+ *  @param SDL_Event event
+ *  @return The method returns no param
+ */
+void InputManager::insert_text(SDL_Event event) {
+    string input(event.text.text);
+    text->insert(text_cursor,input);
+    text_cursor += input.size();
+}
+
+/*!
+ *  @fn void InputManager::erase_text(SDL_Event event) 
+ *  @brief Erase text from text input 
+ *  @param SDL_Event event
+ *  @return The method returns no param
+ */
+void InputManager::erase_text(SDL_Event event) {
+
+    //! If event key is backspace and text is not empty
+    if (event.key.keysym.sym == SDLK_BACKSPACE && 
+            text->size() && text_cursor) {
+
+        text->erase(--text_cursor,1);
+
+        if (text_cursor>text->size()) {
+            text_cursor=text->size();
+        }
+        else {
+            // Do nothing
+        }
+    }
+    else {
+        return;
+    }
+}
+
+/*!
  *  @fn void InputManager::input_event_handler(float time) 
  *  @brief Handle mouse and keyboard inputs  
  *  @param float time
@@ -31,12 +119,12 @@ InputManager::~InputManager() {
  *  @warning Method maybe need refactoring
  */
 void InputManager::input_event_handler(float time) {
-    int x_position = 0;//! <Horizontal axis position
+    int x_position = 0; //! <Horizontal axis position
     int y_position = 0; //! <Vertical axis position
 
     //! Get mouse position 
     SDL_GetMouseState(&x_position,&y_position);
-    mouse_is_moving = (mouse_position.x!=x_position || mouse_position.y!=y_position);
+    mouse_motion = (mouse_position.x!=x_position || mouse_position.y!=y_position);
     mouse_position.x = (float)x_position;
     mouse_position.y = (float)y_position;
     
@@ -55,71 +143,44 @@ void InputManager::input_event_handler(float time) {
         }
 
         //! Event is Mouse button down
-        else if (event.type==SDL_MOUSEBUTTONDOWN) {
-
-            //! TODO: Insert else to do nothing
-            if (/*event.button.button>=0 && */event.button.button<6 && mouse_current_state[event.button.button]!=true) {
-                mouse_updated_state[event.button.button]=update_counter;
-                mouse_current_state[event.button.button]=true;
-            }
-        }
-        
-        //! Event is Mouse button up 
-        else if (event.type==SDL_MOUSEBUTTONUP) {
-
-            //! TODO: Insert else to do nothing
-            if (/*event.button.button>=0 && */event.button.button<6 && mouse_current_state[event.button.button]!=false) {
-                mouse_updated_state[event.button.button]=update_counter;
-                mouse_current_state[event.button.button]=false;
-            }
+        else if (event.type==SDL_MOUSEBUTTONDOWN || event.type==SDL_MOUSEBUTTONUP) {
+            update_mouse_button_state(event);
         }
     
         //! Event is Key down 
         else if (event.type==SDL_KEYDOWN) {
 
-            //! TODO: Insert else to do nothing
             if (!event.key.repeat) {
-                key_current_state[event.key.keysym.sym]=true;
-                key_updated_state[event.key.keysym.sym]=update_counter;
+                update_key_button_state(event);
+            }
+            else {
+                // Do nothing
             }
         }
 
 
         //! Event is Key up 
         else if (event.type==SDL_KEYUP) {
-            key_current_state[event.key.keysym.sym]=false;
-            key_updated_state[event.key.keysym.sym]=update_counter;
+            update_key_button_state(event);
         }
         
         //! If text is not empty    
-        //! TODO: Insert else to do nothing
         if (text != nullptr) {
 
             //! Event is text input
             if (event.type==SDL_TEXTINPUT) {
-                string input(event.text.text);
-                text->insert(text_cursor,input);
-                text_cursor += input.size();
+                insert_text(event);
             }
 
-           //! Event is key down 
+           //! Event is key down when inserting text 
             else if (event.type==SDL_KEYDOWN) {
                 text_cursor_blinker.Restart();
 
-                //! If event key is backspace and text is not empty
-                if (event.key.keysym.sym == SDLK_BACKSPACE && 
-                        text->size() && text_cursor) {
-
-                    text->erase(--text_cursor,1);
-
-                    //! TODO: Insert else to do nothing
-                    if (text_cursor>text->size()) {
-                        text_cursor=text->size();
-                    }
-                }
+                erase_text(event);
+                
 
                 //! Move cursor to the left if left key is pressed 
-                else if (event.key.keysym.sym == SDLK_LEFT && text_cursor > 0) {
+                if (event.key.keysym.sym == SDLK_LEFT && text_cursor > 0) {
                     text_cursor--;
                 }
 
@@ -129,6 +190,9 @@ void InputManager::input_event_handler(float time) {
                 }
             }//! <End of if which event is key down
         } //! <End of if which text is not empty
+        else {
+            // Do nothing
+        }
     } //! <End of while which iteration through sdl events
     update_counter++;
 }
@@ -242,9 +306,11 @@ int InputManager::get_mouse_y_position() {
 void InputManager::start_text_input(string* t) {
 
     //! If param is empty, returns
-    //! TODO: Insert else to do nothing
     if (t == nullptr) { 
         return;
+    }
+    else {
+        // Do nothing
     }
 
     SDL_StartTextInput();
@@ -262,9 +328,11 @@ void InputManager::start_text_input(string* t) {
 void InputManager::stop_text_input(string* t) {
     
     //! If class attribute text is different from param, returns
-    //! TODO: Insert else to do nothing
     if (text != t) {
         return;
+    }
+    else {
+        // Do nothing
     }
     
     text = nullptr;

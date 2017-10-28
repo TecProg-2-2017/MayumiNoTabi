@@ -50,14 +50,14 @@ GUI_Button::GUI_Button(uint a,const Vec2& pos):GUI_Element(pos),action{a}{
 }
 
 void GUI_Button::Update() {
-	if (gui.gui_button_is_selected(this)) return;
-	else if (gui.gui_button_is_down()) return;
+	if (GUI.gui_button_is_selected(this)) return;
+	else if (GUI.gui_button_is_down()) return;
 	
 	Rect button = box;
 	CLIP_RECT(button, DEFAULT_MARGIN);
 	hover=button.contains(INPUT.get_mouse_position());
 	if (hover) {
-		gui.select_gui_button(this);
+		GUI.select_gui_button(this);
 		if (INPUT.mouse_button_pressed(MBUTTON_LEFT)) {
 			press = true;
 			return;
@@ -103,14 +103,14 @@ GUI_CheckButton::GUI_CheckButton(bool& v,const Vec2& pos):GUI_Button(GUI_NONE,po
 
 
 void GUI_CheckButton::Update() {
-	if (gui.gui_button_is_selected(this)) return;
-	else if (gui.gui_button_is_down()) return;
+	if (GUI.gui_button_is_selected(this)) return;
+	else if (GUI.gui_button_is_down()) return;
 	
 	Rect button = box;
 	CLIP_RECT(button, DEFAULT_MARGIN*2);
 	hover=button.contains(INPUT.get_mouse_position());
 	if (hover) {
-		gui.select_gui_button(this);
+		GUI.select_gui_button(this);
 		if (INPUT.mouse_button_pressed(MBUTTON_LEFT))	press = true;
 	}
 	if (press && INPUT.mouse_button_released(MBUTTON_LEFT)) {
@@ -176,15 +176,15 @@ GUI_InputBox::~GUI_InputBox() {
 
 
 void GUI_InputBox::Update() {
-	if (gui.gui_button_is_selected(this)) return;
-	else if (gui.gui_button_is_down()) return;
+	if (GUI.gui_button_is_selected(this)) return;
+	else if (GUI.gui_button_is_down()) return;
 	
 	Rect button = box;
 	CLIP_RECT(button, DEFAULT_MARGIN);
 	hover=button.contains(INPUT.get_mouse_position());
 	bool closed = false;
 	if (hover)
-		gui.select_gui_button(this);
+		GUI.select_gui_button(this);
 		
 	if (INPUT.mouse_button_pressed(MBUTTON_LEFT)) {
 		if (!press) {

@@ -26,13 +26,12 @@ GUIManager::~GUIManager() {
 }
 
 /*!
- *  @fn void GUIManager::update_gui_elements()
- *  @brief Updates general user interface
+ *  @fn void GUIManager::remove_last_gui_element_requested()
+ *  @brief Remove last element if requested
  *  @return The method returns no param
  */
-void GUIManager::update_gui_elements() {
+void GUIManager::remove_last_gui_element_requested() {
 
-    //! TODO: Insert else to do nothing
     //! Remove last element if requested
     if (element_pop_requested) {
         selected_gui_window = nullptr;
@@ -40,46 +39,96 @@ void GUIManager::update_gui_elements() {
 
         gui_elements.pop_back();
     }
+    else {
+        // Do nothing
+    }
+}
+/*!
+ *  @fn void GUIManager::reset_gui_button()
+ *  @brief Reset the button if it is selected 
+ *  @return The method returns no param
+ */
+void GUIManager::reset_gui_button() {
+    
+    //! Reset the button if it is selected 
+    if (selected_gui_button) {
+        selected_gui_button->Reset();
+        selected_gui_button = nullptr;
+    }
+    else {
+        // Do nothing
+    }
+}
 
-    //! TODO: Insert else to do nothing
+/*!
+ *  @fn void GUIManager::add_stored_element_to_gui()
+ *  @brief If there's element stored puts it in gui elements vector
+ *  @return The method returns no param
+ */
+void GUIManager::add_stored_element_to_gui() {
+    
     //! If there's element stored puts it in gui elements vector
     if (stored_gui_element) {
         selected_gui_window = nullptr;
 
-        //! TODO: Insert else to do nothing
-        //! Reset the button if it is selected 
-        if (selected_gui_button) {
-            selected_gui_button->Reset();
-            selected_gui_button = nullptr;
-        }
+        reset_gui_button();
 
         gui_elements.emplace_back(unique_ptr<GUI_Element>(stored_gui_element));
         stored_gui_element = nullptr;
     }
-
-    //! TODO: Insert else to do nothing
-    //! If there's no elements in the gui, returns 
-    if (gui_elements.empty()) {
-         return;
+    else {
+        // Do nothing
     }
+}
+
+/*!
+ *  @fn void GUIManager::assing_pressed_button_to_current()
+ *  @brief Check if current button is pressed and assings it to current_button_state
+ *  @return The method returns no param
+ */
+void GUIManager::assing_pressed_button_to_current() {
     
-    element_pop_requested = false;
-    
-    previous_button_state = current_button_state;
-    
-    //! TODO: Insert else to do nothing
     //! Check if current button is pressed and assings it to current_button_state
     if (selected_gui_button) {
         GUI_Button* selected_gui_buttonCopy = selected_gui_button;
 
         selected_gui_button = nullptr;
 
-        selected_gui_buttonCopy->Update();
+        selected_gui_buttonCopy->update();
         selected_gui_button = selected_gui_buttonCopy;
         current_button_state = selected_gui_button->IsPressed();
     }
+    else {
+        // Do nothing
+    }
+}
+
+/*!
+ *  @fn void GUIManager::update_gui_elements()
+ *  @brief Updates general user interface
+ *  @return The method returns no param
+ */
+void GUIManager::update_gui_elements() {
+
+    remove_last_gui_element_requested();
+
+    add_stored_element_to_gui();
+
+    //! If there's no elements in the gui, returns 
+    if (gui_elements.empty()) {
+         return;
+    }
+    else {
+        // Do nothing
+    }
     
-    gui_elements.back()->Update();  
+    element_pop_requested = false;
+    
+    previous_button_state = current_button_state;
+
+    assing_pressed_button_to_current(); 
+   
+    gui_elements.back()->update();  
 }
 
 /*!
@@ -92,10 +141,12 @@ void GUIManager::render_gui_elements() {
     //! Iterates trough elements of interface to render it
     for (auto& it:gui_elements){
 
-        //! TODO: Insert else to do nothing
         //! If elements is visible renders it
         if (it->IsVisible()){
-            it->Render();
+            it->render();
+        }
+        else {
+            // Do nothing
         }
     }
 }
@@ -108,10 +159,12 @@ void GUIManager::render_gui_elements() {
  */
 void GUIManager::push_gui_element(GUI_Element* element) {
 
-    //! TODO: Insert else to do nothing
     //! Checks if there's an element alredy stored, and deletes it
     if (stored_gui_element) { 
         delete stored_gui_element;
+    }
+    else {
+        // Do nothing
     }
 
     stored_gui_element = element;
@@ -125,11 +178,13 @@ void GUIManager::push_gui_element(GUI_Element* element) {
  */
 void GUIManager::request_gui_element_pop(GUI_Element* element) {
    
-    //! TODO: Insert else to do nothing
     //! If last object of elements vector is equal to the param
     //! Change element_pop_requested value
     if (element == gui_elements.back().get()) {
         element_pop_requested = true;
+    }
+    else {
+        // Do nothing
     }
 }
 
@@ -193,6 +248,39 @@ bool GUIManager::gui_button_is_selected(GUI_Button* button)const{
 }
 
 /*!
+ *  @fn bool GUIManager::selected_button_is_empty()
+ *  @brief Avaliate if button is empty 
+ *  @return True of False 
+ */
+bool GUIManager::selected_button_is_empty()const {
+    
+    //! Return false for empty selected_gui_button
+    if (!selected_gui_button) {
+        return true;
+    }
+    else {
+        return false;
+    }
+}
+
+/*!
+ *  @fn bool GUIManager::selected_button_is_empty()
+ *  @brief Avaliate if button action is different from the param 
+ *  @param uint action
+ *  @return True of False 
+ */
+bool GUIManager::is_button_action_different(uint action)const {
+    
+    //! Return false for action different from the selected button 
+    if (action && selected_gui_button->action != action) {
+        return true;
+    }
+    else {
+        return false;
+    }
+}
+
+/*!
  *  @fn bool GUIManager::gui_button_was_pressed(uint action)const    
  *  @brief Avaliate if button was pressed 
  *  @param unsigned int action 
@@ -201,18 +289,12 @@ bool GUIManager::gui_button_is_selected(GUI_Button* button)const{
  */
 bool GUIManager::gui_button_was_pressed(uint action)const{
 
-    //! TODO: Insert else to do nothing
-    //! Return false for empty selected_gui_button
-    if (!selected_gui_button) {
+    if(selected_button_is_empty() || is_button_action_different(action)) {
         return false;
     }
-    
-    //! TODO: Insert else to do nothing
-    //! Return false for action different from the selected button 
-    if (action && selected_gui_button->action != action) {
-        return false;
+    else {
+        return (!previous_button_state && current_button_state);
     }
-    return (!previous_button_state && current_button_state);
 }
 
 /*!
@@ -224,16 +306,12 @@ bool GUIManager::gui_button_was_pressed(uint action)const{
  */
 bool GUIManager::gui_button_was_released(uint action)const{
 
-    //! TODO: Insert else to do nothing
-    if (!selected_gui_button) { 
+    if(selected_button_is_empty() || is_button_action_different(action)) {
         return false;
     }
-    
-    //! TODO: Insert else to do nothing
-    if (action && selected_gui_button->action != action) {
-        return false;
+    else {
+        return (previous_button_state && !current_button_state);
     }
-    return (previous_button_state && !current_button_state);
 }
 
 /*!
@@ -245,17 +323,12 @@ bool GUIManager::gui_button_was_released(uint action)const{
  */
 bool GUIManager::gui_button_was_clicked(uint action)const{
 
-    //! TODO: Insert else to do nothing
-    if (!selected_gui_button) {
+    if(selected_button_is_empty() || is_button_action_different(action)) {
         return false;
     }
-
-    //! TODO: Insert else to do nothing
-    if (action && selected_gui_button->action != action) { 
-        return false;
+    else {
+        return (previous_button_state && !current_button_state && selected_gui_button->IsHovered());
     }
-
-    return (previous_button_state && !current_button_state && selected_gui_button->IsHovered());
 }
 
 /*!
@@ -266,15 +339,10 @@ bool GUIManager::gui_button_was_clicked(uint action)const{
  */
 bool GUIManager::gui_button_is_down(uint action)const{
 
-    //! TODO: Insert else to do nothing
-    if (!selected_gui_button) {
+    if(selected_button_is_empty() || is_button_action_different(action)) {
         return false;
     }
-
-    //! TODO: Insert else to do nothing
-    if (action && selected_gui_button->action != action) { 
-        return false;
+    else {
+        return current_button_state;
     }
-
-    return current_button_state;
 }
