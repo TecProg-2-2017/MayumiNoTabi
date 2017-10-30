@@ -42,8 +42,6 @@ CompAnim::CompAnim(string filename, CompCollider* temporary_collider) {
 
   assert(filename != "");
   assert(temporary_collider != NULL);
-
-  
   
 	ifstream in(ANIMATION_PATH + filename + ".txt");
   
@@ -68,7 +66,11 @@ CompAnim::CompAnim(string filename, CompCollider* temporary_collider) {
     float height = 0f;
     float r = 0f;
     
-    in >> img_file >> f_count >> f_counter_x >> f_counter_y >> f_time;
+    in >> img_file;
+    in >> f_count;
+    in >> f_counter_x;
+    in >> f_counter_y;
+    in >> f_time;
     
 		sp.Open(img_file, f_counter_x, f_counter_y, f_time, f_count);
     
@@ -170,8 +172,10 @@ int CompAnim::get_frame_count()const {
   LOG_METHOD_START("CompAnim::get_frame_count");
   assert(sp != NULL);
   
-  LOG_METHOD_CLOSE("CompAnim::get_frame_count", sp.get_frame_count());
-	return sp.get_frame_count();
+  int qtd_frame = sp.get_frame_count();
+
+  LOG_METHOD_CLOSE("CompAnim::get_frame_count", qtd_frame);
+	return qtd_frame;
 }
 
 /*!
@@ -186,8 +190,10 @@ int CompAnim::get_current_frame()const {
   LOG_METHOD_START("CompAnim::get_current_frame");
   assert(sp != NULL);
 
-  LOG_METHOD_CLOSE("CompAnim::get_current_frame", sp.get_current_frame());
-  return sp.get_current_frame();
+  int current_frame = sp.get_current_frame();
+
+  LOG_METHOD_CLOSE("CompAnim::get_current_frame", current_frame);
+  return current_frame;
 }
 
 /*!
@@ -200,6 +206,7 @@ int CompAnim::get_current_frame()const {
 
 void CompAnim::set_current_frame(int frame,		// range: unknown
                                  bool force) {// true to force current frame
+  
   LOG_METHOD_START("CompAnim::set_current_frame");
   LOG_VARIABLE("frame", frame);
   LOG_VARIABLE("force", force);
@@ -236,6 +243,7 @@ void CompAnim::set_current_frame(int frame,		// range: unknown
 
 void CompAnim::set_current_frame_by_force(int frame,
                                           bool force) {
+
   LOG_METHOD_START("CompAnim::set_current_frame_by_force");
   LOG_VARIABLE("frame", frame);
   LOG_VARIABLE("force", force);
@@ -274,8 +282,10 @@ bool CompAnim::Looped()const {
   LOG_METHOD_START("CompAnim::Looped");
   assert(sp != NULL);
 
-  LOG_METHOD_CLOSE("CompAnim::Looped", sp.Looped());
-  return sp.Looped();
+  bool is_animation_looped = sp.Looped();
+
+  LOG_METHOD_CLOSE("CompAnim::Looped", is_animation_looped);
+  return is_animation_looped;
 }
 
 /*!
@@ -356,10 +366,12 @@ bool CompAnim::compare_frames(int frame1, int frame2) {
   
   if (frame1 != frame2) {
     LOG_METHOD_CLOSE("CompAnim::compare_frames", 'true');
+    
     return true;
   }
   else {
     LOG_METHOD_CLOSE("CompAnim::compare_frames", 'false');
+    
     return false;
   }
 }
@@ -429,6 +441,7 @@ void CompAnim::Render() {
 void CompAnim::own(GameObject* go) {
   LOG_METHOD_START("CompAnim::own");
   LOG_VARIABLE("go", go.to_string());
+  
   assert(go != NULL);
   
 	entity = go->uid;
