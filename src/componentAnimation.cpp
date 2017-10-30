@@ -27,7 +27,7 @@
 // Constructor method with no params
 CompAnim::CompAnim() {
   LOG_METHOD_START("CompAnim::CompAnim (blank)");
-
+  LOG_METHOD_CLOSE("CompAnim::CompAnim (blank)", "constructor");
 }
 
 //! A constructor.
@@ -43,84 +43,90 @@ CompAnim::CompAnim(string filename, CompCollider* temporary_collider) {
   assert(filename != "");
   assert(temporary_collider != NULL);
 
-  string name = "";
-  string img_file = "";
-  string function_name = "";
-  string animFile = "";
-  string type = "";
-
-  int f_count = 0;
-  int f_counter_x = 0;
-  int f_counter_y = 0;
-  int collider_counter = 0;
-  int function_counter = 0;
-
-  float f_timex_axis = 0f;
-  float y_axis = 0f;
-  float width = 0f;
-  float height = 0f;
-  float r = 0f;
-
+  
+  
 	ifstream in(ANIMATION_PATH + filename + ".txt");
-
+  
 	// Treats possible file opening error
 	if (!in.is_open()) {
-		cerr << "Erro ao abrir arquivo de animação '" << filename << "'" << endl;
+    cerr << "Erro ao abrir arquivo de animação '" << filename << "'" << endl;
 	}
 	else {
-		in >> img_file >> f_count >> f_counter_x >> f_counter_y >> f_time;
-
+    string name = "";
+    string img_file = "";
+    string animation_file = "";
+    string type = "";
+    
+    int f_count = 0;
+    int f_counter_x = 0;
+    int f_counter_y = 0;
+    int collider_counter = 0;
+    
+    float f_timex_axis = 0f;
+    float y_axis = 0f;
+    float width = 0f;
+    float height = 0f;
+    float r = 0f;
+    
+    in >> img_file >> f_count >> f_counter_x >> f_counter_y >> f_time;
+    
 		sp.Open(img_file, f_counter_x, f_counter_y, f_time, f_count);
-
+    
 		colliders.resize(f_count, nullptr);
-
+    
 		FOR(i, f_count) {
-			in >> collider_counter;
-
+      in >> collider_counter;
+      
 			if (collider_counter) {
-				colliders[i] = new CompCollider{};
+        colliders[i] = new CompCollider{};
 				colliders[i]->entity = entity;
-
+        
 				FOR(j, collider_counter) {
-					//TODO: use rotation
-					//TODO: different collider types for each coll
-					in >> x_axis >> y_axis >> width >> height >> r;
 
+          in >> x_axis;
+          in >> y_axis;
+          in >> width;
+          in >> height;
+          in >> r;
+          
           colliders[i]->colls.emplace_back(entity, 
-                                           temporary_collider->colls[0].cType,
-                                           Rect{x_axis, y_axis, width, height});
-
-					colliders[i]->colls[j].useDefault = temporary_collider->colls[0].useDefault;
-					colliders[i]->colls[j].active = temporary_collider->colls[0].active;
-				}
-      }
-      else {
-        // Do nothing
-      }
-
-			in >> function_counter;
-
-			FOR(funcI, funcCount) {
-				in >> function_name;
-
-				if (txtFuncsF.count(function_name)) {
-					frameFunc[i].push_back(txtFuncsF[function_name](in));
+            temporary_collider->colls[0].cType,
+            Rect{x_axis, y_axis, width, height});
+            
+            colliders[i]->colls[j].useDefault = temporary_collider->colls[0].useDefault;
+            colliders[i]->colls[j].active = temporary_collider->colls[0].active;
+          }
         }
         else {
           // Do nothing
         }
-			}
-		}
-
-    in.close();
-	}
-
-	// Changes called value to false if frameFunc has no elements in it
-	if (frameFunc.count(0)) {
-		called = false;
-  }
-  else {
-    // Do nothing
+        
+        int function_counter = 0;
+        in >> function_counter;
+        
+        string function_name = "";
+        
+        FOR(funcI, funcCount) {
+          in >> function_name;
+          
+          if (txtFuncsF.count(function_name)) {
+            frameFunc[i].push_back(txtFuncsF[function_name](in));
+          }
+          else {
+            // Do nothing
+          }
+        }
+      }
+      
+      in.close();
+    }
+    
+    // Changes called value to false if frameFunc has no elements in it
+    if (frameFunc.count(0)) {
+      called = false;
+    }
+    else {
+      // Do nothing
   }
 
   LOG_METHOD_CLOSE("CompAnim::CompAnim", "constructor");
@@ -397,9 +403,12 @@ void CompAnim::Render() {
   LOG_METHOD_START("CompAnim::Render");
   assert(sp != NULL);
   
-  Vec2 pos = GO(entity)->FullBox().corner().renderPos(); //!< Used to save the
-  LOG_VARIABLE("pos", pos.to_string());
+  Vec2 full_box = GO(entity)->FullBox(); //!< Used to save the
   //!< position to render
+  Vec2 corner = full_box.corner();
+  Vec2 render_pos = corner.renderPos();
+
+  LOG_VARIABLE("pos", pos.to_string());
   
   assert(pos != NULL);
 
@@ -419,8 +428,8 @@ void CompAnim::Render() {
 
 void CompAnim::own(GameObject* go) {
   LOG_METHOD_START("CompAnim::own");
-  assert(go != NULL);
   LOG_VARIABLE("go", go.to_string());
+  assert(go != NULL);
   
 	entity = go->uid;
   
@@ -432,7 +441,8 @@ void CompAnim::own(GameObject* go) {
     else {
       // Do nothing
     }
-	}
+  }
+  
   int frame = get_current_frame();
   
   set_current_frame(frame, true);
