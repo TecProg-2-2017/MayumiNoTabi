@@ -29,19 +29,22 @@ CompAnimControl::CompAnimControl(string filename, CompCollider* collider) {
   assert(collider != NULL);
   assert(filename != "");
 
-  string name = "";
-  string animation_filename = "";
-
   ifstream in(ANIMATION_PATH + filename + ".txt");
-
+  
   // Checks if the animation's .txt file is already opened
   if (!in.is_open()) {
     cerr << "Erro ao abrir arquivo de grupo de animações '" << filename << "'";
     cerr << endl;
   }
   else {
-    in >> name >> animation_filename;
-    cur = prev = name;
+    string name = "";
+    string animation_filename = "";
+
+    in >> name;
+    in >> animation_filename;
+    
+    prev = name;
+    cur = prev;
     
     animations[name] = make_unique<CompAnim>(animation_filename, collider);
     
