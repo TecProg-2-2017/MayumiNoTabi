@@ -185,9 +185,9 @@ void CompAnimControl::update(float time) {
         cur = "dead";
       }
       else {
-        get_current().sp.looped = false;
         change_current(prev);
         
+        get_current().sp.looped = false;
         get_current().update(time);
       }
     }
