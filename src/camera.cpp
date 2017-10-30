@@ -267,7 +267,6 @@ void Camera::center_camera_to(const Vec2& vec2_vector) {
 */
 
 Vec2 Camera::render_camera_pos(const Vec2& vec2_vector) {
-
   LOG_METHOD_START("Camera::render_camera_pos");
   LOG_VARIABLE("vec2_vector", vec2_vector);
 
@@ -275,7 +274,7 @@ Vec2 Camera::render_camera_pos(const Vec2& vec2_vector) {
 
   Vec2 rendered_camera_pos = (vec2_vector - CAMERA) * CAMERAZOOM;
   
-  LOG_METHOD_CLOSE("Camera::render_camera_pos", rendered_camera_pos;
+  LOG_METHOD_CLOSE("Camera::render_camera_pos", rendered_camera_pos.to_string());
   
   return rendered_camera_pos;
 }

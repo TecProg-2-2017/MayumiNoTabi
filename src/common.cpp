@@ -89,8 +89,10 @@ bool equals(const float &a, const float &b) {
   LOG_VARIABLE("a", a);
   LOG_VARIABLE("b", b);
 
-  LOG_METHOD_CLOSE("Common::equals", (std::fabs((a - b)) <= PRECISION));
-  return (std::fabs((a - b)) <= PRECISION);
+  float fabs_on_params = std::fabs((a - b));
+
+  LOG_METHOD_CLOSE("Common::equals", fabs_on_params <= PRECISION));
+  return (fabs_on_params <= PRECISION);
 }
 
 /*!
@@ -117,14 +119,13 @@ float close_distance(const float &from, const float &to, const float &change) {
   }
 
 	if (from > to) {
-		return from - change;
+		return (from - change);
   }
   else {
     // Do nothing
   }
 
   LOG_METHOD_CLOSE("Common::close_distance", from + change);
-
   return from + change;
 }
 
@@ -142,7 +143,7 @@ string convert_float_to_str(float float_number) {
   
   char string_to_be_saved[15]; //!< Temporary storage variable for saving chars
 
-  sprintf(string_to_be_saved,"%.2f",float_number);
+  sprintf(string_to_be_saved, "%.2f", float_number);
 
   LOG_METHOD_CLOSE("Common::convert_float_to_str", string_to_be_saved);
 	return string_to_be_saved;
