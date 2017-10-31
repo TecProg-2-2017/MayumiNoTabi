@@ -17,7 +17,11 @@
 
 //! Functions to be called by the methods in order to perform actions
 
-void chooseTypeComponentMovement(float time){
+void choose_type_component_movement(float time){
+	LOG_METHOD_START('choose_type_component_movement');
+	LOG_VARIABLE("choose_type_component_movement", "time");
+
+	assert(time >= 0);
 
 	UNUSED(time);
 	GO(entity)->position += move;
@@ -28,6 +32,7 @@ void chooseTypeComponentMovement(float time){
 	else {
 		//Nothing to do
 	}
+	LOG_METHOD_CLOSE('choose_type_component_movement', "void");
 }
 
 
@@ -36,10 +41,15 @@ void chooseTypeComponentMovement(float time){
     This is a constructor method of componentMovement class
     */
 
-CompMovement::CompMovement(const Vec2& sprite,moveType movetype):
+CompMovement::CompMovement(const Vec2& sprite, moveType move_type): mType{move_type},speed{s} {
+	LOG_METHOD_START('CompMovement::CompMovement');
+	LOG_VARIABLE("CompMovement::CompMovement", "sprite", "move_type");
 
-	mType{movetype},speed{s}{
-		// Method body its empty
+	assert(sprite >= 0);
+	assert(move_type != NULL);
+
+	LOG_METHOD_CLOSE('CompMovement::CompMovement', "constructor");
+
 }
 
 //! A destructor.
@@ -48,22 +58,30 @@ CompMovement::CompMovement(const Vec2& sprite,moveType movetype):
     */
 
 CompMovement::~CompMovement() {
+	LOG_METHOD_START('CompMovement::~CompMovement');
+
+	LOG_METHOD_CLOSE('CompMovement::~CompMovement', "destructor");
 	// Method body its empty
 }
 
 
 /*!
-	@fn void CompMovement::Update(float time)
+	@fn void CompMovement::update(float time)
 	@brief Method that update element movement
-	@param float time
 	@return The execution of this method returns no value
 	@warning Method that requires review of comment
+	@param float time
 */
 
 void CompMovement::update(float time) {
+	LOG_METHOD_START('CompMovement::update');
+	LOG_VARIABLE("CompMovement::update", "time");
 
-	chooseTypeComponentMovement(time);
+	assert(time >= 0);
 
+	choose_type_component_movement(time);
+
+	LOG_METHOD_CLOSE('CompMovement::update', "void");
 }
 
 /*!
@@ -75,7 +93,10 @@ void CompMovement::update(float time) {
 
 
 void CompMovement::render() {
-	// Method body its empty
+	//! Non renderizable component
+	LOG_METHOD_START('CompMovement::render');
+
+	LOG_METHOD_CLOSE('CompMovement::render', "void");
 }
 
 
@@ -86,6 +107,11 @@ void CompMovement::render() {
 	@return Component class object
 	@warning Method that requires review of comment
 */
+
 Component::type CompMovement::get_type()const{
+	LOG_METHOD_START('CompMovement::get_type');
+
+	LOG_METHOD_CLOSE('CompMovement::get_type', t_movement.to_string());
+
   return Component::type::t_movement;
 }
