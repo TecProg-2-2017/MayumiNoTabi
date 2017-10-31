@@ -44,7 +44,9 @@ CompTimer::~CompTimer() {
 	@warning Method that requires review of comment
 */
 
-void CompTimer::update(float time) {
+void CompTimer::update(float time) { //Time range 0.0 - 60.0
+
+	assert(time > 0.0 and time < 60.0);
 
 	t.add_time(time);
 
@@ -73,6 +75,9 @@ void CompTimer::render() {
 */
 
 void CompTimer::own(GameObject* go) {
+
+	assert(go != NULL);
+
 	entity=go->uid;
 }
 

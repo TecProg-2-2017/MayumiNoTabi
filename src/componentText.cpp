@@ -51,7 +51,9 @@ CompText::~CompText() {
 	@return The execution of this method returns no value
 	@warning Method that requires review of comment
 */
-void CompText::update(float time) {
+void CompText::update(float time) { //Time range 0.0 - 60.0
+
+	assert(time > 0.0 and time < 60.0);
 	UNUSED(time);
 }
 

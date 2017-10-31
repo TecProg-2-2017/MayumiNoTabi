@@ -21,7 +21,7 @@
 
 void chooseTypeComponentMovement(float time){
 
- 	assert(time > 0.0 and time < 60.0 ) // CPPCheck avalia a condição da assertiva (Se está sempre true)
+ 	assert(time > 0.0 and time < 60.0 ); // CPPCheck avalia a condição da assertiva (Se está sempre true)
 
 	UNUSED(time);
 	GO(entity)->position += move;
@@ -64,7 +64,7 @@ CompMovement::~CompMovement() {
 */
 void CompMovement::update(float time) {
 
-	assert(time > 0.0 and time < 60.0 )
+	assert(time > 0.0 and time < 60.0 );
 
 	UNUSED(time);
 	GO(entity)->position += move;
