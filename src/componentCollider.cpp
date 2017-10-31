@@ -15,6 +15,9 @@
 */
 
 CompCollider::CompCollider() {
+	LOG_METHOD_START('CompCollider::CompCollider');
+
+	LOG_METHOD_CLOSE('CompCollider::CompCollider', "constructor");
 }
 
 /*!
@@ -117,8 +120,8 @@ void CompCollider::update(float time) {
 	for(Coll &coll:colls) {
 		if(coll.active) {
 
-			int lowerRange = coll.Box().x-10; //!< Creates variable that sets the lower range of the game box
-			int upperRange = coll.Box().x2()+10; //!< Creates variable that sets the upper range of the game box
+			int lowerRange = coll.Box().x - 10; //!< Creates variable that sets the lower range of the game box
+			int upperRange = coll.Box().x2() + 10; //!< Creates variable that sets the upper range of the game box
 			set<uint> ent = GAMESTATE.GetEntitiesInRange(lowerRange,upperRange);
 			//! Iterates throughout the screen elements to check if there has been collisions
 			FOR(uint object:ent) {
@@ -151,7 +154,6 @@ void CompCollider::render() {
 
 	if (SETTINGS.showCollision) {
 		//! Iterates throughout the Collision objects in order to update the rendering
-		//! TODO: Improve decision structures
 			for (Coll coll:colls) {
 				if (coll.cType == CompCollider::collType::t_player) {
 					SET_COLOR4(255,0,0,100);
@@ -206,28 +208,6 @@ void CompCollider::own(GameObject *object) {
 	LOG_METHOD_CLOSE('CompCollider::own', "void");
 }
 
-/*!
-  * @fn void CompCollider::equal_size(GameObject *object)
-	* @brief Verifies if an Object has an an equal size of the rectangle
-	* @param GameObject *object
-*/
-
-void CompCollider::equal_size(GameObject *object) {
-	LOG_METHOD_START('CompCollider::own');
-	LOG_VARIABLE("CompCollider::own", object);
-
-	assert(object != NULL);
-
-	Rect rectangle{};
-  //! Verifies if the element size is equal to the collisions size
-	for(Coll coll:colls) {
-		rectangle = rectangle.sum(Rect{coll.position,coll.size});
-	}
-	object->curPos = rectangle.corner(); //!< Updates the value of the current position of the object
-	object->curSize = rectangle.size(); //!< Updates the value of the current size of the object
-
-	LOG_METHOD_CLOSE('CompCollider::equal_size', "void");
-}
 
 /*!
   * @fn CompCollider::kills_component()
@@ -257,7 +237,7 @@ bool CompCollider::kills_component(float time) {
 		// Nothing to Do
 	}
 
-	LOG_METHOD_CLOSE('CompCollider::equal_size', "false");
+	LOG_METHOD_CLOSE('CompCollider::kills_component', "false");
 
 	return false;
 }
@@ -280,7 +260,7 @@ Component::type CompCollider::get_type() const{
 /*!
 	* @fn CompCollider::Coll::Coll(const uint &e,collType type,const Rect &r)
 	* @brief Constructor
-	* @param const uint &e,collType type,const Rect &r
+	* @param const uint &e, collType type, const Rect &rectangle
 */
 
 CompCollider::Coll::Coll(const uint &e, collType type, const Rect &rectangle): //! uint is equivalent to unsigned int
@@ -322,56 +302,13 @@ CompCollider::Coll::Coll(const uint &e, collType type, const Vec2 &position,cons
 
 Rect CompCollider::Coll::Box() const {
 	LOG_METHOD_START('CompCollider::Coll::Box');
-	LOG_VARIABLE("CompCollider::Coll::Coll", rectangle);
+	LOG_VARIABLE("CompCollider::Coll::Box", rectangle);
 
-	Rect rectangle = GO(entity)->Box(pos,size);
+	Rect rectangle = GO(entity)->Box(pos, size);
 
-	LOG_METHOD_CLOSE('CompCollider::Coll::Coll', rectangle.to_string());
+	LOG_METHOD_CLOSE('CompCollider::Coll::Box', rectangle.to_string());
 
 	return rectangle;
-}
-
-/*!
-	* @fn CompCollider::Coll::CollisionCheck(const CompCollider::Coll &other)
-	* @brief Checks if components has suffered an collision, generic type of element as a param
-	* @param CompCollider::Coll &otherComponent
-*/
-
-void CompCollider::Coll::collision_check(const CompCollider::Coll &other_component) {
-	LOG_METHOD_START('CompCollider::Coll::collision_check');
-	LOG_VARIABLE("CompCollider::Coll::collision_check", &other_component);
-
-	assert(other_component != NULL);
-
-	//! Verifies the collision type and if is whether
-	if(useDefault.count(other.cType)) {
-		useDefault[other.cType](*this, other_component);
-	}
-	else if(useDefault.count(collType::t_any)) {
-		useDefault[collType::t_any](*this, other_component);
-	}
-	else if(GO(entity)->HasComponent(Component::type::t_movement)) {
-
-		CompMovement *compMove = COMPMOVEp(GO(entity));
-
-		Vec2 &speed = compMove->speed;
-		Vec2 &totMove = compMove->move;
-		Vec2 move;
-
-		//! TODO : Comment this structure
-		if(totMove == Vec2{}) {
-			return;
-		}
-		else {
-			// Nothing to Do
-		}
-		collides_axis(other_component);
-		totMove = move;
-	}
-	else {
-		// Nothing to Do
-	}
-	LOG_METHOD_CLOSE('CompCollider::Coll::collision_check', "void");
 }
 
 /*!
@@ -414,8 +351,8 @@ void CompCollider::Coll::collides_axis(const CompCollider::Coll &other_component
 */
 
 Vec2 CompCollider::Coll::collides(const Coll &other_component,const Vec2 &move,const Vec2 &moved) const {
-	LOG_METHOD_START('CompCollider::Coll::collides_axis');
-	LOG_VARIABLE("CompCollider::Coll::collides_axis", &other_component);
+	LOG_METHOD_START('CompCollider::Coll::collides');
+	LOG_VARIABLE("CompCollider::Coll::collides", &other_component, const Vec2 &move,const Vec2 &moved);
 
 	assert(other_component != NULL);
 	assert(move != NULL);
@@ -425,13 +362,12 @@ Vec2 CompCollider::Coll::collides(const Coll &other_component,const Vec2 &move,c
 
 	Rect rectangle = Box() + moved; //!< Updates the current value of the rectangle
 	Rect another_rectangle = other_component.Box(); //!< Updates the value of another rectangle
-	Vec2 moveSafe,move100 = move/precision,moveTry;
+	Vec2 moveSafe,move100 = move / precision,moveTry;
 
 	//! Iterates throughout the 'rangeable' variables to identify collision
 	for(counter, precision + 1) {
 		moveTry = move100 * counter;
 		//! Checks if a collision has happened
-		//! TODO: Refactorate decision structure
 		if((rectangle + moveTry).collides(box2)) {
 			return moveSafe;
 		}
@@ -441,6 +377,90 @@ Vec2 CompCollider::Coll::collides(const Coll &other_component,const Vec2 &move,c
 		moveSafe = moveTry;
 	}
 
-	LOG_METHOD_CLOSE('CompCollider::Coll::collides_axis', move.to_string());
+	LOG_METHOD_CLOSE('CompCollider::Coll::collides', move.to_string());
+
 	return move;
+}
+
+/*!
+* @fn void CompCollider::equal_size(GameObject *object)
+* @brief Verifies if an Object has an an equal size of the rectangle
+* @param GameObject *object
+*/
+
+void CompCollider::equal_size(GameObject *object) {
+	LOG_METHOD_START('CompCollider::equal_size');
+	LOG_VARIABLE("CompCollider::equal_size", object);
+
+	assert(object != NULL);
+
+	Rect rectangle{};
+	//! Verifies if the element size is equal to the collisions size
+	for(Coll coll:colls) {
+		rectangle = rectangle.sum(Rect{coll.position,coll.size});
+	}
+	object->curPos = rectangle.corner(); //!< Updates the value of the current position of the object
+	object->curSize = rectangle.size(); //!< Updates the value of the current size of the object
+
+	LOG_METHOD_CLOSE('CompCollider::equal_size', "void");
+}
+
+/*!
+* @fn CompCollider::Coll::CollisionCheck(const CompCollider::Coll &other_component)
+* @brief Checks if components has suffered an collision, generic type of element as a param
+* @param CompCollider::Coll &other_component
+*/
+
+void CompCollider::Coll::collision_check(const CompCollider::Coll &other_component) {
+	LOG_METHOD_START('CompCollider::Coll::collision_check');
+	LOG_VARIABLE("CompCollider::Coll::collision_check", &other_component);
+
+	assert(other_component != NULL);
+
+	//! Verifies the collision type and if is whether
+	if(useDefault.count(other.cType)) {
+		useDefault[other.cType](*this, other_component);
+	}
+	else if(useDefault.count(collType::t_any)) {
+		useDefault[collType::t_any](*this, other_component);
+	}
+	else if(GO(entity)->HasComponent(Component::type::t_movement)) {
+		has_component(other_component);
+	}
+	else {
+		// Nothing to Do
+	}
+	LOG_METHOD_CLOSE('CompCollider::Coll::collision_check', "void");
+}
+
+/*!
+* @fn CompCollider::Coll::has_component(const CompCollider::Coll &other_component)
+* @brief Checks if the collidable component has an component
+* @param CompCollider::Coll &other_component
+*/
+
+void CompCollider::Coll::has_component(const CompCollider::Coll &other_component) {
+	LOG_METHOD_START('CompCollider::Coll::has_component');
+	LOG_VARIABLE("CompCollider::Coll::has_component", &other_component);
+
+	assert(other_component != NULL);
+
+	CompMovement *compMove = COMPMOVEp(GO(entity));
+
+	Vec2 &speed = compMove->speed;
+
+	if(totMove == Vec2{}) {
+		return;
+	}
+	else {
+		// Nothing to Do
+	}
+	collides_axis(other_component);
+	Vec2 move;
+
+	Vec2 &totMove = compMove->move;
+	totMove = move;
+
+	LOG_METHOD_CLOSE('CompCollider::Coll::has_component', "void");
+
 }
