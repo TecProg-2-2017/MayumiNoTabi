@@ -12,29 +12,6 @@
 
 int debug_count = 0; //!< Global variable used as debug counter
 
-// Hotspot screen positions to be used as shortcuts
-// The number on the left is x axis and the right one is y axis
-pair<float, float>
-    hotspot_positions[] = {
-        // TOP_LEFT
-        {0.0, 0.0},
-        // TOP
-        {0.5, 0.0},
-        // TOP_RIGHT
-        {1.0, 0.0},
-        // LEFT
-        {0.0, 0.5},
-        // CENTER
-        {0.5, 0.5},
-        // RIGHT
-        {1.0, 0.5},
-        // BOTTOM_LEFT
-        {0.0, 1.0},
-        // BOTTOM
-        {0.5, 1.0},
-        // BOTTOM_RIGHT
-        {1.0, 1.0}};
-
 /*!
 	@fn       SDL_Color generate_color(int r, int g, int b, int a)
 	@brief    Generates color with a alpha channel
@@ -75,6 +52,63 @@ SDL_Color generate_color(int red,		// red value, 	range: 0 -> 255
 }
 
 /*!
+  @fn       float close_distance(const float &from, const float &to, 
+  const float &change)
+	@brief    Function that cannot be comprehended by mere human beings
+	@param    const float &from, const float &to, const float &change
+	@return   A float result (???)
+	@warning  TODO: this method must be refactorated for better understanding
+*/
+
+float close_distance(const float &from, const float &to, const float &change) {
+  LOG_METHOD_START("Common::close_distance");
+
+  LOG_VARIABLE("from", from);
+  LOG_VARIABLE("to", to);
+  LOG_VARIABLE("change", change);
+
+  if (abs(from - to) < change) {
+    return to;
+  }
+  else {
+    // Do nothing
+  }
+
+  if (from > to) {
+    return (from - change);
+  }
+  else {
+    // Do nothing
+  }
+
+  LOG_METHOD_CLOSE("Common::close_distance", from + change);
+  return from + change;
+}
+
+// Hotspot screen positions to be used as shortcuts
+// The number on the left is x axis and the right one is y axis
+pair<float, float> hotspot_positions[] = {
+  // TOP_LEFT
+  {0.0, 0.0},
+  // TOP
+  {0.5, 0.0},
+  // TOP_RIGHT
+  {1.0, 0.0},
+  // LEFT
+  {0.0, 0.5},
+  // CENTER
+  {0.5, 0.5},
+  // RIGHT
+  {1.0, 0.5},
+  // BOTTOM_LEFT
+  {0.0, 1.0},
+  // BOTTOM
+  {0.5, 1.0},
+  // BOTTOM_RIGHT
+  {1.0, 1.0}
+};
+
+/*!
 	@fn       bool equals(const float &a, const float &b)
 	@brief    Compares two float constants and returns the boolean result
 	@param    const float &a, const float &b
@@ -96,40 +130,6 @@ bool equals(const float &a, const float &b) {
 }
 
 /*!
-  @fn       float close_distance(const float &from, const float &to, 
-  const float &change)
-	@brief    Function that cannot be comprehended by mere human beings
-	@param    const float &from, const float &to, const float &change
-	@return   A float result (???)
-	@warning  TODO: this method must be refactorated for better understanding
-*/
-
-float close_distance(const float &from, const float &to, const float &change) {
-  LOG_METHOD_START("Common::close_distance");
-  
-  LOG_VARIABLE("from", from);
-  LOG_VARIABLE("to", to);
-  LOG_VARIABLE("change", change);
-
-	if (abs(from - to) < change) {
-		return to;
-  }
-  else {
-    // Do nothing
-  }
-
-	if (from > to) {
-		return (from - change);
-  }
-  else {
-    // Do nothing
-  }
-
-  LOG_METHOD_CLOSE("Common::close_distance", from + change);
-  return from + change;
-}
-
-/*!
 	@fn       string convert_float_to_str(float f)
 	@brief    Converts a float number to a string and returns it
 	@param    float number f
@@ -140,11 +140,11 @@ float close_distance(const float &from, const float &to, const float &change) {
 string convert_float_to_str(float float_number) {
   LOG_METHOD_START("Common::convert_float_to_str");
   LOG_VARIABLE("float_number", float_number);
-  
+
   char string_to_be_saved[15]; //!< Temporary storage variable for saving chars
 
   sprintf(string_to_be_saved, "%.2f", float_number);
 
   LOG_METHOD_CLOSE("Common::convert_float_to_str", string_to_be_saved);
-	return string_to_be_saved;
+  return string_to_be_saved;
 }
