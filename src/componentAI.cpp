@@ -15,7 +15,6 @@
 //#include <camera.hpp>
 //#include <inputManager.hpp>
 
-// TODO: Refactorate
 //! A constructor.
   /*!
   This is a constructor method of the componentAI class

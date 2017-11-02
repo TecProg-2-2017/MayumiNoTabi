@@ -161,116 +161,6 @@ CompAnim::~CompAnim() {
 }
 
 /*!
-	@fn       int CompAnim::get_frame_count()const
-	@brief    Returns current frame count as a integer
-	@param    none
-	@return   int value of frame count
-	@warning  none
-*/
-
-int CompAnim::get_frame_count()const {
-  LOG_METHOD_START("CompAnim::get_frame_count");
-  assert(sp != NULL);
-  
-  int qtd_frame = sp.get_frame_count();
-
-  LOG_METHOD_CLOSE("CompAnim::get_frame_count", qtd_frame);
-	return qtd_frame;
-}
-
-/*!
-	@fn       int CompAnim::get_current_frame()const
-	@brief    Returns current frame as a integer
-	@param    none
-	@return   int with the number of the current frame
-	@warning  none
-*/
-
-int CompAnim::get_current_frame()const {
-  LOG_METHOD_START("CompAnim::get_current_frame");
-  assert(sp != NULL);
-
-  int current_frame = sp.get_current_frame();
-
-  LOG_METHOD_CLOSE("CompAnim::get_current_frame", current_frame);
-  return current_frame;
-}
-
-/*!
-	@fn       void CompAnim::set_current_frame(int frame, bool force)
-	@brief    Sets the current frame
-	@param    int frame, bool force
-	@return   void
-	@warning  none
-*/
-
-void CompAnim::set_current_frame(int frame,		// range: unknown
-                                 bool force) {// true to force current frame
-  
-  LOG_METHOD_START("CompAnim::set_current_frame");
-  LOG_VARIABLE("frame", frame);
-  LOG_VARIABLE("force", force);
-
-  assert(sp != NULL);
-
-  // Set frame as current if it isn't already
-	if (frame != get_current_frame()) {
-    sp.SetFrame(frame);
-    
-		for (auto &foo:frameFunc[frame]) {
-      foo(GO(entity));
-		}
-    
-		called = true;
-		force = true;
-  }
-  else {
-    // Do nothing
-  }
-  
-	// Sets current frame by force
-	set_current_frame_by_force(frame, force);
-  LOG_METHOD_CLOSE("CompAnim::set_current_frame", sp.set_current_frame());
-}
-
-/*!
-@fn       void CompAnim::set_current_frame_by_force(int frame, bool force)
-@brief    Sets the current frame by force
-@param    int frame, bool force
-@return   void
-@warning  none
-*/
-
-void CompAnim::set_current_frame_by_force(int frame,
-                                          bool force) {
-
-  LOG_METHOD_START("CompAnim::set_current_frame_by_force");
-  LOG_VARIABLE("frame", frame);
-  LOG_VARIABLE("force", force);
-
-  assert(sp != NULL);
-
-  // Sets current frame by force
-  if (force == true) {
-    
-    // proceeds if frame exists or sets as null
-    if (colliders[frame] != nullptr) {
-      GO(entity)->SetComponent(Component::type::t_collider, colliders[frame]);
-    }
-    else if (GO(entity)->HasComponent(Component::type::t_collider)) {
-      GO(entity)->components[Component::type::t_collider] = nullptr;
-    }
-    else {
-      // Do nothing
-    }
-  }
-  else {
-    // Do nothing
-  }
-  LOG_METHOD_CLOSE("CompAnim::set_current_frame_by_force", "void");
-}
-
-/*!
 	@fn       bool CompAnim::Looped()const
 	@brief    Returns if the animation is looped (true) or not (false)
 	@param    none
@@ -335,7 +225,6 @@ void CompAnim::checks_animation_call(int frame) {
   assert(frame > 0);
   
   if (!called) {
-    
     // Iterates through frame
     for (auto &foo : frameFunc[frame]) {
       foo(GO(entity));
@@ -347,60 +236,6 @@ void CompAnim::checks_animation_call(int frame) {
     // Do nothing
   }
   LOG_METHOD_CLOSE("CompAnim::checks_animation_call", "void");
-}
-
-/*!
-	@fn       void CompAnim::compare_frames(int frame1, int frame2)
-	@brief    compares the frames
-	@param    int frame1, int frame2
-	@return   bool
-	@warning  none
-*/
-
-bool CompAnim::compare_frames(int frame1, int frame2) {
-  LOG_METHOD_START("CompAnim::compare_frames");
-  LOG_VARIABLE("frame1", frame1);
-  LOG_VARIABLE("frame2", frame2);
-
-  assert(frame1 < 0 or frame2 < 0);
-  
-  if (frame1 != frame2) {
-    LOG_METHOD_CLOSE("CompAnim::compare_frames", 'true');
-    
-    return true;
-  }
-  else {
-    LOG_METHOD_CLOSE("CompAnim::compare_frames", 'false');
-    
-    return false;
-  }
-}
-
-/*!
-	@fn       void CompAnim::set_new_frame(int frame1, int frame2)
-	@brief    sets the new frame if it is not already set
-	@param    int frame1, int frame2
-	@return   void
-	@warning  none
-*/
-
-void set_new_frame(int frame1, int frame2) {
-  LOG_METHOD_START("CompAnim::set_new_frame");
-  LOG_VARIABLE("frame1", frame1);
-  LOG_VARIABLE("frame2", frame2);
-
-  assert(frame1 < 0 or frame2 < 0);
-
-  // Checks if current frames is the same as the next one, if they're not the
-  // next frame is set
-  if (compare_frames(frame1, frame2)) {
-    called = false;
-    set_current_frame(frame2, true);
-  }
-  else {
-    // Do nothing
-  }
-  LOG_METHOD_CLOSE("CompAnim::set_new_frame", "void");
 }
 
 /*!
@@ -461,6 +296,170 @@ void CompAnim::own(GameObject* go) {
   set_current_frame(frame, true);
   
   LOG_METHOD_CLOSE("CompAnim::own", "void");
+}
+
+/*!
+	@fn       void CompAnim::compare_frames(int frame1, int frame2)
+	@brief    compares the frames
+	@param    int frame1, int frame2
+	@return   bool
+	@warning  none
+*/
+
+bool CompAnim::compare_frames(int frame1, int frame2) {
+  LOG_METHOD_START("CompAnim::compare_frames");
+  LOG_VARIABLE("frame1", frame1);
+  LOG_VARIABLE("frame2", frame2);
+
+  assert(frame1 < 0 or frame2 < 0);
+
+  if (frame1 != frame2) {
+    LOG_METHOD_CLOSE("CompAnim::compare_frames", 'true');
+
+    return true;
+  }
+  else {
+    LOG_METHOD_CLOSE("CompAnim::compare_frames", 'false');
+
+    return false;
+  }
+}
+
+/*!
+	@fn       int CompAnim::get_frame_count()const
+	@brief    Returns current frame count as a integer
+	@param    none
+	@return   int value of frame count
+	@warning  none
+*/
+
+int CompAnim::get_frame_count() const {
+  LOG_METHOD_START("CompAnim::get_frame_count");
+  assert(sp != NULL);
+
+  int qtd_frame = sp.get_frame_count();
+
+  LOG_METHOD_CLOSE("CompAnim::get_frame_count", qtd_frame);
+  return qtd_frame;
+}
+
+/*!
+	@fn       int CompAnim::get_current_frame()const
+	@brief    Returns current frame as a integer
+	@param    none
+	@return   int with the number of the current frame
+	@warning  none
+*/
+
+int CompAnim::get_current_frame() const {
+  LOG_METHOD_START("CompAnim::get_current_frame");
+  assert(sp != NULL);
+
+  int current_frame = sp.get_current_frame();
+
+  LOG_METHOD_CLOSE("CompAnim::get_current_frame", current_frame);
+  return current_frame;
+}
+
+/*!
+	@fn       void CompAnim::set_current_frame(int frame, bool force)
+	@brief    Sets the current frame
+	@param    int frame, bool force
+	@return   void
+	@warning  none
+*/
+
+void CompAnim::set_current_frame(int frame, // range: unknown
+                                 bool force) { // true to force current frame
+
+  LOG_METHOD_START("CompAnim::set_current_frame");
+  LOG_VARIABLE("frame", frame);
+  LOG_VARIABLE("force", force);
+
+  assert(sp != NULL);
+
+  // Set frame as current if it isn't already
+  if (frame != get_current_frame()) {
+    sp.SetFrame(frame);
+
+    for (auto &foo : frameFunc[frame]) {
+      foo(GO(entity));
+    }
+
+    called = true;
+    force = true;
+  }
+  else {
+    // Do nothing
+  }
+
+  // Sets current frame by force
+  set_current_frame_by_force(frame, force);
+  LOG_METHOD_CLOSE("CompAnim::set_current_frame", sp.set_current_frame());
+}
+
+/*!
+	@fn       void CompAnim::set_new_frame(int frame1, int frame2)
+	@brief    sets the new frame if it is not already set
+	@param    int frame1, int frame2
+	@return   void
+	@warning  none
+*/
+
+void set_new_frame(int frame1, int frame2) {
+  LOG_METHOD_START("CompAnim::set_new_frame");
+  LOG_VARIABLE("frame1", frame1);
+  LOG_VARIABLE("frame2", frame2);
+
+  assert(frame1 < 0 or frame2 < 0);
+
+  // Checks if current frames is the same as the next one, if they're not the
+  // next frame is set
+  if (compare_frames(frame1, frame2)) {
+    called = false;
+    set_current_frame(frame2, true);
+  }
+  else {
+    // Do nothing
+  }
+  LOG_METHOD_CLOSE("CompAnim::set_new_frame", "void");
+}
+
+/*!
+@fn       void CompAnim::set_current_frame_by_force(int frame, bool force)
+@brief    Sets the current frame by force
+@param    int frame, bool force
+@return   void
+@warning  none
+*/
+
+void CompAnim::set_current_frame_by_force(int frame,
+                                          bool force) {
+
+  LOG_METHOD_START("CompAnim::set_current_frame_by_force");
+  LOG_VARIABLE("frame", frame);
+  LOG_VARIABLE("force", force);
+
+  assert(sp != NULL);
+
+  // Sets current frame by force
+  if (force == true) {
+
+    // proceeds if frame exists or sets as null
+    if (colliders[frame] != nullptr) {
+      GO(entity)->SetComponent(Component::type::t_collider, colliders[frame]);
+    }
+    else if (GO(entity)->HasComponent(Component::type::t_collider)) {
+      GO(entity)->components[Component::type::t_collider] = nullptr;
+    }
+    else {
+      // Do nothing
+    }
+  }
+  else {
+    // Do nothing
+  }
+  LOG_METHOD_CLOSE("CompAnim::set_current_frame_by_force", "void");
 }
 
 /*!
