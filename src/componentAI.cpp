@@ -73,12 +73,13 @@ void CompAI::render_component_ai() {
   @brief    Method that picks a component type and returns it
   @param    none
   @return   Component::type
-  @warning  TODO: refactorate for better understanding
+  @warning  none
 */
 
 Component::type CompAI::get_type()const {
   LOG_METHOD_START("CompAI::get_type");
 
   LOG_METHOD_CLOSE("CompAI::get_type", Component::type::t_ai);
+  assert(Component::type::t_ai != NULL);
   return Component::type::t_ai;
 }

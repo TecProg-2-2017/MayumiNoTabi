@@ -27,6 +27,8 @@ bool Component::kills_component(float time) {
   UNUSED(time);
 
   LOG_METHOD_CLOSE("Component::kills_component", "true (hardcoded)");
+  
+  // How can I possibly check this??
   return true;
 }
 
