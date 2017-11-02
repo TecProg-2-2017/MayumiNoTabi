@@ -258,6 +258,7 @@ CompAnim &CompAnimControl::get_current() {
   LOG_METHOD_START("CompAnimControl::get_current");
   LOG_METHOD_CLOSE("CompAnimControl::get_current", "pointer to current animation");
 
+  assert(*animations[cur] != NULL);
   return *animations[cur];
 }
 
@@ -272,7 +273,7 @@ CompAnim &CompAnimControl::get_current() {
 const string &CompAnimControl::get_current_name() const {
   LOG_METHOD_START("CompAnimControl::get_current_name");
   LOG_METHOD_CLOSE("CompAnimControl::get_current_name", current);
-
+  assert(current != '');
   return current;
 }
 
@@ -287,7 +288,7 @@ const string &CompAnimControl::get_current_name() const {
 string &CompAnimControl::get_current_name() {
   LOG_METHOD_START("CompAnimControl::get_current_name");
   LOG_METHOD_CLOSE("CompAnimControl::get_current_name", current);
-
+  assert(current != "");
   return current;
 }
 
@@ -302,6 +303,6 @@ string &CompAnimControl::get_current_name() {
 Component::type CompAnimControl::get_type()const {
   LOG_METHOD_START("CompAnimControl::get_type");
   LOG_METHOD_CLOSE("CompAnimControl::get_type", Component::type::t_animation_control.to_string());
-
+  assert(Component::type::t_animation_control != NULL);
   return Component::type::t_animation_control;
 }
