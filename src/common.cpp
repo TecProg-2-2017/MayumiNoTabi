@@ -47,8 +47,12 @@ SDL_Color generate_color(int red,		// red value, 	range: 0 -> 255
 	color.b = blue;
 	color.a = alpha;
   
-  LOG_METHOD_CLOSE("Common::generate_color", color);
-	return color;
+  LOG_METHOD_CLOSE("Common::generate_color", color.to_string());
+  assert(color.red >= 0 and color.red <= 255);
+  assert(color.green >= 0 and color.green <= 255);
+  assert(color.blue >= 0 and color.blue <= 255);
+  assert(color.alpha >= 0 and color.alpha <= 255);
+  return color;
 }
 
 /*!
@@ -82,6 +86,7 @@ float close_distance(const float &from, const float &to, const float &change) {
   }
 
   LOG_METHOD_CLOSE("Common::close_distance", from + change);
+  assert((from + change) != NULL);
   return from + change;
 }
 
@@ -146,5 +151,6 @@ string convert_float_to_str(float float_number) {
   sprintf(string_to_be_saved, "%.2f", float_number);
 
   LOG_METHOD_CLOSE("Common::convert_float_to_str", string_to_be_saved);
+  assert(string_to_be_saved != "");
   return string_to_be_saved;
 }

@@ -144,6 +144,7 @@ uint Camera::get_camera_focus() {
   LOG_METHOD_START('Camera::get_camera_focus');
   LOG_METHOD_CLOSE('Camera::get_camera_focus', camera_focus);
 
+  assert(camera_focus >= 0);
   return camera_focus;
 }
 
@@ -165,6 +166,7 @@ Vec2 Camera::render_camera_pos(const Vec2& vec2_vector) {
   
   LOG_METHOD_CLOSE("Camera::render_camera_pos", rendered_camera_pos.to_string());
   
+  assert(rendered_camera_pos != NULL);
   return rendered_camera_pos;
 }
 
@@ -218,67 +220,57 @@ void Camera::update_camera_speed(float time) {
   LOG_VARIABLE("time", time);
 
   // Defines camera position in either follow or static or do nothing
-  if (camera_is_following)
-  {
+  if (camera_is_following) {
     LOG_MSG("if (camera_is_following)");
 
     center_camera_to(GO(camera_focus)->Box().center());
   }
-  else if (!camera_is_locked)
-  {
+  else if (!camera_is_locked) {
     LOG_MSG("else if (!camera_is_locked)");
 
     camera_speed = Vec2(0, 0);
 
     // defines camera speed according to the arrow key that has been pressed.
     // (left)
-    if (INPUT.key_is_down(KEY_LEFT))
-    {
+    if (INPUT.key_is_down(KEY_LEFT)) {
       LOG_MSG("if (INPUT.key_is_down(KEY_LEFT))");
 
       camera_speed.x = camera_speed.x - CAMERA_SPEED;
     }
-    else
-    {
+    else {
       // Do nothing
     }
 
     // defines camera speed according to the arrow key that has been pressed.
     // (right)
-    if (INPUT.IsKeyDown(KEY_RIGHT))
-    {
+    if (INPUT.IsKeyDown(KEY_RIGHT)) {
       LOG_MSG("if (INPUT.IsKeyDown(KEY_RIGHT)");
 
       camera_speed.x = camera_speed.x + CAMERA_SPEED;
     }
-    else
-    {
+    else {
       // Do nothing
     }
 
     // defines camera speed according to the arrow key that has been pressed.
     // (up)
-    if (INPUT.key_is_down(KEY_UP))
-    {
+    if (INPUT.key_is_down(KEY_UP)) {
       LOG_MSG("if (INPUT.key_is_down(KEY_UP)");
 
       camera_speed.y = camera_speed.y - CAMERA_SPEED;
     }
-    else
-    {
+    else {
       // Do nothing
     }
 
     // defines camera speed according to the arrow key that has been pressed.
     // (down)
-    if (INPUT.key_is_down(KEY_DOWN))
-    {
+    if (INPUT.key_is_down(KEY_DOWN)) {
       LOG_MSG("if (INPUT.key_is_down(KEY_DOWN))");
 
       camera_speed.y = CAMERA_SPEED + camera_speed.y;
     }
-    else
-    {
+    else {
       // Do nothing
     }
 
@@ -304,7 +296,8 @@ float Camera::render_camera_pos_x(const float& x_axis_pos) {
   // Stores return value
   float rendered_x = (x_axis_pos - CAMERA.x) * CAMERAZOOM;
   
-  LOG_METHOD_CLOSE("Camera::render_camera_pos_y", rendered_x;
+  LOG_METHOD_CLOSE("Camera::render_camera_pos_y", rendered_x);
+  assert(rendered_x != NULL);
   return rendered_x;
 }
 
@@ -323,6 +316,7 @@ float Camera::render_camera_pos_y(const float& y_axis_pos) {
   // Stores return value
   float rendered_y = (y_axis_pos - CAMERA.y) * CAMERAZOOM;
 
-  LOG_METHOD_CLOSE("Camera::render_camera_pos_y", rendered_y;
+  LOG_METHOD_CLOSE("Camera::render_camera_pos_y", rendered_y);
+  assert(rendered_y != NULL);
   return rendered_y;
 }
