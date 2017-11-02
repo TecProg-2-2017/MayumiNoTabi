@@ -29,19 +29,22 @@ CompAnimControl::CompAnimControl(string filename, CompCollider* collider) {
   assert(collider != NULL);
   assert(filename != "");
 
-  string name = "";
-  string animation_filename = "";
-
   ifstream in(ANIMATION_PATH + filename + ".txt");
-
+  
   // Checks if the animation's .txt file is already opened
   if (!in.is_open()) {
     cerr << "Erro ao abrir arquivo de grupo de animações '" << filename << "'";
     cerr << endl;
   }
   else {
-    in >> name >> animation_filename;
-    cur = prev = name;
+    string name = "";
+    string animation_filename = "";
+
+    in >> name;
+    in >> animation_filename;
+    
+    prev = name;
+    cur = prev;
     
     animations[name] = make_unique<CompAnim>(animation_filename, collider);
     
@@ -63,6 +66,48 @@ CompAnimControl::CompAnimControl(string filename, CompCollider* collider) {
 CompAnimControl::~CompAnimControl() {
   LOG_METHOD_START("CompAnimControl::~CompAnimControl");
   LOG_METHOD_CLOSE("CompAnimControl::~CompAnimControl", "destructor");
+}
+
+/*!
+  @fn       bool CompAnimControl::kills_component(float time)
+  @brief    Method for rendering player's death animation
+  @param    float time value
+  @return   boolean value
+  @warning  TODO: alternative flux in condition structures
+*/
+
+bool CompAnimControl::kills_component(float time) { // range: unknown
+  LOG_METHOD_START("CompAnimControl::kills_component");
+  LOG_VARIABLE("time", time);
+  UNUSED(time);
+
+  // Checks if die animation isn't in animations
+  if (!animations.count("die")) {
+    return true;
+  }
+  else {
+    // Do nothing
+  }
+
+  // Checks if player is dying
+  if (dying) {
+
+    // Makes method return true if current animation isn't player's death
+    if (cur != "die") {
+      LOG_METHOD_CLOSE("CompAnimControl::kills_component", "true");
+      return true;
+    }
+    else {
+      // Do nothing
+    }
+  }
+  else {
+    change_current("die", false);
+    dying = true;
+  }
+
+  LOG_METHOD_CLOSE("CompAnimControl::kills_component", "false");
+  return false;
 }
 
 /*!
@@ -117,51 +162,6 @@ void CompAnimControl::change_current(string animation_name,
 }
 
 /*!
-  @fn
-  @brief    Returns current animation object
-  @param    none
-  @return   CompAnim& type animation object pointer
-  @warning  none
-*/
-
-CompAnim& CompAnimControl::get_current() {
-  LOG_METHOD_START("CompAnimControl::get_current");
-  LOG_METHOD_CLOSE("CompAnimControl::get_current", "pointer to current animation");
-
-  return *animations[cur];
-}
-
-/*!
-  @fn       const string& CompAnimControl::get_current_name()const
-  @brief    Returns current animation's name as a constant
-  @param    none
-  @return   const string with animation name
-  @warning  none
-*/
-
-const string& CompAnimControl::get_current_name()const {
-  LOG_METHOD_START("CompAnimControl::get_current_name");
-  LOG_METHOD_CLOSE("CompAnimControl::get_current_name", current);
-
-  return current;
-}
-
-/*!
-  @fn       string& CompAnimControl::get_current_name()
-  @brief    Returns current animation's name
-  @param    none
-  @return   string with current animation's name
-  @warning  none
-*/
-
-string& CompAnimControl::get_current_name() {
-  LOG_METHOD_START("CompAnimControl::get_current_name");
-  LOG_METHOD_CLOSE("CompAnimControl::get_current_name", current);
-
-  return current;
-}
-
-/*!
   @fn       void CompAnimControl::update(float time)
   @brief    Updates the animation according to time
   @param    float value resembling time
@@ -185,9 +185,9 @@ void CompAnimControl::update(float time) {
         cur = "dead";
       }
       else {
-        get_current().sp.looped = false;
         change_current(prev);
         
+        get_current().sp.looped = false;
         get_current().update(time);
       }
     }
@@ -247,45 +247,49 @@ void CompAnimControl::own(GameObject *game_object) {
 }
 
 /*!
-  @fn       bool CompAnimControl::kills_component(float time)
-  @brief    Method for rendering player's death animation
-  @param    float time value
-  @return   boolean value
-  @warning  TODO: alternative flux in condition structures
+  @fn
+  @brief    Returns current animation object
+  @param    none
+  @return   CompAnim& type animation object pointer
+  @warning  none
 */
 
-bool CompAnimControl::kills_component(float time) { // range: unknown
-  LOG_METHOD_START("CompAnimControl::kills_component");
-  LOG_VARIABLE("time", time);
-  UNUSED(time);
+CompAnim &CompAnimControl::get_current() {
+  LOG_METHOD_START("CompAnimControl::get_current");
+  LOG_METHOD_CLOSE("CompAnimControl::get_current", "pointer to current animation");
 
-  // Checks if die animation isn't in animations
-  if (!animations.count("die")) {
-    return true;
-  }
-  else {
-    // Do nothing
-  }
+  assert(*animations[cur] != NULL);
+  return *animations[cur];
+}
 
-  // Checks if player is dying
-  if (dying) {
+/*!
+  @fn       const string& CompAnimControl::get_current_name()const
+  @brief    Returns current animation's name as a constant
+  @param    none
+  @return   const string with animation name
+  @warning  none
+*/
 
-    // Makes method return true if current animation isn't player's death
-    if (cur != "die") {
-      LOG_METHOD_CLOSE("CompAnimControl::kills_component", "true");
-      return true;
-    }
-    else {
-      // Do nothing
-    }
-  }
-  else {
-    change_current("die", false);
-    dying = true;
-  }
-  
-  LOG_METHOD_CLOSE("CompAnimControl::kills_component", "false");
-  return false;
+const string &CompAnimControl::get_current_name() const {
+  LOG_METHOD_START("CompAnimControl::get_current_name");
+  LOG_METHOD_CLOSE("CompAnimControl::get_current_name", current);
+  assert(current != '');
+  return current;
+}
+
+/*!
+  @fn       string& CompAnimControl::get_current_name()
+  @brief    Returns current animation's name
+  @param    none
+  @return   string with current animation's name
+  @warning  none
+*/
+
+string &CompAnimControl::get_current_name() {
+  LOG_METHOD_START("CompAnimControl::get_current_name");
+  LOG_METHOD_CLOSE("CompAnimControl::get_current_name", current);
+  assert(current != "");
+  return current;
 }
 
 /*!
@@ -299,6 +303,6 @@ bool CompAnimControl::kills_component(float time) { // range: unknown
 Component::type CompAnimControl::get_type()const {
   LOG_METHOD_START("CompAnimControl::get_type");
   LOG_METHOD_CLOSE("CompAnimControl::get_type", Component::type::t_animation_control.to_string());
-
+  assert(Component::type::t_animation_control != NULL);
   return Component::type::t_animation_control;
 }
