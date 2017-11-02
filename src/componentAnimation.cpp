@@ -175,6 +175,7 @@ bool CompAnim::Looped()const {
   bool is_animation_looped = sp.Looped();
 
   LOG_METHOD_CLOSE("CompAnim::Looped", is_animation_looped);
+  assert(is_animation_looped == true || is_animation_looped == false);
   return is_animation_looped;
 }
 
@@ -358,6 +359,7 @@ int CompAnim::get_current_frame() const {
   int current_frame = sp.get_current_frame();
 
   LOG_METHOD_CLOSE("CompAnim::get_current_frame", current_frame);
+  assert(current_frame > -1);
   return current_frame;
 }
 
@@ -473,5 +475,6 @@ void CompAnim::set_current_frame_by_force(int frame,
 Component::type CompAnim::GetType()const {
   LOG_METHOD_START("CompAnim::GetType");  
   LOG_METHOD_CLOSE("CompAnim::GetType", Component::type::t_animation);
+  assert(Component::type::t_animation != NULL);
   return Component::type::t_animation;
 }
