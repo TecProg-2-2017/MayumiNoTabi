@@ -42,6 +42,196 @@ Game* Game::instance = 0;
 	@warning Method that requires review of comment
 */
 
+Game::Game(string title, int width, int height):frameStart{0},deltatime{0},windowSize{
+																												(float)width,(float)height} {
+		//! TODO:LOG_VARIABLE here
+		assert(title != "");
+		assert(width > 0);
+		assert(height > 0);
+
+	  srand(time(NULL));
+
+	// Check if a instance was create
+		checkInstance();
+
+	// Check all SDL outputs and if can't be initialize display a error messege
+  	checkSDLOutputs();
+
+		int res = IMAGE_Init(image_settings);
+	// Initialize Audio, Image and TTF modules
+		initializeModules(res);
+
+	// Creating the window that will contain the game interface
+		windowCreate();
+
+		SDL_SetRenderDrawBlendMode(GAMERENDER, SDL_BLENDMODE_BLEND);
+};
+
+/*!
+	@fn Game::~Game()
+	@brief This is a destructor
+	@warning Method that requires review of comment
+*/
+
+Game::~Game() {
+
+	//! TODO:LOG_METHOD here
+
+	checkStackState();
+
+	Resources::ClearImages();
+	Resources::ClearMusics();
+	Resources::ClearFonts();
+
+	TTF_Quit();
+
+	Mix_CloseAudio();
+	Mix_Quit();
+
+	IMAGE_Quit();
+
+	SDL_DestroyRenderer(renderer);
+	SDL_DestroyWindow(window);
+	SDL_Quit();
+
+}
+
+/*!
+	@fn Game& Game::GetInstance()
+	@brief Create a instance of class Game
+	@return Returns a instance of Game
+	@warning Method that requires review of comment
+*/
+
+Game& Game::GetInstance() {
+	return (*instance);
+}
+
+/*!
+	@fn State& Game::GetCurrentState()
+	@brief Verify the current object state
+	@return state
+	@warning Method that requires review of comment
+*/
+
+State& Game::GetCurrentState() {
+	return (*stateStack.top());
+}
+
+/*!
+	@fn void Game::Run()
+	@brief
+	@param
+	@return
+	@warning Method that requires review of comment
+*/
+
+SDL_Renderer* Game::GetRenderer() {
+	return renderer;
+}
+
+/*!
+	@fn void Game::Push(State* state)
+	@brief Swapping the object state
+	@param state
+	@return The execution of this method returns no value
+	@warning Method that requires review of comment
+*/
+
+void Game::Push(State* state) {
+
+
+	checkStoredState();
+
+	assert(state != NULL);
+
+	if (storedState){
+		delete storedState;
+	}
+	storedState=state;
+}
+
+/*!
+	@fn void Game::Run()
+	@brief
+	@param
+	@return The execution of this method returns no value
+	@warning Method that requires review of comment
+*/
+
+void Game::Run() {
+
+	if (storedState) {
+
+		stateStack.push(unique_ptr<State>(storedState));
+		storedState=nullptr;
+
+		GetCurrentState().Begin();
+	}
+	else {
+		//Nothing to do
+	}
+
+	while (!stateStack.empty()) {
+		CalculateDeltaTime();
+
+		// Update the state of the game elements and set it
+
+		INPUT.input_event_handler(deltatime);
+		//if (INPUT.KeyPress(KEY_F(11))) SwitchWindowMode();
+
+		GetCurrentState().update(deltatime);
+		GetCurrentState().render();
+
+		SDL_RenderPresent(renderer);
+
+		/* If the user press Pause button the system change the status to paused
+			or press End button stop the game and reset
+			*/
+			pauseOrEndGame();
+
+		SDL_Delay(17);
+	}
+
+	while (stateStack.size()) {
+		GetCurrentState().End();
+		stateStack.pop();
+	}
+}
+
+float Game::GetDeltaTime() {
+	return deltatime;
+}
+
+/*!
+	@fn void Game::CalculateDeltaTime()
+	@brief
+	@return The execution of this method returns no value
+	@warning Method that requires review of comment
+*/
+
+void Game::CalculateDeltaTime() {
+
+	unsigned int tmp = frameStart;
+
+	//Define the response time of a frame
+	frameStart = SDL_GetTicks();
+	deltatime = max((frameStart - tmp) / 1000.0, 0.001);
+}
+
+/*!
+	@fn void Game::SwitchWindowMode()
+	@brief
+	@return The execution of this method returns no value
+	@warning Method that requires review of comment
+*/
+
+//! Functions to be called by the methods in order to perform actions
+
+void Game::SwitchWindowMode() {
+	// Method body its empty
+}
+
 void checkInstance(){
 
 	//! TODO:LOG_VARIABLE here
@@ -288,192 +478,4 @@ void pauseOrEndGame(){
 	else {
 		//Nothing to do
 	}
-}
-
-Game::Game(string title, int width, int height):frameStart{0},deltatime{0},windowSize{
-																												(float)width,(float)height} {
-		//! TODO:LOG_VARIABLE here
-		assert(title != "");
-		assert(width > 0);
-		assert(height > 0);
-
-	  srand(time(NULL));
-
-	// Check if a instance was create
-		checkInstance();
-
-	// Check all SDL outputs and if can't be initialize display a error messege
-  	checkSDLOutputs();
-
-		int res = IMAGE_Init(image_settings);
-	// Initialize Audio, Image and TTF modules
-		initializeModules(res);
-
-	// Creating the window that will contain the game interface
-		windowCreate();
-
-		SDL_SetRenderDrawBlendMode(GAMERENDER, SDL_BLENDMODE_BLEND);
-};
-
-/*!
-	@fn Game::~Game()
-	@brief This is a destructor
-	@warning Method that requires review of comment
-*/
-
-Game::~Game() {
-
-	//! TODO:LOG_METHOD here
-
-	checkStackState();
-
-	Resources::ClearImages();
-	Resources::ClearMusics();
-	Resources::ClearFonts();
-
-	TTF_Quit();
-
-	Mix_CloseAudio();
-	Mix_Quit();
-
-	IMAGE_Quit();
-
-	SDL_DestroyRenderer(renderer);
-	SDL_DestroyWindow(window);
-	SDL_Quit();
-
-}
-
-/*!
-	@fn Game& Game::GetInstance()
-	@brief Create a instance of class Game
-	@return Returns a instance of Game
-	@warning Method that requires review of comment
-*/
-
-Game& Game::GetInstance() {
-	return (*instance);
-}
-
-/*!
-	@fn State& Game::GetCurrentState()
-	@brief Verify the current object state
-	@return state
-	@warning Method that requires review of comment
-*/
-
-State& Game::GetCurrentState() {
-	return (*stateStack.top());
-}
-
-/*!
-	@fn void Game::Run()
-	@brief
-	@param
-	@return
-	@warning Method that requires review of comment
-*/
-
-SDL_Renderer* Game::GetRenderer() {
-	return renderer;
-}
-
-/*!
-	@fn void Game::Push(State* state)
-	@brief Swapping the object state
-	@param state
-	@return The execution of this method returns no value
-	@warning Method that requires review of comment
-*/
-
-void Game::Push(State* state) {
-
-
-	checkStoredState();
-
-	assert(state != NULL);
-
-	if (storedState){
-		delete storedState;
-	}
-	storedState=state;
-}
-
-/*!
-	@fn void Game::Run()
-	@brief
-	@param
-	@return The execution of this method returns no value
-	@warning Method that requires review of comment
-*/
-
-void Game::Run() {
-
-	if (storedState) {
-
-		stateStack.push(unique_ptr<State>(storedState));
-		storedState=nullptr;
-
-		GetCurrentState().Begin();
-	}
-	else {
-		//Nothing to do
-	}
-
-	while (!stateStack.empty()) {
-		CalculateDeltaTime();
-
-		// Update the state of the game elements and set it
-
-		INPUT.input_event_handler(deltatime);
-		//if (INPUT.KeyPress(KEY_F(11))) SwitchWindowMode();
-
-		GetCurrentState().update(deltatime);
-		GetCurrentState().render();
-
-		SDL_RenderPresent(renderer);
-
-		/* If the user press Pause button the system change the status to paused
-			or press End button stop the game and reset
-			*/
-			pauseOrEndGame();
-
-		SDL_Delay(17);
-	}
-
-	while (stateStack.size()) {
-		GetCurrentState().End();
-		stateStack.pop();
-	}
-}
-
-float Game::GetDeltaTime() {
-	return deltatime;
-}
-
-/*!
-	@fn void Game::CalculateDeltaTime()
-	@brief
-	@return The execution of this method returns no value
-	@warning Method that requires review of comment
-*/
-
-void Game::CalculateDeltaTime() {
-
-	unsigned int tmp = frameStart;
-
-	//Define the response time of a frame
-	frameStart = SDL_GetTicks();
-	deltatime = max((frameStart - tmp) / 1000.0, 0.001);
-}
-
-/*!
-	@fn void Game::SwitchWindowMode()
-	@brief
-	@return The execution of this method returns no value
-	@warning Method that requires review of comment
-*/
-
-void Game::SwitchWindowMode() {
-	// Method body its empty
 }
