@@ -44,7 +44,9 @@ Game* Game::instance = 0;
 
 Game::Game(string title, int width, int height):frameStart{0},deltatime{0},windowSize{
 																												(float)width,(float)height} {
-		//! TODO:LOG_VARIABLE here
+		LOG_METHOD_START('Game::Game');
+		LOG_VARIABLE("Game::Game", "title","width","height");
+
 		assert(title != "");
 		assert(width > 0);
 		assert(height > 0);
@@ -65,6 +67,9 @@ Game::Game(string title, int width, int height):frameStart{0},deltatime{0},windo
 		windowCreate();
 
 		SDL_SetRenderDrawBlendMode(GAMERENDER, SDL_BLENDMODE_BLEND);
+
+		LOG_METHOD_CLOSE('Game::Game', "constructor");
+
 };
 
 /*!
@@ -75,7 +80,7 @@ Game::Game(string title, int width, int height):frameStart{0},deltatime{0},windo
 
 Game::~Game() {
 
-	//! TODO:LOG_METHOD here
+	LOG_METHOD_START('Game::Game', "destructor");
 
 	checkStackState();
 
@@ -94,6 +99,8 @@ Game::~Game() {
 	SDL_DestroyWindow(window);
 	SDL_Quit();
 
+	LOG_METHOD_CLOSE('Game::Game', "destructor");
+
 }
 
 /*!
@@ -104,7 +111,12 @@ Game::~Game() {
 */
 
 Game& Game::GetInstance() {
+
+	LOG_METHOD_START('Game::GetInstance');
+	LOG_METHOD_CLOSE('Game::GetInstance');
+
 	return (*instance);
+
 }
 
 /*!
@@ -115,7 +127,12 @@ Game& Game::GetInstance() {
 */
 
 State& Game::GetCurrentState() {
+
+	LOG_METHOD_START('Game::GetCurrentState');
+	LOG_METHOD_CLOSE('Game::GetCurrentState');
+
 	return (*stateStack.top());
+
 }
 
 /*!
@@ -127,7 +144,12 @@ State& Game::GetCurrentState() {
 */
 
 SDL_Renderer* Game::GetRenderer() {
+
+	LOG_METHOD_START('Game::GetRenderer');
+	LOG_METHOD_CLOSE('Game::GetRenderer');
+
 	return renderer;
+
 }
 
 /*!
@@ -140,6 +162,8 @@ SDL_Renderer* Game::GetRenderer() {
 
 void Game::Push(State* state) {
 
+	LOG_METHOD_START('Game::Push');
+	LOG_VARIABLE("Game::Push", "state");
 
 	checkStoredState();
 
@@ -149,6 +173,8 @@ void Game::Push(State* state) {
 		delete storedState;
 	}
 	storedState=state;
+
+	LOG_METHOD_CLOSE('Game::Push',"void");
 }
 
 /*!
@@ -160,6 +186,8 @@ void Game::Push(State* state) {
 */
 
 void Game::Run() {
+
+	LOG_METHOD_START('Game::Run');
 
 	if (storedState) {
 
@@ -197,9 +225,16 @@ void Game::Run() {
 		GetCurrentState().End();
 		stateStack.pop();
 	}
+
+	LOG_METHOD_CLOSE('Game::Run');
+
 }
 
 float Game::GetDeltaTime() {
+
+	LOG_METHOD_START('Game::GetDeltaTime');
+	LOG_METHOD_CLOSE('Game::GetDeltaTime',"float");
+
 	return deltatime;
 }
 
@@ -212,11 +247,15 @@ float Game::GetDeltaTime() {
 
 void Game::CalculateDeltaTime() {
 
+	LOG_METHOD_START('Game::CalculateDeltaTime');
+
 	unsigned int tmp = frameStart;
 
 	//Define the response time of a frame
 	frameStart = SDL_GetTicks();
 	deltatime = max((frameStart - tmp) / 1000.0, 0.001);
+
+	LOG_METHOD_CLOSE('Game::CalculateDeltaTime',"void");
 }
 
 /*!
@@ -229,12 +268,16 @@ void Game::CalculateDeltaTime() {
 //! Functions to be called by the methods in order to perform actions
 
 void Game::SwitchWindowMode() {
+
+	LOG_METHOD_START('Game::SwitchWindowMode');
+	LOG_METHOD_CLOSE('Game::SwitchWindowMode',"void");
 	// Method body its empty
 }
 
 void checkInstance(){
 
-	//! TODO:LOG_VARIABLE here
+	LOG_METHOD_START('checkInstance');
+	LOG_VARIABLE("checkInstance", "title","width","height");
 	assert(title != "");
 	assert(width > 0);
 	assert(height > 0);
@@ -251,9 +294,13 @@ void checkInstance(){
 
 	}
 
+	LOG_METHOD_CLOSE('checkInstance',"void");
+
 }
 
 void checkSDLOutputs(){
+
+	LOG_METHOD_START('checkSDLOutputs');
 
 	bool success = SDL_Init(SDL_INIT_VIDEO | SDL_INIT_AUDIO | SDL_INIT_TIMER) == 0;
 
@@ -267,6 +314,8 @@ void checkSDLOutputs(){
 	else {
 		//Nothing to do
 	}
+
+	LOG_METHOD_START('checkSDLOutputs',"void");
 }
 
 void initializeImageLibrary(int image_settings, int res){
@@ -275,7 +324,8 @@ void initializeImageLibrary(int image_settings, int res){
 		 if its necessary
 	 */
 
-	//! TODO:LOG_VARIABLE here
+	LOG_METHOD_START('initializeImageLibrary');
+	LOG_VARIABLE("initializeImageLibrary", "image_settings","res");
 	assert (image_settings >= 0);
 	assert (res >=0);
 
@@ -291,6 +341,7 @@ void initializeImageLibrary(int image_settings, int res){
 			else {
 				//Nothing to do
 			}
+
 		}
 
 		error_messege += "\n";
@@ -302,11 +353,14 @@ void initializeImageLibrary(int image_settings, int res){
 		//Nothing to do
 	}
 
+	LOG_METHOD_CLOSE('initializeImageLibrary',"void");
+
 }
 
 void initializeImageModule(int res) {
 
-	//! TODO:LOG_VARIABLE here
+	LOG_METHOD_START('initializeImageModule');
+	LOG_VARIABLE("initializeImageModule", "res");
 	assert (res >=0);
 
 	map<int, string> code_name_map = {{IMAGE_INIT_TIF, "tif"},
@@ -327,11 +381,14 @@ void initializeImageModule(int res) {
 
 	initializeImageLibrary(image_settings, res);
 
+	LOG_METHOD_CLOSE('initializeImageModule',"void");
+
 }
 
 void initializeAudioModule(int res, int audio_modules){
 
-	//! TODO:LOG_VARIABLE here
+	LOG_METHOD_START('initializeAudioModule');
+	LOG_VARIABLE("initializeAudioModule", "res","audio_modules");
 	assert (res >=0);
 	assert (audio_modules >= 0);
 
@@ -351,10 +408,14 @@ void initializeAudioModule(int res, int audio_modules){
 
 	}
 
+	LOG_METHOD_CLOSE('initializeAudioModule',"void");
+
 }
 
 void installSDLAudio(int res){
 
+	LOG_METHOD_START('installSDLAudio');
+	LOG_VARIABLE("installSDLAudio", "res");
 	assert (res >=0);
 
 	if (res != 0){
@@ -363,10 +424,14 @@ void installSDLAudio(int res){
 	else {
 		//Nothing to do
 	}
+
+	LOG_METHOD_CLOSE('installSDLAudio', "void");
 }
 
 void initializeTTFModule(int res){
 
+	LOG_METHOD_START('initializeTTFModule');
+	LOG_VARIABLE("initializeTTFModule", "res");
 	assert (res >=0);
 
 	if (res != 0){
@@ -375,10 +440,15 @@ void initializeTTFModule(int res){
 	else {
 		//Nothing to do
 	}
+
+	LOG_METHOD_START('initializeTTFModule',"void");
+
 }
 
 void initializeModules(int res){
 
+	LOG_METHOD_START('initializeModules');
+	LOG_VARIABLE("initializeModules", "res");
 	assert (res >=0);
 
 	// Initialize image module and check if process went OK
@@ -400,9 +470,15 @@ void initializeModules(int res){
 		// Initialize TTF module
 	 	res = TTF_Init();
 	 	initializeTTFModule(int res);
+
+		LOG_METHOD_CLOSE('initializeModules',"void");
+
 }
 
 void windowCreate(){
+
+	LOG_METHOD_START('windowCreate');
+
 	window = SDL_CreateWindow(title.c_str(),
 														SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED,
 														width, height, SDL_WINDOW_FULLSCREEN);
@@ -424,9 +500,13 @@ void windowCreate(){
 	}
 
 	storedState = nullptr;
+
+	LOG_METHOD_CLOSE('windowCreate');
 }
 
 void checkStoredState(){
+
+	LOG_METHOD_START('checkStoredState');
 
 	if (storedState) {
 		delete storedState;
@@ -434,9 +514,14 @@ void checkStoredState(){
 	else{
 		//Nothing to do
 	}
+
+	LOG_METHOD_CLOSE('checkStoredState', "void");
+
 }
 
 void checkStackState(){
+
+LOG_METHOD_START('checkStackState');
 
 	while (stateStack.size()) {
 		delete stateStack.top().get();
@@ -449,10 +534,10 @@ void checkStackState(){
 
 void pauseOrEndGame(){
 	if (GetCurrentState().get_quit_requested()) {
+		GetCurrentState().Pause();
 			break;
 	}
 	else if (GetCurrentState().PopRequested()) {
-		GetCurrentState().Pause();
 		GetCurrentState().End();
 		stateStack.pop();
 
@@ -478,4 +563,7 @@ void pauseOrEndGame(){
 	else {
 		//Nothing to do
 	}
+
+	LOG_METHOD_CLOSE('checkStackState',"void");
+
 }
