@@ -38,6 +38,8 @@ void textPosition(){
     This is a constructor method of componentText class
     */
 CompText::CompText(const Text &t, Hotspot h, Vec2 p):txt{t},pos{p}{
+
+	
 	txt.set_hotspot(h);
 }
 
@@ -66,6 +68,8 @@ CompText::~CompText() {
 	@warning Method that requires review of comment
 */
 void CompText::update(float time) { //Time range 0.0 - 60.0
+
+	//! TODO:LOG_VARIABLE here
 
 	assert(time > 0.0 and time < 60.0);
 	UNUSED(time);
