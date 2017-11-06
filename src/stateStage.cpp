@@ -32,7 +32,7 @@ void StateStage::Update(float time) {
 	if (INPUT.key_pressed(KEY_ESC))popRequested=true;
 	
 	Vec2 pos = GO(PLAYER_UID)->pos;
-	if (INPUT.key_pressed(KEY(u))) AddObject(GameObject::MakePorco(pos+Vec2{2000.0f,-100.0f}));
+	if (INPUT.key_pressed(KEY(u))) AddObject(GameObject::makeBoar(pos+Vec2{2000.0f,-100.0f}));
 	if (INPUT.key_pressed(KEY(p))) AddObject(GameObject::MakeMike(pos+Vec2{850.0f,-100.0f}));
 	if (INPUT.key_pressed(KEY(o))) AddObject(GameObject::MakeBanshee(pos+Vec2{850.0f,-100.0f},pos+Vec2{230.0f,-200.0f}));
 	if (INPUT.key_pressed(KEY(i))) AddObject(GameObject::MakeMask(pos+Vec2{850.0f,-100.0f}));
