@@ -18,27 +18,6 @@
 #include <assert.h>
 //#include <inputManager.hpp>
 
-//! Functions to be called by the methods in order to perform actions
-
-void camScaling(Vec2 position){
-
-	  //! TODO:LOG_VARIABLE here
-
-	assert(position != NULL);
-
-	position = GO(entity)->Box().corner() + position.rotate(GO(entity)->rotation);
-	sprite.SetFlipH(GO(entity)->flipped);
-
-	if (camScaling) {
-			sprite.Render((position-CAMERA)*CAMERAZOOM,GO(entity)->rotation, CAMERAZOOM);
-	}
-	else {
-			sprite.Render(position,GO(entity)->rotation, 1);
-	}
-}
-
-
-
 
 //! A constructor.
     /*!
@@ -102,4 +81,23 @@ void CompStaticRender::render() {
 */
 Component::type CompStaticRender::get_type()const{
 	return Component::type::t_static_render;
+}
+
+//! Functions to be called by the methods in order to perform actions
+
+void camScaling(Vec2 position){
+
+	  //! TODO:LOG_VARIABLE here
+
+	assert(position != NULL);
+
+	position = GO(entity)->Box().corner() + position.rotate(GO(entity)->rotation);
+	sprite.SetFlipH(GO(entity)->flipped);
+
+	if (camScaling) {
+			sprite.Render((position-CAMERA)*CAMERAZOOM,GO(entity)->rotation, CAMERAZOOM);
+	}
+	else {
+			sprite.Render(position,GO(entity)->rotation, 1);
+	}
 }

@@ -17,47 +17,6 @@
 #include <assert.h>
 
 
-//! Functions to be called by the methods in order to perform actions
-
-void chooseTypeComponentMovement(float time){
-
-  //! TODO:LOG_VARIABLE here
-
- 	assert(time > 0.0 and time < 60.0 ); // CPPCheck avalia a condição da assertiva (Se está sempre true)
-
-	UNUSED(time);
-	GO(entity)->position += move;
-
-	if (mType == moveType::type_bullet){
-		GO(entity)->rotation = speed.angle();
-	}
-	else {
-		//Nothing to do
-	}
-}
-
-//! Functions to be called by the methods in order to perform actions
-
-void choose_type_component_movement(float time){
-
-  LOG_METHOD_START('choose_type_component_movement');
-	LOG_VARIABLE("choose_type_component_movement", "time");
-
-	assert(time >= 0);
-
-	UNUSED(time);
-	GO(entity)->position += move;
-
-	if (mType == moveType::type_bullet){
-		GO(entity)->rotation = speed.angle();
-	}
-	else {
-		//Nothing to do
-	}
-	LOG_METHOD_CLOSE('choose_type_component_movement', "void");
-}
-
-
 //! A constructor.
     /*!
     This is a constructor method of componentMovement class
@@ -150,4 +109,44 @@ Component::type CompMovement::get_type()const{
 	LOG_METHOD_CLOSE('CompMovement::get_type', t_movement.to_string());
 
   return Component::type::t_movement;
+}
+
+//! Functions to be called by the methods in order to perform actions
+
+void chooseTypeComponentMovement(float time){
+
+  //! TODO:LOG_VARIABLE here
+
+ 	assert(time > 0.0 and time < 60.0 ); // CPPCheck avalia a condição da assertiva (Se está sempre true)
+
+	UNUSED(time);
+	GO(entity)->position += move;
+
+	if (mType == moveType::type_bullet){
+		GO(entity)->rotation = speed.angle();
+	}
+	else {
+		//Nothing to do
+	}
+}
+
+//! Functions to be called by the methods in order to perform actions
+
+void choose_type_component_movement(float time){
+
+  LOG_METHOD_START('choose_type_component_movement');
+	LOG_VARIABLE("choose_type_component_movement", "time");
+
+	assert(time >= 0);
+
+	UNUSED(time);
+	GO(entity)->position += move;
+
+	if (mType == moveType::type_bullet){
+		GO(entity)->rotation = speed.angle();
+	}
+	else {
+		//Nothing to do
+	}
+	LOG_METHOD_CLOSE('choose_type_component_movement', "void");
 }
