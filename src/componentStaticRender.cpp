@@ -30,6 +30,8 @@ CompStaticRender::CompStaticRender(const Sprite &sprite,
 																	 cameraScaling{camerascalin}{
 
 		// Method body its empty
+		LOG_METHOD_START('CompStaticRender::CompStaticRender');
+		LOG_METHOD_CLOSE('CompStaticRender::CompStaticRender', "constructor");
 }
 
 //! A destructor.
@@ -38,7 +40,8 @@ CompStaticRender::CompStaticRender(const Sprite &sprite,
     */
 CompStaticRender::~CompStaticRender() {
 	// Method body its empty
-	//! TODO:LOG_METHOD here
+	LOG_METHOD_START('CompStaticRender::CompStaticRender');
+	LOG_METHOD_CLOSE('CompStaticRender::CompStaticRender', "destructor");
 }
 
 /*!
@@ -50,9 +53,15 @@ CompStaticRender::~CompStaticRender() {
 */
 void CompStaticRender::update(float time) { // Time range 0.0 - 60.0
 
-	 //! TODO:LOG_VARIABLE here
+	LOG_METHOD_START('CompStaticRender::update');
+	LOG_VARIABLE("CompMovement::update", "time");
+
 	assert(time > 0.0 and time < 60.0)
+
 	sp.update(time);
+
+	LOG_METHOD_CLOSE('CompStaticRender::update', "void");
+
 }
 
 /*!
@@ -66,10 +75,14 @@ void CompStaticRender::render() {
 
 	Vec2 position = position;
 
-	//! TODO:LOG_VARIABLE here
-	//! TODO:assert here
+	LOG_METHOD_START('CompStaticRender::render');
+	LOG_VARIABLE("CompMovement::render", "position");
+
+	assert(position != NULL);
 
 	camScaling(position);
+
+	LOG_METHOD_CLOSE('CompStaticRender::render', "void");
 
 }
 
@@ -80,14 +93,20 @@ void CompStaticRender::render() {
 	@warning Method that requires review of comment
 */
 Component::type CompStaticRender::get_type()const{
+
+	LOG_METHOD_START('CompStaticRender::get_type');
+	LOG_METHOD_CLOSE('CompStaticRender::get_type');
+
 	return Component::type::t_static_render;
+
 }
 
 //! Functions to be called by the methods in order to perform actions
 
 void camScaling(Vec2 position){
 
-	  //! TODO:LOG_VARIABLE here
+	LOG_METHOD_START('camScaling');
+	LOG_VARIABLE("CompMovement::position", "position");
 
 	assert(position != NULL);
 
@@ -100,4 +119,7 @@ void camScaling(Vec2 position){
 	else {
 			sprite.Render(position,GO(entity)->rotation, 1);
 	}
+
+	LOG_METHOD_CLOSE('camScaling', "void");
+
 }
