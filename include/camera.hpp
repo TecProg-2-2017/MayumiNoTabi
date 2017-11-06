@@ -38,8 +38,8 @@ public:
   static void center_camera_to(const Vec2& vec2_vector);
 
   static Vec2 render_camera_pos(const Vec2& vec2_vector);
-  static float render_camera_posx(const float& x_axis_pos);
-  static float render_camera_posy(const float& y_axis_pos);
+  static float render_camera_pos_x(const float& x_axis_pos);
+  static float render_camera_pos_y(const float& y_axis_pos);
 };
 
 #endif

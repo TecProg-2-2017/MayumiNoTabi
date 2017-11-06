@@ -19,11 +19,11 @@ public:
 		const uint &entity;
 		Vec2 position;
 		Vec2 size;
-		const collType cType=t_any;
-		bool active=true;
+		const collType cType = t_any;
+		bool active = true;
 		map<collType,colliderFunc> useDefault;//use custom collision handler against colliders of _type
 
-		Coll(const uint &e,collType type,const Rect &rectangle=Rect{0.0f,0.0f,1.0f,1.0f});
+		Coll(const uint &e,collType type,const Rect &rectangle = Rect{0.0f,0.0f,1.0f,1.0f});
 		Coll(const uint &e,collType type,const Vec2 &position,const Vec2 &sz=Vec2{1.0f,1.0f});
 
 		Rect Box() const;

@@ -11,11 +11,45 @@
 #include <game.hpp>
 #include <camera.hpp>
 
-CompHP::CompHP(int tot,bool showHP,bool showDMG,float dmgCD)
-   :total{tot},current{tot},showHP{showHP},showDMG{showDMG},cooldown{dmgCD}{}
 
-CompHP::CompHP(int tot,int cur,bool showHP,bool showDMG,float dmgCD)
-   :total{tot},current{cur},showHP{showHP},showDMG{showDMG},cooldown{dmgCD}{}
+/*!
+	* @fn CompHP::HP(int tot, bool show_HP, bool show_damage, float damage_CD)
+	* @brief Constructor Method for component HP
+	* @param int tot, bool show_HP, bool show_damage, float damage_CD
+*/
+
+CompHP::CompHP(int total, bool show_HP, bool show_damage, float damage_CD)
+   :total{total}, current{total}, show_HP{show_HP}, show_damage{show_damage}, cooldown{damage_CD} {
+    LOG_METHOD_START('CompHP::CompHP');
+   	LOG_VARIABLE("CompHP::CompHP", total, show_HP, show_damage, damage_CD);
+
+   	assert(total >= 0);
+    assert(show_HP >= 0);
+    assert(show_damage) >= 0);
+    assert(damage_CD >= 0);
+
+
+   	LOG_METHOD_CLOSE('CompHP::CompHP', "constructor");
+   }
+/*!
+	* @fn CompHP::CompHP(int tot,int cur,bool showHP,bool showDMG,float dmgCD)
+ 	* @brief Constructor Method for component HP
+ 	* @param int tot, bool show_HP, bool show_damage, float damage_CD
+*/
+
+CompHP::CompHP(int total, int current, bool show_HP,bool show_damage,float damage_CD)
+   :total{total},current{current},show_HP{show_HP},show_damage{show_damage}, cooldown{damage_CD} {
+     LOG_METHOD_START('CompHP::CompHP');
+     LOG_VARIABLE("CompHP::CompHP", total, current, show_HP, show_damage, damage_CD);
+
+     assert(total >= 0);
+     assert(current >= 0);
+     assert(show_HP >= 0);
+     assert(show_damage) >= 0);
+     assert(damage_CD >= 0);
+
+     LOG_METHOD_CLOSE('CompHP::CompHP', "constructor");
+   }
 
 /*!
   * @fn CompHP::~CompHP()
@@ -24,6 +58,9 @@ CompHP::CompHP(int tot,int cur,bool showHP,bool showDMG,float dmgCD)
 */
 
 CompHP::~CompHP() {
+  LOG_METHOD_START('CompHP::~CompHP');
+
+  LOG_METHOD_CLOSE('CompHP::~CompHP', "destructor");
 }
 
 /*!
@@ -33,17 +70,34 @@ CompHP::~CompHP() {
 */
 
 void CompHP::damage(int damage) {
+  LOG_METHOD_START('CompHP::damage');
+  LOG_VARIABLE("CompHP::damage", damage);
+
+  assert(damage >= 0);
+
 	//! Verifies if current damage value bigger than the current value
-	if(damageCoolDown.Get()>cooldown){
+	if(damageCoolDown.Get() > cooldown){
 		damageCoolDown.Restart();
-		current-=damage; //!< Decrements the value of the current life value according to the damage inflicted
+		current = current - damage; //!< Decrements the value of the current life value according to the damage inflicted
 		//! TODO: Renderizes damage value
-		if(showDMG){
+		if(show_damage){
 		}
-		//! Checks if element has 'memory' type and increases 'hit' value
-    //! TODO: Refactorate decision structure
-		if(GO(entity)->HasComponent(Component::type::t_memory))COMPMEMORYp(GO(entity))->ints["hit"]++;
+    else {
+      // Nothing to Do
+    }
+
+    //! Checks if element has 'memory' type and increases 'hit' value
+    if(GO(entity)->HasComponent(Component::type::t_memory)) {
+      COMPMEMORYp(GO(entity))->ints["hit"]++;
+    }
+    else {
+    	// Nothing to Do
+    }
 	}
+  else {
+    // Nothing to Do
+  }
+  LOG_METHOD_CLOSE('CompHP::damage', "void");
 }
 
 /*!
@@ -53,10 +107,20 @@ void CompHP::damage(int damage) {
 */
 
 void CompHP::update(float time) {
+  LOG_METHOD_START('CompHP::update');
+  LOG_VARIABLE("CompHP::update", "time");
+
+  assert(time >= 0);
+
 	//! Verifies if element is in the 'dead' state
-	//! TODO: Refactorate decision structures
-	if(current<=0)GO(entity)->dead=true;
+	if(current <= 0) {
+    GO(entity)->dead = true;
+  }
+  else {
+    // Nothing to Do
+  }
 	dmgCoolDown.add_time(time);
+  LOG_METHOD_CLOSE('CompHP::update', "void");
 }
 
 /*!
@@ -66,27 +130,32 @@ void CompHP::update(float time) {
 */
 
 void CompHP::render() {
+  LOG_METHOD_START('CompHP::render');
+
 	//! Shows HP on screen if it's set player and bigget than zero
-	//! TODO: Refactorate decision structures
-	if(SETTINGS.showHP && showHP && current>0){
+	if(SETTINGS.showHP && showHP && current>0) {
 		Rect box{0,-GO(entity)->Box().w/5.0f - GO(entity)->Box().w/10.0f,GO(entity)->Box().w,GO(entity)->Box().w/5.0f};
-		box+=GO(entity)->Box().corner();
+		box = box + GO(entity)->Box().corner();
 
 		box = box.renderBox();
 
 		SDL_SetRenderDrawColor(GAMERENDER, 0, 0, 0, 255);
-		SDL_Rect rect=box.sdlRect();
-		SDL_RenderDrawRect(GAMERENDER,&rect);
+		SDL_Rect rect = box.sdlRect();
+		SDL_RenderDrawRect(GAMERENDER, &rect);
 
 		SDL_SetRenderDrawColor(GAMERENDER, 255, 0, 0, 255);
-		rect.w*=current;
-		rect.w/=total;
-		rect.x++;
-		rect.y++;
-		rect.w-=2;
-		rect.h-=2;
-		SDL_RenderFillRect(GAMERENDER,&rect);
+		rect.w = rect.w * current;
+		rect.w = rect.w / total;
+		rect.x ++;
+		rect.y ++;
+		rect.w = rect.w - 2;
+		rect.h = rect.h - 2;
+		SDL_RenderFillRect(GAMERENDER, &rect);
 	}
+  else {
+    // Nothing to Do
+  }
+  LOG_METHOD_CLOSE('CompHP::render', "void");
 }
 
 /*!
@@ -96,5 +165,8 @@ void CompHP::render() {
 */
 
 Component::type CompHP::get_type() const {
+  LOG_METHOD_START('CompHP::get_type');
+
+  LOG_METHOD_CLOSE('CompHP::get_type', t_hp.to_string());
 	return Component::type::t_hp;
 }

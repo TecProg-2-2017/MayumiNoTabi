@@ -67,26 +67,41 @@ void Camera::unfollow() {
   LOG_METHOD_START('Camera::unfollow');
   
   camera_is_following = false;
+  
   LOG_VARIABLE('camera_is_following', camera_is_following);
-
   LOG_METHOD_CLOSE('Camera::unfollow', 'void');
 }
 
+
 /*!
-  @fn       uint CompTimer::get_camera_focus()
-  @brief    Method that returns the camera's focus value
-  @param    none
-  @return   unsigned int focus value
-  @warning  none
+  @fn       void Camera::CenterTo(const Vec2& vector)
+  @brief    Centers camera to a pre-stablished position
+  @param    const Vec2& vector
+  @return   void
+  @warning  TODO: some math must be simplified
 */
 
-uint Camera::get_camera_focus() {
-  LOG_METHOD_START('Camera::get_camera_focus');  
-  LOG_METHOD_CLOSE('Camera::get_camera_focus', camera_focus);
-  
-  return camera_focus;
-}
+void Camera::center_camera_to(const Vec2& vec2_vector) {
+  LOG_METHOD_START('Camera::center_camera_to');
+  LOG_VARIABLE('vec2_vector', vec2_vector);
 
+  Vec2 half_winsize = WINSIZE / 2;
+  Vec2 target = vec2_vector - (half_winsize / camera_zoom);//!< Updates the camera 
+                                                           //!< target
+
+  LOG_VARIABLE('half_winsize', half_winsize);
+  LOG_VARIABLE('target', target.to_string);
+
+  // Minimum values
+  camera_position.x = min(camera_position.x, target.x + camera_size.x);
+  camera_position.y = min(camera_position.y, target.y + camera_size.y);
+
+  // maximum vaues
+  camera_position.x = max(camera_position.x, target.x - camera_size.x);
+  camera_position.y = max(camera_position.y, target.y - camera_size.y);
+
+  LOG_METHOD_CLOSE("Camera::center_camera_to", "void");
+}
 
 /*!
   @fn       void Camera::update_camera(float time)
@@ -100,20 +115,59 @@ void Camera::update_camera(float time) {
   LOG_METHOD_START('Camera::update_camera');
   LOG_VARIABLE("time", time);
 
-  Vec2 center = camera_position + (WINSIZE/2/camera_zoom); //!< Newvalue for center
+  Vec2 half_winsize = WINSIZE / 2;
+
+  Vec2 center = camera_position + (half_winsize / camera_zoom); //!< Newvalue for center
 
   LOG_VARIABLE("center", center.to_string);
-
   assert(center != NULL);
 
+  // Updates zoom
   update_camera_zoom(time);
-
   // Centers screen
   center_camera_to(center);
-
+  // Updates screen
   update_camera_speed(time);
 
   LOG_METHOD_CLOSE('Camera::update_camera', 'void');
+}
+
+/*!
+  @fn       uint CompTimer::get_camera_focus()
+  @brief    Method that returns the camera's focus value
+  @param    none
+  @return   unsigned int focus value
+  @warning  none
+*/
+
+uint Camera::get_camera_focus() {
+  LOG_METHOD_START('Camera::get_camera_focus');
+  LOG_METHOD_CLOSE('Camera::get_camera_focus', camera_focus);
+
+  assert(camera_focus >= 0);
+  return camera_focus;
+}
+
+/*!
+  @fn       Vec2 Camera::render_camera_pos(const Vec2& vec2_vector)
+  @brief    Renders camera's position
+  @param    const Vec2& vec2_vector
+  @return   Rendered camera position
+  @warning  TODO: fix return to no longer be an math expression
+*/
+
+Vec2 Camera::render_camera_pos(const Vec2& vec2_vector) {
+  LOG_METHOD_START("Camera::render_camera_pos");
+  LOG_VARIABLE("vec2_vector", vec2_vector);
+
+  assert(vec2_vector != NULL);
+
+  Vec2 rendered_camera_pos = (vec2_vector - CAMERA) * CAMERAZOOM;
+  
+  LOG_METHOD_CLOSE("Camera::render_camera_pos", rendered_camera_pos.to_string());
+  
+  assert(rendered_camera_pos != NULL);
+  return rendered_camera_pos;
 }
 
 /*!
@@ -132,24 +186,19 @@ void Camera::update_camera_zoom(float time) {
   if (INPUT.IsKeyDown(KEY(z))) {
     LOG_MSG("if (INPUT.IsKeyDown(KEY(z)))");
 
-    camera_zoom += 0.5 * time;
+    camera_zoom = camera_zoom + (0.5 * time);
     camera_zoom = min(camera_zoom, MAX_ZOOM);
-
-    //cout<<"camera_zoom: "<<camera_zoom<<endl;
   }
   else {
     // Do nothing
   }
 
   // Zooms out if x key is pressed
-
   if (INPUT.key_is_down(KEY(x))) {
     LOG_MSG("if (INPUT.IsKeyDown(KEY(x)))");
 
-    camera_zoom -= 0.5 * time;
+    camera_zoom = (0.5 * time) - camera_zoom;
     camera_zoom = max(camera_zoom, MIN_ZOOM);
-
-    //cout<<"camera_zoom: "<<camera_zoom<<endl;
   }
   else {
     // Do nothing
@@ -164,7 +213,7 @@ void Camera::update_camera_zoom(float time) {
   @param    float time
   @return   void
   @warning  none
-*/
+  */
 
 void Camera::update_camera_speed(float time) {
   LOG_METHOD_START("Camera::update_camera_speed");
@@ -178,13 +227,15 @@ void Camera::update_camera_speed(float time) {
   }
   else if (!camera_is_locked) {
     LOG_MSG("else if (!camera_is_locked)");
+
     camera_speed = Vec2(0, 0);
 
     // defines camera speed according to the arrow key that has been pressed.
     // (left)
     if (INPUT.key_is_down(KEY_LEFT)) {
       LOG_MSG("if (INPUT.key_is_down(KEY_LEFT))");
-      camera_speed.x -= CAMERA_SPEED;
+
+      camera_speed.x = camera_speed.x - CAMERA_SPEED;
     }
     else {
       // Do nothing
@@ -195,7 +246,7 @@ void Camera::update_camera_speed(float time) {
     if (INPUT.IsKeyDown(KEY_RIGHT)) {
       LOG_MSG("if (INPUT.IsKeyDown(KEY_RIGHT)");
 
-      camera_speed.x += CAMERA_SPEED;
+      camera_speed.x = camera_speed.x + CAMERA_SPEED;
     }
     else {
       // Do nothing
@@ -205,7 +256,8 @@ void Camera::update_camera_speed(float time) {
     // (up)
     if (INPUT.key_is_down(KEY_UP)) {
       LOG_MSG("if (INPUT.key_is_down(KEY_UP)");
-      camera_speed.y -= CAMERA_SPEED;
+
+      camera_speed.y = camera_speed.y - CAMERA_SPEED;
     }
     else {
       // Do nothing
@@ -215,68 +267,18 @@ void Camera::update_camera_speed(float time) {
     // (down)
     if (INPUT.key_is_down(KEY_DOWN)) {
       LOG_MSG("if (INPUT.key_is_down(KEY_DOWN))");
-      camera_speed.y += CAMERA_SPEED;
+
+      camera_speed.y = CAMERA_SPEED + camera_speed.y;
     }
     else {
       // Do nothing
     }
 
-    // TODO: math refactoring
-    camera_speed /= camera_zoom;
-    camera_speed *= time;
-    camera_position += camera_speed;
-
-    // if (camera_speed != Vec2(0,0)) {
-    // 	cout << "camera x= " << pos.x << "\t y= " << pos.y << endl;
-    // }
+    camera_speed = camera_speed / camera_zoom;
+    camera_speed = camera_speed * time;
+    camera_position = camera_position + camera_speed;
   }
-
   LOG_METHOD_CLOSE("Camera::update_camera_speed", "void");
-}
-
-/*!
-  @fn       void Camera::CenterTo(const Vec2& vector)
-  @brief    Centers camera to a pre-stablished position
-  @param    const Vec2& vector
-  @return   void
-  @warning  TODO: some math must be simplified
-*/
-
-void Camera::center_camera_to(const Vec2& vec2_vector) {
-  LOG_METHOD_START('Camera::center_camera_to');
-  LOG_VARIABLE('vec2_vector', vec2_vector);
-  // TODO: break down math
-  Vec2 target = vec2_vector - (WINSIZE/2/camera_zoom); //!< Updates the camera 
-                                                       //!< target
-  LOG_VARIABLE('target', target.to_string);
-  // Minimum values
-  camera_position.x = min(camera_position.x, target.x + camera_size.x);
-  camera_position.y = min(camera_position.y, target.y + camera_size.y);
-
-  // maximum vaues
-  camera_position.x = max(camera_position.x, target.x - camera_size.x);
-  camera_position.y = max(camera_position.y, target.y - camera_size.y);
-
-  LOG_METHOD_CLOSE("Camera::center_camera_to", "void");
-}
-
-/*!
-  @fn       Vec2 Camera::render_camera_pos(const Vec2& vec2_vector)
-  @brief    Renders camera's position
-  @param    const Vec2& vec2_vector
-  @return   Rendered camera position
-  @warning  TODO: fix return to no longer be an math expression
-*/
-
-Vec2 Camera::render_camera_pos(const Vec2& vec2_vector) {
-
-  LOG_METHOD_START("Camera::render_camera_pos");
-  LOG_VARIABLE("vec2_vector", vec2_vector);
-
-  assert(vec2_vector != NULL);
-
-  LOG_METHOD_CLOSE("Camera::render_camera_pos", (vec2_vector - CAMERA) * CAMERAZOOM);
-  return (vec2_vector - CAMERA) * CAMERAZOOM;
 }
 
 /*!
@@ -290,9 +292,13 @@ Vec2 Camera::render_camera_pos(const Vec2& vec2_vector) {
 float Camera::render_camera_pos_x(const float& x_axis_pos) {
   LOG_METHOD_START("Camera::render_camera_pos_x");
   LOG_VARIABLE("x_axis_pos", x_axis_pos);
-  LOG_METHOD_CLOSE("Camera::render_camera_pos_y", (x_axis_pos - CAMERA.x) * CAMERAZOOM);
-
-  return (x_axis_pos - CAMERA.x) * CAMERAZOOM;
+  
+  // Stores return value
+  float rendered_x = (x_axis_pos - CAMERA.x) * CAMERAZOOM;
+  
+  LOG_METHOD_CLOSE("Camera::render_camera_pos_y", rendered_x);
+  assert(rendered_x != NULL);
+  return rendered_x;
 }
 
 /*!
@@ -306,7 +312,11 @@ float Camera::render_camera_pos_x(const float& x_axis_pos) {
 float Camera::render_camera_pos_y(const float& y_axis_pos) {
   LOG_METHOD_START("Camera::render_camera_pos_y");
   LOG_VARIABLE("y_axis_pos", y_axis_pos);
-  LOG_METHOD_CLOSE("Camera::render_camera_pos_y", (y_axis_pos - CAMERA.y) * CAMERAZOOM);
 
-  return (y_axis_pos - CAMERA.y) * CAMERAZOOM;
+  // Stores return value
+  float rendered_y = (y_axis_pos - CAMERA.y) * CAMERAZOOM;
+
+  LOG_METHOD_CLOSE("Camera::render_camera_pos_y", rendered_y);
+  assert(rendered_y != NULL);
+  return rendered_y;
 }

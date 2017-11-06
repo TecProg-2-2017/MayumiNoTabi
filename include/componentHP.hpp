@@ -13,13 +13,13 @@ class CompHP : public Component{
 public:
 	//public members
 	int total, current;
-	bool showHP,showDMG;
+	bool show_HP,show_damage;
 	float cooldown;
-	Timer damageCoolDown;
+	Timer damage_cooldown;
 
 
-	CompHP(int tot=100,bool showHP=false,bool showDMG=false,float dmgCD=0.0f);
-	CompHP(int tot,int cur,bool showHP=false,bool showDMG=false,float dmgCD=0.0f);
+	CompHP(int tot = 100, bool show_HP = false,bool show_damage = false,float damage_CD = 0.0f);
+	CompHP(int tot,int cur, bool show_HP = false,bool show_damage = false,float damage_CD = 0.0f);
 	~CompHP();
 
 	void damage(int damage);
