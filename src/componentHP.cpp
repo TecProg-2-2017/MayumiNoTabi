@@ -78,9 +78,9 @@ void CompHP::damage(int damage) {
 	//! Verifies if current damage value bigger than the current value
 	if(damageCoolDown.Get() > cooldown){
 		damageCoolDown.Restart();
-		current -= damage; //!< Decrements the value of the current life value according to the damage inflicted
+		current = current - damage; //!< Decrements the value of the current life value according to the damage inflicted
 		//! TODO: Renderizes damage value
-		if(showDMG){
+		if(show_damage){
 		}
     else {
       // Nothing to Do
@@ -135,7 +135,7 @@ void CompHP::render() {
 	//! Shows HP on screen if it's set player and bigget than zero
 	if(SETTINGS.showHP && showHP && current>0) {
 		Rect box{0,-GO(entity)->Box().w/5.0f - GO(entity)->Box().w/10.0f,GO(entity)->Box().w,GO(entity)->Box().w/5.0f};
-		box+=GO(entity)->Box().corner();
+		box = box + GO(entity)->Box().corner();
 
 		box = box.renderBox();
 
@@ -144,12 +144,12 @@ void CompHP::render() {
 		SDL_RenderDrawRect(GAMERENDER, &rect);
 
 		SDL_SetRenderDrawColor(GAMERENDER, 255, 0, 0, 255);
-		rect.w *= current;
-		rect.w /= total;
+		rect.w = rect.w * current;
+		rect.w = rect.w / total;
 		rect.x ++;
 		rect.y ++;
-		rect.w -= 2;
-		rect.h -= 2;
+		rect.w = rect.w - 2;
+		rect.h = rect.h - 2;
 		SDL_RenderFillRect(GAMERENDER, &rect);
 	}
   else {
