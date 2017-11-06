@@ -40,6 +40,7 @@ void updateTimeByLimit(){
 
 CompTimer::CompTimer(float limit):limit{limit}{
 
+	//! TODO:LOG_VARIABLE here
 	assert(limit >= 0.0);
 	// Method body its empty
 }
@@ -51,6 +52,7 @@ CompTimer::CompTimer(float limit):limit{limit}{
 
 CompTimer::~CompTimer() {
 	// Method body its empty
+	//! TODO:LOG_METHOD here
 }
 
 /*!
@@ -67,6 +69,7 @@ CompTimer::~CompTimer() {
 
 void CompTimer::update(float time) { //Time range 0.0 - 60.0
 
+	 //! TODO:LOG_VARIABLE here
 	assert(time > 0.0 and time < 60.0);
 
 	t.add_time(time);
@@ -98,6 +101,7 @@ void CompTimer::render() {
 
 void CompTimer::own(GameObject* go) {
 
+	 //! TODO:LOG_VARIABLE here
 	assert(go != NULL);
 
 	entity=go->uid;
