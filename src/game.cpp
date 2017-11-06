@@ -44,6 +44,7 @@ Game* Game::instance = 0;
 
 void checkInstance(){
 
+	//! TODO:LOG_VARIABLE here
 	assert(title != "");
 	assert(width > 0);
 	assert(height > 0);
@@ -84,6 +85,7 @@ void initializeImageLibrary(int image_settings, int res){
 		 if its necessary
 	 */
 
+	//! TODO:LOG_VARIABLE here
 	assert (image_settings >= 0);
 	assert (res >=0);
 
@@ -114,6 +116,7 @@ void initializeImageLibrary(int image_settings, int res){
 
 void initializeImageModule(int res) {
 
+	//! TODO:LOG_VARIABLE here
 	assert (res >=0);
 
 	map<int, string> code_name_map = {{IMAGE_INIT_TIF, "tif"},
@@ -138,6 +141,7 @@ void initializeImageModule(int res) {
 
 void initializeAudioModule(int res, int audio_modules){
 
+	//! TODO:LOG_VARIABLE here
 	assert (res >=0);
 	assert (audio_modules >= 0);
 
@@ -288,7 +292,7 @@ void pauseOrEndGame(){
 
 Game::Game(string title, int width, int height):frameStart{0},deltatime{0},windowSize{
 																												(float)width,(float)height} {
-
+		//! TODO:LOG_VARIABLE here
 		assert(title != "");
 		assert(width > 0);
 		assert(height > 0);
@@ -318,6 +322,8 @@ Game::Game(string title, int width, int height):frameStart{0},deltatime{0},windo
 */
 
 Game::~Game() {
+
+	//! TODO:LOG_METHOD here
 
 	checkStackState();
 
