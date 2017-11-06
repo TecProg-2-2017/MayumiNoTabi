@@ -109,7 +109,7 @@ GameObject::~GameObject() {
 */
 
 void GameObject::update(float time) {
-	bool remove = false // Initializing the variabel remove
+	 remove = false // Initializing the variabel remove
 
 	if (IsDead()) {
 		remove = true;
@@ -163,7 +163,7 @@ void GameObject::update(float time) {
 	}
 
 	//! And then do the rest
-	FOR2(i,Component::type::t__+1,Component::type::t_count) {
+	FOR2(i, Component::type::t__+1, Component::type::t_count) {
 		if (HasComponent(i)) {
 			components[i]->Update(time);
 		}
@@ -685,7 +685,7 @@ template<int atkDist,int seeDist,
 				//! Nothing to do
 			}
 			if (target->Box().x < GO(ai->entity)->Box().x &&  GO(ai->entity)->flipped) {
-				GO(ai->entity)->flipped=false;
+				GO(ai->entity)->flipped = false;
 		}
 		else {
 			//! Nothing to do
@@ -716,7 +716,7 @@ void PassiveAIfunc(CompAI* ai,float time) {
 
 	//! If the object is idle.
 	if (state == CompAI::state::idling) {
-		if (cd.Get()>0.5f) {
+		if (cd.Get() > 0.5f) {
 			state = CompAI::state::walking;  // The object is in movie
 			music.open_music_file("audio/banshee-vozes-1.wav");
             music.play_music(1);
@@ -760,13 +760,13 @@ void PassiveAIfunc(CompAI* ai,float time) {
 	@warning Method that requires review of comment and refactor this method
 */
 
-template<int atkDist,int seeDist,int stCD,int atkCount,int stompCount>
+template<int atkDist,int seeDist,int stCD,int atkCount,int stompCount >
                                void PumbaAiFunc(CompAI* ai,float time) {
 	Sound music = null; // Initializing variable music
 	Music music2 = null; // Initializing variable music2
 	CompAnimControl *ac = COMPANIMCONTp(GO(ai->entity)); // Component Control
 	CompMemory *mem = COMPMEMORYp(GO(ai->entity));
-	CompHP *hp = COMPHPp(GO(ai->entity)); // Power of boar
+	//CompHP *hp = COMPHPp(GO(ai->entity)); // Power of boar. Commented
 
 	int &state = mem->ints["state"]; // State of boar
 	int &attacked = mem->ints["attacked"]; // State if boar is attacked
@@ -1408,14 +1408,13 @@ uint GameObject::Create(const string& blueprint, const Vec2& pos, const Vec2& au
 		// Nothing to do
 	}
 	if (blueprint == "porco") {
-		return MakePorco(pos);
+		return makeBoar(pos);
 	}
 	else {
 		// Nothing to do
 	}
 
 	GameObject* obj = new GameObject{pos};
-	obj = null; // Initializing the variable obj
 	CompStaticRender* img = new CompStaticRender{Sprite{blueprint}};
 	Vec2 size{(float)img->sp.GetWidth(),(float)img->sp.GetHeight()};
 	obj->AddComponent(img);
@@ -1568,13 +1567,13 @@ uint GameObject::MakeMask(const Vec2 &pos) {
 }
 
 /*!
-	@fn uint GameObject::MakePorco(const Vec2 &pos)
+	@fn uint GameObject::makeBoar(const Vec2 &pos)
 	@brief Method that creates the monster "Porco", a boar.
 	@param &pos
 	@return The execution of this method returns a undefined integer
 	@warning Method that requires review of comment and refactor this method
 */
-uint GameObject::MakePorco(const Vec2 &pos) {
+uint GameObject::makeBoar(const Vec2 &pos) {
 	GameObject* pumba = new GameObject{pos,0.0f,Hotspot::BOTTOM};
 
 	CompCollider coll{CompCollider::collType::t_monster};
