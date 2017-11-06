@@ -10,6 +10,7 @@
 #include <game.hpp>
 #include <gameObject.hpp>
 #include <state.hpp>
+#include <assert.h>
 
 #define DEFAULT_BACKGROUND "img/mountain_bg.jpg"
 #define DEFAULT_TILE_SIZE 64
@@ -43,7 +44,8 @@ Level::Level() : background_sprite{Sprite(DEFAULT_BACKGROUND)},
  *  @param string file
  *  @return A Level object
  */
-Level::Level(string file) : level_tile_set{TileSet()}, level_tile_map{TileMap(DEFAULT_MAP_WIDTH, DEFAULT_MAP_HEIGHT, &level_tile_set)} { 
+Level::Level(string file) : level_tile_set{TileSet()}, 
+    level_tile_map{TileMap(DEFAULT_MAP_WIDTH, DEFAULT_MAP_HEIGHT, &level_tile_set)} { 
     Load(file);
 }
 
@@ -123,7 +125,7 @@ void Level::load_tile_set(ifstream& file_input, string& file_parameters) {
  */
 void Level::load_level_from_file(const string& file) {
     ifstream file_input = NULL;//! <Receive input from level file
-   
+
     //! Load Level file 
     load_read_file(file_input, file);
     
@@ -210,6 +212,8 @@ void Level::save_collision_layer(stringstream& level_stream_out) {
     int level_map_width = level_tile_map.get_width();
     int level_map_height = level_tile_map.get_height();
 
+    assert(level_stream_out != NULL);
+
     FOR(y,level_map_height) {
         FOR(x,level_map_width) {
             char s[200] = {0};
@@ -249,6 +253,8 @@ string Level::save_level_to_file(const string& file) {
     level_stream_out<<level_tile_set_filename<<endl;
     level_stream_out<<level_tile_set.get_width()<<","<<level_tile_set.get_height()<<endl<<endl;
     
+    assert(level_stream_out != NULL);
+
     //! Saving the tilemap:
     level_tile_map.Save(level_stream_out);
     
@@ -356,6 +362,9 @@ void Level::map_level_area(uint& uid, map<int,pair<Rect,int>>& mp,
         if (t) {
             GameObject *tile = new GameObject{r};
             tile->AddComponent(new CompCollider{CompCollider::collType::t_ground});
+
+            assert(tile != NULL);
+
             GAMESTATE.AddObject(tile->uid);
         }
         else {
@@ -401,6 +410,7 @@ void Level::load_level_objects(bool collisors) {
  *  @warning Understand better this method
  */
 void Level::save_level_objects(const vector<pair<ii,ii>>& grouped) {
+    assert(grouped != NULL); 
     
     //! Saving the collision groups:
     int level_map_width = level_tile_map.get_width(); //! <Level map width

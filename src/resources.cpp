@@ -6,6 +6,7 @@
 
 #include <resources.hpp>
 #include <game.hpp>
+#include <assert.h>
 
 unordered_map<string,shared_ptr<SDL_Texture>> Resources::game_image_table;
 unordered_map<string,shared_ptr<Mix_Music>> Resources::game_music_table;
@@ -34,6 +35,7 @@ void Resources::sdl_error() {
  *  @return shared_ptr<SDL_Texture> 
  */
 shared_ptr<SDL_Texture> Resources::game_get_image(const string& file) {
+    assert(file != NULL);
 
     if (game_image_table.count(file)) {
         return game_image_table[file];
@@ -85,6 +87,7 @@ void Resources::game_clear_images() {
  *  @return shared_ptr<Mix_Music> 
  */
 shared_ptr<Mix_Music> Resources::game_get_music(const string& file) {
+    assert(file != NULL);
 
     if (game_music_table.count(file)) {
         return game_music_table[file];
@@ -137,6 +140,7 @@ void Resources::game_clear_musics() {
  *  @return shared_ptr<Mix_Chunk> 
  */
 shared_ptr<Mix_Chunk> Resources::game_get_sound(const string& file) {
+    assert(file != NULL);
 
     if (game_sound_table.count(file)) {
         return game_sound_table[file];
@@ -190,6 +194,7 @@ void Resources::game_clear_sounds() {
  *  @return shared_ptr<TTF_Font>
  */
 shared_ptr<TTF_Font> Resources::game_get_font(const string& file,int ptsize) {
+    assert(file != NULL);
 
     string key = file+std::to_string(ptsize);
 
@@ -263,6 +268,7 @@ void Resources::is_file_open(ifstream& file_input, const string& file) {
  *  @return The method returns no param
  */
 void Resources::add_blueprint_to_table(ifstream& file_input) {
+    assert(file_input != NULL);
 
     //! Iterate through the file adding blueprint to the game_blueprint_table 
     for (string component;getline(file_input, component);) {
