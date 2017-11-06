@@ -39,7 +39,6 @@ void textPosition(){
     */
 CompText::CompText(const Text &t, Hotspot h, Vec2 p):txt{t},pos{p}{
 
-	
 	txt.set_hotspot(h);
 }
 
