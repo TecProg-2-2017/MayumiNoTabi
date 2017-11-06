@@ -70,7 +70,7 @@ public:
 	static uint MakeMike(const Vec2 &pos);
 	static uint MakeBanshee(const Vec2 &pos,const Vec2 &pos2);
 	static uint MakeMask(const Vec2 &pos);
-	static uint MakePorco(const Vec2 &pos);
+	static uint makeBoar(const Vec2 &pos);
 	//static uint Make...(const Vec2 &pos);
 };
 
