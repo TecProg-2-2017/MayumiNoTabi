@@ -23,9 +23,15 @@
     /*!
     This is a constructor method of componentText class
     */
+
 CompText::CompText(const Text &t, Hotspot h, Vec2 p):txt{t},pos{p}{
 
+	LOG_METHOD_START('CompText::CompText');
+
 	txt.set_hotspot(h);
+
+	LOG_METHOD_CLOSE('CompText::CompText', "constructor");
+
 }
 
 //! A constructor.
@@ -43,6 +49,8 @@ CompText::CompText(string text, int size, SDL_Color c, Hotspot h, Vec2 p):txt{te
     */
 CompText::~CompText() {
 	// Method body its empty
+	LOG_METHOD_START('CompText::CompText');
+	LOG_METHOD_CLOSE('CompText::CompText', "destructor");
 }
 
 /*!
@@ -54,10 +62,14 @@ CompText::~CompText() {
 */
 void CompText::update(float time) { //Time range 0.0 - 60.0
 
-	//! TODO:LOG_VARIABLE here
+	LOG_METHOD_START('CompText::update');
+	LOG_VARIABLE("CompText::update", "time");
 
 	assert(time > 0.0 and time < 60.0);
+
 	UNUSED(time);
+
+	LOG_METHOD_CLOSE('CompText::update', "void");
 }
 
 /*!
@@ -68,7 +80,12 @@ void CompText::update(float time) { //Time range 0.0 - 60.0
 */
 
 void CompText::render() {
+
+	LOG_METHOD_START('CompText::render');
+
 	textPosition()
+
+	LOG_METHOD_CLOSE('CompStaticRender::render', "void");
 }
 
 /*!
@@ -78,12 +95,19 @@ void CompText::render() {
 	@warning Method that requires review of comment
 */
 Component::type CompText::get_type()const{
+
+	LOG_METHOD_START('CompText::get_type');
+	LOG_METHOD_CLOSE('CompText::get_type', "void");
 	return Component::type::t_text;
+
 }
 
 //! Functions to be called by the methods in order to perform actions
 
 void textPosition(){
+
+	LOG_METHOD_START('textPosition');
+
 	Vec2 p = pos + GO(entity)->Box().corner();
 	txt.SetPos(p);
 
@@ -93,4 +117,7 @@ void textPosition(){
 	else {
 		txt.Render(CAMERA);
 	}
+
+	LOG_METHOD_CLOSE('textPosition', "void");
+
 }
