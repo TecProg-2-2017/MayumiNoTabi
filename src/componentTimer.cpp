@@ -25,9 +25,11 @@
 
 CompTimer::CompTimer(float limit):limit{limit}{
 
-	//! TODO:LOG_VARIABLE here
+	LOG_METHOD_START('CompTimer::CompTimer');
+
 	assert(limit >= 0.0);
-	// Method body its empty
+
+	LOG_METHOD_CLOSE('CompTimer::CompTimer', "constructor");
 }
 
 //! A destructor.
@@ -37,7 +39,8 @@ CompTimer::CompTimer(float limit):limit{limit}{
 
 CompTimer::~CompTimer() {
 	// Method body its empty
-	//! TODO:LOG_METHOD here
+	LOG_METHOD_START('CompTimer::CompTimer');
+	LOG_METHOD_CLOSE('CompTimer::CompTimer', "destructor");
 }
 
 /*!
@@ -54,7 +57,7 @@ CompTimer::~CompTimer() {
 
 void CompTimer::update(float time) { //Time range 0.0 - 60.0
 
-	 //! TODO:LOG_VARIABLE here
+	LOG_VARIABLE("CompTimer::update", "time");
 	assert(time > 0.0 and time < 60.0);
 
 	t.add_time(time);
@@ -86,7 +89,8 @@ void CompTimer::render() {
 
 void CompTimer::own(GameObject* go) {
 
-	 //! TODO:LOG_VARIABLE here
+	LOG_VARIABLE("CompTimer::own", "go");
+
 	assert(go != NULL);
 
 	entity=go->uid;
@@ -107,6 +111,8 @@ Component::type CompTimer::get_type() const{
 
 void updateTimeByLimit(){
 
+	LOG_METHOD_START('updateTimeByLimit');
+
 	t.add_time(time);
 
 	if (t.get_time()>limit) {
@@ -115,4 +121,7 @@ void updateTimeByLimit(){
 	else {
 		//Nothing to do
 	}
+
+	LOG_METHOD_CLOSE('updateTimeByLimit', "void");
+
 }
