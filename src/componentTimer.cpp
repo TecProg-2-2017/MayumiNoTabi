@@ -18,21 +18,6 @@
 #include <gameObject.hpp>
 #include <assert.h>
 
-//! Functions to be called by the methods in order to perform actions
-
-void updateTimeByLimit(){
-
-	t.add_time(time);
-
-	if (t.get_time()>limit) {
-		GO(entity)->dead=true;
-	}
-	else {
-		//Nothing to do
-	}
-}
-
-
 //! A constructor.
     /*!
     This is a constructor method of componentTimer class
@@ -116,4 +101,18 @@ void CompTimer::own(GameObject* go) {
 
 Component::type CompTimer::get_type() const{
 	return Component::type::t_timer;
+}
+
+//! Functions to be called by the methods in order to perform actions
+
+void updateTimeByLimit(){
+
+	t.add_time(time);
+
+	if (t.get_time()>limit) {
+		GO(entity)->dead=true;
+	}
+	else {
+		//Nothing to do
+	}
 }
