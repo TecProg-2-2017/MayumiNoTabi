@@ -18,28 +18,18 @@
 #include <gameObject.hpp>
 #include <assert.h>
 
-//! Functions to be called by the methods in order to perform actions
-
-void updateTimeByLimit(){
-
-	t.add_time(time);
-
-	if (t.get_time()>limit) {
-		GO(entity)->dead=true;
-	}
-	else {
-		//Nothing to do
-	}
-}
-
-
 //! A constructor.
     /*!
     This is a constructor method of componentTimer class
     */
 
 CompTimer::CompTimer(float limit):limit{limit}{
-	// Method body its empty
+
+	LOG_METHOD_START('CompTimer::CompTimer');
+
+	assert(limit >= 0.0);
+
+	LOG_METHOD_CLOSE('CompTimer::CompTimer', "constructor");
 }
 
 //! A destructor.
@@ -49,6 +39,8 @@ CompTimer::CompTimer(float limit):limit{limit}{
 
 CompTimer::~CompTimer() {
 	// Method body its empty
+	LOG_METHOD_START('CompTimer::CompTimer');
+	LOG_METHOD_CLOSE('CompTimer::CompTimer', "destructor");
 }
 
 /*!
@@ -65,6 +57,7 @@ CompTimer::~CompTimer() {
 
 void CompTimer::update(float time) { //Time range 0.0 - 60.0
 
+	LOG_VARIABLE("CompTimer::update", "time");
 	assert(time > 0.0 and time < 60.0);
 
 	t.add_time(time);
@@ -96,6 +89,8 @@ void CompTimer::render() {
 
 void CompTimer::own(GameObject* go) {
 
+	LOG_VARIABLE("CompTimer::own", "go");
+
 	assert(go != NULL);
 
 	entity=go->uid;
@@ -110,4 +105,23 @@ void CompTimer::own(GameObject* go) {
 
 Component::type CompTimer::get_type() const{
 	return Component::type::t_timer;
+}
+
+//! Functions to be called by the methods in order to perform actions
+
+void updateTimeByLimit(){
+
+	LOG_METHOD_START('updateTimeByLimit');
+
+	t.add_time(time);
+
+	if (t.get_time()>limit) {
+		GO(entity)->dead=true;
+	}
+	else {
+		//Nothing to do
+	}
+
+	LOG_METHOD_CLOSE('updateTimeByLimit', "void");
+
 }
