@@ -16,6 +16,7 @@
 //#include <inputManager.hpp>
 
 #include <gameObject.hpp>
+#include <assert.h>
 
 //! Functions to be called by the methods in order to perform actions
 
@@ -59,8 +60,19 @@ CompTimer::~CompTimer() {
 	@warning Method that requires review of comment
 */
 
-void CompTimer::update(float time) {
-	updateTimeByLimit();
+
+
+
+void CompTimer::update(float time) { //Time range 0.0 - 60.0
+
+	assert(time > 0.0 and time < 60.0);
+
+	t.add_time(time);
+
+	if (t.get_time()>limit) {
+		GO(entity)->dead=true;
+	}
+
 }
 
 /*!
@@ -83,6 +95,9 @@ void CompTimer::render() {
 */
 
 void CompTimer::own(GameObject* go) {
+
+	assert(go != NULL);
+
 	entity=go->uid;
 }
 

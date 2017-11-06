@@ -14,6 +14,25 @@
 #include <game.hpp>
 #include <gameObject.hpp>
 #include <componentMovement.hpp>
+#include <assert.h>
+
+
+//! Functions to be called by the methods in order to perform actions
+
+void chooseTypeComponentMovement(float time){
+
+ 	assert(time > 0.0 and time < 60.0 ); // CPPCheck avalia a condição da assertiva (Se está sempre true)
+
+	UNUSED(time);
+	GO(entity)->position += move;
+
+	if (mType == moveType::type_bullet){
+		GO(entity)->rotation = speed.angle();
+	}
+	else {
+		//Nothing to do
+	}
+}
 
 //! Functions to be called by the methods in order to perform actions
 
@@ -62,6 +81,8 @@ CompMovement::~CompMovement() {
 
 	LOG_METHOD_CLOSE('CompMovement::~CompMovement', "destructor");
 	// Method body its empty
+
+
 }
 
 /*!
@@ -81,6 +102,20 @@ void CompMovement::update(float time) {
 	choose_type_component_movement(time);
 
 	LOG_METHOD_CLOSE('CompMovement::update', "void");
+
+	assert(time > 0.0 and time < 60.0 );
+
+	UNUSED(time);
+	GO(entity)->position += move;
+
+	assert(time > 0.0 and time < 60.0 )
+	chooseTypeComponentMovement(time);
+
+
+	if (mType == moveType::type_bullet){
+		GO(entity)->rotation = speed.angle();
+	}
+
 }
 
 /*!
