@@ -22,6 +22,8 @@
 
 void camScaling(Vec2 position){
 
+	assert(position != NULL);
+
 	position = GO(entity)->Box().corner() + position.rotate(GO(entity)->rotation);
 	sprite.SetFlipH(GO(entity)->flipped);
 

@@ -39,6 +39,8 @@ void updateTimeByLimit(){
     */
 
 CompTimer::CompTimer(float limit):limit{limit}{
+
+	assert(limit >= 0.0);
 	// Method body its empty
 }
 

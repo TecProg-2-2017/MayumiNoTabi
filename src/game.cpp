@@ -84,6 +84,9 @@ void initializeImageLibrary(int image_settings, int res){
 		 if its necessary
 	 */
 
+	assert (image_settings >= 0);
+	assert (res >=0);
+
 	if (image_settings != res) {
 
 		string error_messege_main = SDL_GetError();
@@ -111,6 +114,8 @@ void initializeImageLibrary(int image_settings, int res){
 
 void initializeImageModule(int res) {
 
+	assert (res >=0);
+
 	map<int, string> code_name_map = {{IMAGE_INIT_TIF, "tif"},
 									  {IMAGE_INIT_JPG, "jpg"},
 									  {IMAGE_INIT_PNG, "png"}};
@@ -133,6 +138,9 @@ void initializeImageModule(int res) {
 
 void initializeAudioModule(int res, int audio_modules){
 
+	assert (res >=0);
+	assert (audio_modules >= 0);
+
 	if (res != audio_modules) {
 
 		throw GameException("Problem when initiating SDL audio!");
@@ -153,6 +161,8 @@ void initializeAudioModule(int res, int audio_modules){
 
 void installSDLAudio(int res){
 
+	assert (res >=0);
+
 	if (res != 0){
 		throw GameException("Problem when initiating SDL audio!");
 	}
@@ -163,6 +173,8 @@ void installSDLAudio(int res){
 
 void initializeTTFModule(int res){
 
+	assert (res >=0);
+
 	if (res != 0){
 		cerr << "Could not initialize TTF module!" << endl;
 	}
@@ -172,6 +184,9 @@ void initializeTTFModule(int res){
 }
 
 void initializeModules(int res){
+
+	assert (res >=0);
+
 	// Initialize image module and check if process went OK
 
  		initializeImageModule()
@@ -273,6 +288,11 @@ void pauseOrEndGame(){
 
 Game::Game(string title, int width, int height):frameStart{0},deltatime{0},windowSize{
 																												(float)width,(float)height} {
+
+		assert(title != "");
+		assert(width > 0);
+		assert(height > 0);
+
 	  srand(time(NULL));
 
 	// Check if a instance was create
