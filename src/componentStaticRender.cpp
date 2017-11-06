@@ -22,6 +22,8 @@
 
 void camScaling(Vec2 position){
 
+	  //! TODO:LOG_VARIABLE here
+
 	assert(position != NULL);
 
 	position = GO(entity)->Box().corner() + position.rotate(GO(entity)->rotation);
@@ -57,6 +59,7 @@ CompStaticRender::CompStaticRender(const Sprite &sprite,
     */
 CompStaticRender::~CompStaticRender() {
 	// Method body its empty
+	//! TODO:LOG_METHOD here
 }
 
 /*!
@@ -68,6 +71,7 @@ CompStaticRender::~CompStaticRender() {
 */
 void CompStaticRender::update(float time) { // Time range 0.0 - 60.0
 
+	 //! TODO:LOG_VARIABLE here
 	assert(time > 0.0 and time < 60.0)
 	sp.update(time);
 }
@@ -82,6 +86,10 @@ void CompStaticRender::update(float time) { // Time range 0.0 - 60.0
 void CompStaticRender::render() {
 
 	Vec2 position = position;
+
+	//! TODO:LOG_VARIABLE here
+	//! TODO:assert here
+
 	camScaling(position);
 
 }
