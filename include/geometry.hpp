@@ -38,17 +38,17 @@ public:
 
 	void floor();
 
-	float len() const;//magnitude do vetor
-	float angle() const;//angulo entre this e o eixo x
+	float len() const; //! magnitude of the vector
+	float angle() const; //! angle between this and the x-axis
 
-	float dist(const Vec2& b) const;//distancia entre this e b
-	float angle(const Vec2& b) const;//inclinacao da reta definida por this e b
+	float dist(const Vec2& b) const; //! distance between this and b
+	float angle(const Vec2& b) const; //! slope of the line defined by this and b
 
-	Vec2 unit() const;//vetor unitario
-	Vec2 renderPos() const;//posicao de renderizacao de acordo com a camera
-	Vec2 rotate(float a);//rotaciona o vetor em a graus
+	Vec2 unit() const; // unit vector
+	Vec2 renderPos() const; //! rendering position according to the camera
+	Vec2 rotate(float a); //! rotates the vector in a degrees
 
-	ConvexPolygon polygon();//retorna a semireta definida pelo vetor e pela origem
+	ConvexPolygon polygon(); //! returns the semi-vector defined by the vector and by the origin
 };
 std::ostream& operator<<(std::ostream& os, const Vec2& obj);
 
@@ -59,11 +59,11 @@ public:
 	float w;
 	float h;
 
-	Rect(const float &a=0.0f,const float &b=0.0f,const float &c=0.0f,const float &d=0.0f);
+	Rect(const float &a = 0.0f,const float &b=0.0f,const float &c = 0.0f,const float &d=0.0f);
 	Rect(const Vec2 &pos,const Vec2 &sz);
 	Rect(const Rect &b);
 
-	Rect operator= (const Rect& b);
+	Rect& operator= (const Rect& b);
 	Rect operator+ (const Vec2& b)const;
 	void operator+=(const Vec2& b);
 	Rect operator- (const Vec2& b)const;
@@ -74,66 +74,83 @@ public:
 
 	void floor();
 	void setPos(const Vec2& b);
-	void setCenter(const Vec2& b); 
+	void setCenter(const Vec2& b);
 
 	float x2() const;
 	float y2() const;
 
-	Vec2 distCenter(const Rect& b) const;//retorna a distancia entre os centros dos retangulos
-	Vec2 distEdge(const Rect& b) const;//retorna a distancia entre os pontos mais proximos dos retangulos
-	Vec2 hotspot(const Hotspot hs=Hotspot::TOP_LEFT);
-	Vec2 corner() const; //retorna o canto esquerdo superior do retangulo
-	Vec2 corner2() const;//retorna o canto direito  superior do retangulo
-	Vec2 corner3() const;//retorna o canto esquerdo inferior do retangulo
-	Vec2 corner4() const;//retorna o canto direito  inferior do retangulo
-	Vec2 center() const;//retorna o centro do retangulo
-	Vec2 size() const;//retorna o tamanho do retangulo
-	Vec2 relativePos(const Vec2 &relative,bool inverted=false) const;
+	//! returns the distance between the centers of the rectangles
+	Vec2 distCenter(const Rect& b) const;
 
-	Rect relativeBox(const Rect &relative,bool inverted=false) const;
-	Rect renderBox() const;//posicao de renderizacao de acordo com a camera
-	Rect sum(const Rect &other) const;//retorna o retangulo que contem ambos
+	//! returns the distance between the points closest to the rectangles
+	Vec2 distEdge(const Rect& b) const;
 
-	ConvexPolygon polygon(const float &r=0.0f) const;
+	Vec2 hotspot(const Hotspot hs = Hotspot::TOP_LEFT);
+	Vec2 corner() const; //! returns the upper left corner of the rectangle
+	Vec2 corner2() const; //! returns the upper right corner of the rectangle
+	Vec2 corner3() const; //! returns the bottom left corner of the rectangle
+	Vec2 corner4() const; //! returns the lower right corner of the rectangle
+	Vec2 center() const; //! returns the center of the rectangle
+	Vec2 size() const; //! returns the size of the rectangle
+	Vec2 relativePos(const Vec2 &relative,bool inverted = false) const;
+
+	Rect relativeBox(const Rect &relative,bool inverted = false) const;
+	Rect renderBox() const; //! rendering position according to the camera
+	Rect sum(const Rect &other) const; //! returns the rectangle containing both
+
+	ConvexPolygon polygon(const float &r = 0.0f) const;
 	SDL_Rect sdlRect()const;
 
-	bool contains(const float &i,const float &j) const;//retorna se o ponto pertence ao retangulo
-	bool contains(const Vec2& b) const;//retorna se o ponto pertence ao retangulo
-	bool collides(const Rect& b) const;//retorna se o retangulo tem interseção com b
+	//! returns if the point belongs to the rectangle
+	bool contains(const float &i,const float &j) const;
+	//! returns if the point belongs to the rectangle
+	bool contains(const Vec2& b) const;
+	//! returns if the rectangle intersects with b
+	bool collides(const Rect& b) const;
 };
 ostream& operator<<(ostream& os, const Rect& obj);
 
-class Circle{
+class Circle {
 public:
 	float x;
 	float y;
 	float r;
-	Circle(float x=0.0f,float y=0.0f,float r=float(1000));
+	Circle(float x = 0.0f,float y = 0.0f,float r = float(1000));
 
 	void floor();
 
-	bool contains(const Vec2 &p)const;//retorna se o ponto pertence ào circulo
-	bool contains(const float &x,const float &y)const;//retorna se o ponto pertence ào circulo
+	//! returns if the point belongs to the circle
+	bool contains(const Vec2 &p)const;
+
+	//! returns if the point belongs to the circle
+	bool contains(const float &x,const float &y)const;
 };
 
 class ConvexPolygon{
 	vector<Vec2> points;
-	map<Vec2,float> pointsAng;//angle point-points[0] to the origin
+	map<Vec2,float> pointsAng; //! angle point-points[0] to the origin
 	Vec2 source;
 	int count;
 	Rect boundingRect;
 public:
 	ConvexPolygon();
-	ConvexPolygon(vector<Vec2> v,bool all=false);
+	ConvexPolygon(vector<Vec2> v,bool all = false);
 
-	bool AddPoint(Vec2 p=Vec2{0.0f,0.0f});//doesnt work if the resulting polygon is not convex
-	bool AddPoints(const vector<Vec2> &pts,bool all=false);//if all==true, doesnt add any if adding all wont make a convex polygon
-	bool RemovePoint(Vec2 p);//doesnt work on non-existing points
-	bool RemovePoint(int ind);//doesnt work on non-existing points
+	//! doesn't work if the resulting polygon is not convex
+	bool AddPoint(Vec2 p = Vec2{0.0f,0.0f});
 
-	void SetSource(const Vec2 &p);//changes the source and updates all points
-	void MoveSource(const Vec2 &p);//changes the source and keeps all points in the same relative position
-	void ReorderPoints();//reorders the points with the lowest rightmost becoming the new points[0]
+	//! if all==true, doesnt add any if adding all wont make a convex polygon
+	bool AddPoints(const vector<Vec2> &pts,bool all = false);
+	bool RemovePoint(Vec2 p); //! doesn't work on non-existing points
+	bool RemovePoint(int ind); //! doesn't work on non-existing points
+
+	void SetSource(const Vec2 &p); //! changes the source and updates all points
+
+	//! changes the source and keeps all points in the same relative position
+	void MoveSource(const Vec2 &p);
+
+	//! reorders the points with the lowest rightmost becoming the new points[0]
+	void ReorderPoints();
 	void ReorderPoints(vector<Vec2> &pts,map<Vec2,float> &ptsAng)const;
 
 	vector<Vec2> GetPoints()const;
@@ -144,8 +161,11 @@ public:
 	float GetPointAng(const Vec2& p)const;
 	float GetPointAng(int ind)const;
 
-	bool IsConvex(const vector<Vec2> &pts)const;//tests if the polygon will remain convex if you add points pts
-	bool IsConvex(const Vec2 &p)const;//tests if the polygon will remain convex if you add point p
+	//! tests if the polygon will remain convex if you add points pts
+	bool IsConvex(const vector<Vec2> &pts)const;
+
+	//! tests if the polygon will remain convex if you add point p
+	bool IsConvex(const Vec2 &p)const;
 	bool Contains(Vec2 p)const;
 	bool Collides(const ConvexPolygon& other)const;
 
