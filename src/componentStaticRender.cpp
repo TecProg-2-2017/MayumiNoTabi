@@ -15,6 +15,7 @@
 #include <gameObject.hpp>
 #include <camera.hpp>
 #include <componentStaticRender.hpp>
+#include <assert.h>
 //#include <inputManager.hpp>
 
 //! Functions to be called by the methods in order to perform actions
@@ -63,7 +64,9 @@ CompStaticRender::~CompStaticRender() {
 	@return The execution of this method returns no value
 	@warning Method that requires review of comment
 */
-void CompStaticRender::update(float time) {
+void CompStaticRender::update(float time) { // Time range 0.0 - 60.0
+
+	assert(time > 0.0 and time < 60.0)
 	sp.update(time);
 }
 

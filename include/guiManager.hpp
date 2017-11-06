@@ -26,6 +26,14 @@ public:
 	GUIManager();
 	~GUIManager();
 	
+    void remove_last_gui_element_requested();
+    void reset_gui_button();
+    void add_stored_element_to_gui();
+    void assing_pressed_button_to_current();
+
+    bool selected_button_is_empty()const;
+    bool is_button_action_different(uint action)const;
+
 	void update_gui_elements();
 	void render_gui_elements();
 
