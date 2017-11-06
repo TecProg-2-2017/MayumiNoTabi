@@ -85,6 +85,7 @@ CompMovement::~CompMovement() {
 
 }
 
+
 /*!
 	@fn void CompMovement::update(float time)
 	@brief Method that update element movement
@@ -125,12 +126,14 @@ void CompMovement::update(float time) {
 	@warning Method that requires review of comment
 */
 
+
 void CompMovement::render() {
 	//! Non renderizable component
 	LOG_METHOD_START('CompMovement::render');
 
 	LOG_METHOD_CLOSE('CompMovement::render', "void");
 }
+
 
 
 /*!

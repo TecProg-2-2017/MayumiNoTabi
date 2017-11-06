@@ -31,7 +31,7 @@ class InputManager{
     unordered_map<int,int>  key_updated_state;
     int update_counter=0;
     Vec2 mouse_position;
-    bool mouse_is_moving;
+    bool mouse_motion;
 
     string* text=nullptr;
     uint text_cursor;
@@ -58,6 +58,11 @@ public:
     Vec2 get_mouse_position();
     int get_mouse_x_position();
     int get_mouse_y_position();
+
+    void update_mouse_button_state(SDL_Event event);
+    void update_key_button_state(SDL_Event event);
+    void insert_text(SDL_Event event);
+    void erase_text(SDL_Event event);
 
     void start_text_input(string* t);
     void stop_text_input(string* t);

@@ -14,12 +14,18 @@ Sprite::Sprite(const string& file,int fCountX,int fCountY,float fTime,int fCount
 	if (fCount==-1) { 
         fCount=fCountX*fCountY;
     }
+    else {
+        // Do nothing
+    }
 
 	Open(file,fCountX,fCountY,fTime,fCount);
 }
 Sprite::Sprite(const string& file,int fCountX,float fTime,int fCount):texture{nullptr}{
 	if (fCount==-1) {
         fCount=fCountX;
+    }
+    else {
+        // Do nothing
     }
 
 	Open(file,fCountX,1,fTime,fCount);
@@ -32,6 +38,9 @@ void Sprite::Open(const string& file,int fCountX,int fCountY,float fTime,int fCo
 	if (fCount==-1) {
         fCount=fCountX*fCountY;
     }
+    else {
+        // Do nothing
+    }
 
 	texture = Resources::game_get_image(file);
 
@@ -39,6 +48,9 @@ void Sprite::Open(const string& file,int fCountX,int fCountY,float fTime,int fCo
 		cerr << "Erro ao carregar as dimensões da textura \"" << file << "\", o programa ira encerrar agora" << endl;
 		exit(EXIT_FAILURE);
 	}
+    else {
+        // Do nothing
+    }
 
 	SetFrameCount(fCountX,fCountY,fCount);
 	SetFrameTime(fTime);
@@ -83,6 +95,9 @@ void Sprite::update(float time) {
 	if (get_frame_count()==1 || frameTime<0) {
         return;
     }
+    else {
+        // Do nothing
+    }
 
 	timeElapsed+=time;
 
@@ -91,6 +106,9 @@ void Sprite::update(float time) {
 		set_frame((currentFrame+1)%get_frame_count());
 		looped = (currentFrame==0);
 	}
+    else {
+        // Do nothing
+    }
 }
 void Sprite::set_frame(int frame) {
 	currentFrame = frame;
@@ -99,6 +117,9 @@ void Sprite::set_frame(int frame) {
 void Sprite::SetFrameCount(int fCountX,int fCountY,int fCount) {
 	if (fCount==-1) {
         fCount=fCountX*fCountY;
+    }
+    else {
+        // Do nothing
     }
 
 	frameCountX=fCountX;
