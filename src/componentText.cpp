@@ -18,20 +18,6 @@
 #include <assert.h>
 //#include <inputManager.hpp>
 
-//! Functions to be called by the methods in order to perform actions
-
-void textPosition(){
-	Vec2 p = pos + GO(entity)->Box().corner();
-	txt.SetPos(p);
-
-	if (GO(entity)->anchored) {
-		txt.Render();
-	}
-	else {
-		txt.Render(CAMERA);
-	}
-}
-
 
 //! A constructor.
     /*!
@@ -93,4 +79,18 @@ void CompText::render() {
 */
 Component::type CompText::get_type()const{
 	return Component::type::t_text;
+}
+
+//! Functions to be called by the methods in order to perform actions
+
+void textPosition(){
+	Vec2 p = pos + GO(entity)->Box().corner();
+	txt.SetPos(p);
+
+	if (GO(entity)->anchored) {
+		txt.Render();
+	}
+	else {
+		txt.Render(CAMERA);
+	}
 }
