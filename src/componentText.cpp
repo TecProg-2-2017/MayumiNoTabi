@@ -15,6 +15,7 @@
 #include <gameObject.hpp>
 #include <camera.hpp>
 #include <componentText.hpp>
+#include <assert.h>
 //#include <inputManager.hpp>
 
 

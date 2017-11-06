@@ -28,6 +28,8 @@
 #include <resources.hpp>
 #include <state.hpp>
 
+#include <assert.h>
+
 
 Game* Game::instance = NULL;
 
@@ -44,6 +46,10 @@ Game::Game(string title, int width, int height):frameStart{0},deltatime{0},windo
 																												(float)width,(float)height} {
 
 	srand(time(NULL));
+
+	assert(title != "");
+	assert(width > 0);
+	assert(height > 0);
 
 	if (instance) {
 
@@ -238,6 +244,8 @@ SDL_Renderer* Game::GetRenderer() {
 */
 
 void Game::Push(State* state) {
+
+	assert(state != NULL);
 
 	if (storedState){
 		delete storedState;

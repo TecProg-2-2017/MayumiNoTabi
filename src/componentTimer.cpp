@@ -16,6 +16,7 @@
 //#include <inputManager.hpp>
 
 #include <gameObject.hpp>
+#include <assert.h>
 
 //! A constructor.
     /*!
