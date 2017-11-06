@@ -14,7 +14,9 @@
 */
 
 CompInputControl::CompInputControl(function<void(GameObject*,float)> f):func{f} {
+	LOG_METHOD_START('CompInputControl::CompInputControl');
 
+	LOG_METHOD_CLOSE('CompInputControl::CompInputControl', "constructor");
 }
 
 /*!
@@ -24,7 +26,9 @@ CompInputControl::CompInputControl(function<void(GameObject*,float)> f):func{f} 
 */
 
 CompInputControl::~CompInputControl() {
+	LOG_METHOD_START('CompInputControl::CompInputControl');
 
+	LOG_METHOD_CLOSE('CompInputControl::CompInputControl', "destructor");
 }
 
 /*!
@@ -34,7 +38,14 @@ CompInputControl::~CompInputControl() {
 */
 
 void CompInputControl::update(float time) {
-	func(GO(entity),time);
+	LOG_METHOD_START('CompInputControl::update');
+	LOG_VARIABLE("CompInputControl::update", "time");
+
+	assert(time >= 0);
+
+	LOG_METHOD_CLOSE('CompGravity::CompGravity', "void");
+
+	func(GO(entity), time);
 }
 
 /*!
@@ -44,14 +55,21 @@ void CompInputControl::update(float time) {
 */
 
 void CompInputControl::render() {
+	//! Non renderizable component
+	LOG_METHOD_START('CompInputControl::render');
+
+	LOG_METHOD_CLOSE('CompInputControl::render', "void");
 }
 
 /*!
-  * @fn Component::type CompInputControl::GetType()
+  * @fn Component::type CompInputControl::get_type()
   * @brief Returns if the component is if the 'input control' type
   * @param float time
 */
 
 Component::type CompInputControl::get_type() const {
+	LOG_METHOD_START('CompInputControl::get_type');
+
+	LOG_METHOD_CLOSE('CompInputControl::get_type', t_input_control.to_string());
 	return Component::type::t_input_control;
 }

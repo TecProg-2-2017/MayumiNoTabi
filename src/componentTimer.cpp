@@ -18,6 +18,21 @@
 #include <gameObject.hpp>
 #include <assert.h>
 
+//! Functions to be called by the methods in order to perform actions
+
+void updateTimeByLimit(){
+
+	t.add_time(time);
+
+	if (t.get_time()>limit) {
+		GO(entity)->dead=true;
+	}
+	else {
+		//Nothing to do
+	}
+}
+
+
 //! A constructor.
     /*!
     This is a constructor method of componentTimer class
@@ -45,6 +60,9 @@ CompTimer::~CompTimer() {
 	@warning Method that requires review of comment
 */
 
+
+
+
 void CompTimer::update(float time) { //Time range 0.0 - 60.0
 
 	assert(time > 0.0 and time < 60.0);
@@ -54,6 +72,7 @@ void CompTimer::update(float time) { //Time range 0.0 - 60.0
 	if (t.get_time()>limit) {
 		GO(entity)->dead=true;
 	}
+
 }
 
 /*!

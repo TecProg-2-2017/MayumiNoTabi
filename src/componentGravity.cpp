@@ -16,7 +16,12 @@
 */
 
 CompGravity::CompGravity(float gravity):gravity{gravity} {
+	LOG_METHOD_START('CompGravity::CompGravity');
+	LOG_VARIABLE("CompGravity::CompGravity", gravity);
 
+	assert(gravity >= 0);
+
+	LOG_METHOD_CLOSE('CompGravity::CompGravity', "constructor");
 }
 
 /*!
@@ -26,7 +31,9 @@ CompGravity::CompGravity(float gravity):gravity{gravity} {
 */
 
 CompGravity::~CompGravity() {
+	LOG_METHOD_START('CompGravity::~CompGravity');
 
+	LOG_METHOD_CLOSE('CompGravity::~CompGravity', "destructor");
 }
 
 /*!
@@ -36,10 +43,19 @@ CompGravity::~CompGravity() {
 */
 
 void CompGravity::update(float time) {
+	LOG_METHOD_START('CompGravity::update');
+	LOG_VARIABLE("CompGravity::update", time);
+
+	assert(time >= 0);
+
 	//! Verifies if element has a type that characterizes movement in Y axis
 	if(GO(entity)->HasComponent(Component::type::t_movement)) {
-		COMPMOVEp(GO(entity))->speed.y+=gravity*time;
+		COMPMOVEp(GO(entity))->speed.y += gravity*time;
 	}
+	else {
+		// Nothing to Do
+	}
+	LOG_METHOD_CLOSE('CompGravity::CompGravity', "void");
 }
 
 /*!
@@ -49,7 +65,10 @@ void CompGravity::update(float time) {
 */
 
 void CompGravity::render() {
+	//! Non renderizable component
+	LOG_METHOD_START('CompGravity::render');
 
+	LOG_METHOD_CLOSE('CompGravity::render', "void");
 }
 
 /*!
@@ -60,5 +79,9 @@ void CompGravity::render() {
 */
 
 Component::type CompGravity::get_type() const{
+	LOG_METHOD_START('CompGravity::get_type');
+
+	LOG_METHOD_CLOSE('CompGravity::get_type', t_gravity.to_string());
+
 	return Component::type::t_gravity;
 }

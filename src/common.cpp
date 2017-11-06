@@ -8,6 +8,7 @@
  */
 
 #include <common.hpp>
+#include <assert.h>
 
 int debug_count = 0; //!< Global variable used as debug counter
 
@@ -47,13 +48,29 @@ SDL_Color generate_color(int red,		// red value, 	range: 0 -> 255
                          int blue,		// blue value,	range: 0 -> 255
                          int alpha) {	// alpha value, range: unknown
 
+  LOG_METHOD_START("Common::generate_color");                   
+
+  LOG_VARIABLE("red", red);
+  assert(red >= 0 and red <= 255);
+  
+  LOG_VARIABLE("green", green);
+  assert(green >= 0 and green <= 255);
+  
+  LOG_VARIABLE("blue", blue);
+  assert(blue >= 0 and blue <= 255);
+  
+  LOG_VARIABLE("alpha", alpha);
+  assert(alpha >= 0);
+
+  
   SDL_Color color; //!< Object with the 4 color values
 
   color.r = red;
 	color.g = green;
 	color.b = blue;
 	color.a = alpha;
-
+  
+  LOG_METHOD_CLOSE("Common::generate_color", color);
 	return color;
 }
 
@@ -67,7 +84,13 @@ comparisson between the two float values
 */
 
 bool equals(const float &a, const float &b) {
-	return (std::fabs((a - b)) <= PRECISION);
+  LOG_METHOD_START("Common::equals");
+
+  LOG_VARIABLE("a", a);
+  LOG_VARIABLE("b", b);
+
+  LOG_METHOD_CLOSE("Common::equals", (std::fabs((a - b)) <= PRECISION));
+  return (std::fabs((a - b)) <= PRECISION);
 }
 
 /*!
@@ -80,15 +103,29 @@ bool equals(const float &a, const float &b) {
 */
 
 float close_distance(const float &from, const float &to, const float &change) {
+  LOG_METHOD_START("Common::close_distance");
+  
+  LOG_VARIABLE("from", from);
+  LOG_VARIABLE("to", to);
+  LOG_VARIABLE("change", change);
+
 	if (abs(from - to) < change) {
 		return to;
-	}
+  }
+  else {
+    // Do nothing
+  }
 
 	if (from > to) {
 		return from - change;
-	}
+  }
+  else {
+    // Do nothing
+  }
 
-	return from + change;
+  LOG_METHOD_CLOSE("Common::close_distance", from + change);
+
+  return from + change;
 }
 
 /*!
@@ -100,9 +137,13 @@ float close_distance(const float &from, const float &to, const float &change) {
 */
 
 string convert_float_to_str(float float_number) {
+  LOG_METHOD_START("Common::convert_float_to_str");
+  LOG_VARIABLE("float_number", float_number);
+  
   char string_to_be_saved[15]; //!< Temporary storage variable for saving chars
 
   sprintf(string_to_be_saved,"%.2f",float_number);
 
+  LOG_METHOD_CLOSE("Common::convert_float_to_str", string_to_be_saved);
 	return string_to_be_saved;
 }

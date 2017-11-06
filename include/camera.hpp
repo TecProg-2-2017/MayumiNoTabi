@@ -32,6 +32,8 @@ public:
   static uint get_camera_focus();
 
   static void update_camera(float time);
+  static void update_camera_zoom(float time);
+  static void update_camera_speed(float time);
 
   static void center_camera_to(const Vec2& vec2_vector);
 
