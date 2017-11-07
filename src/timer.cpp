@@ -54,6 +54,6 @@ void Timer::restart_time() {
 */
 float Timer::get_time() {
 	LOG_METHOD_START("Timer::get_time");
-	LOG_METHOD_CLOSE("Timer::get_time",time);
+	LOG_METHOD_CLOSE("time",time);
 	return time;
 }
