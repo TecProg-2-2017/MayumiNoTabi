@@ -137,73 +137,6 @@ void TileMap::save(stringstream& output_file) {
 }
 
 /*!
-	@fn void TileMap::set_tile_set(Tile_set* ts)
-	@brief A setter of the attribute tile_set
-  @param ts
-  @brief A pointer to TileSet, that represents the new first tile set of the
-  tile map
-  @return The execution of this method returns no value
-*/
-void TileMap::set_tile_set(TileSet* tile_set) {
-	LOG_METHOD_START("TileMap::set_tile_set");
-	assert(tile_set != NULL);
-	LOG_VARIABLE("tile_set",tile_set);
-	this->tile_set = tile_set;
-	LOG_METHOD_CLOSE("TileMap::set_tile_set","void");
-}
-
-/*!
-	@fn int& TileMap::at(int position_x,int position_y,int position_z)
-	@brief Method that returns element of the corresponding position of the tile
-  matrix
-	@param position_x
-	@brief A positive integer, that recives the x axis position of the element
-  @param position_y
-  @brief A positive integer, that recives the y axis position of the element
-  @param position_z
-  @brief A positive integer, that recives the z axis position of the element
-	@return A address to integer,that represents the tile of the tile matrix
-*/
-int& TileMap::at(int position_x,int position_y,int position_z) {
-	LOG_METHOD_START("TileMap::at");
-	assert(position_x >= 0);
-	LOG_VARIABLE("position_x",position_x);
-	assert(position_y >= 0);
-	LOG_VARIABLE("position_y",position_y);
-	assert(position_z >= 0);
-	LOG_VARIABLE("position_z",position_z);
-	LOG_METHOD_CLOSE("TileMap::at",tile_matrix[position_x+(position_y*map_width)+(position_z*map_width*map_height)])
-	assert(tile_matrix[position_x+(position_y*map_width)+(position_z*map_width*map_height)] != NULL);
-	return tile_matrix[position_x+(position_y*map_width)+(position_z*map_width*map_height)];
-}
-
-
-/*!
-	@fn int TileMap::at(int position_x,int position_y,int position_z) const
-	@brief Method that returns element of the corresponding position of the tile
-  matrix
-  @param position_x
-	@brief A positive integer, that recives the x axis position of the element
-  @param position_y
-  @brief A positive integer, that recives the y axis position of the element
-  @param position_z
-  @brief A positive integer, that recives the z axis position of the element
-	@return A integer,that represents the tile of the tile matrix
-*/
-int TileMap::at(int position_x,int position_y,int position_z) const{
-	LOG_METHOD_START("TileMap::at");
-	assert(position_x >= 0);
-	LOG_VARIABLE("position_x",position_x);
-	assert(position_y >= 0);
-	LOG_VARIABLE("position_y",position_y);
-	assert(position_z >= 0);
-	LOG_VARIABLE("position_z",position_z);
-	LOG_METHOD_CLOSE("TileMap::at",tile_matrix[position_x+(position_y*map_width)+(position_z*map_width*map_height)])
-	assert(tile_matrix[position_x+(position_y*map_width)+(position_z*map_width*map_height)] != NULL);
-	return tile_matrix[position_x+(position_y*map_width)+(position_z*map_width*map_height)];
-}
-
-/*!
 	@fn void TileMap::render_layer(int layer,int position_x ,int position_y)
 	@brief Method that reders a layer of the tile map
   @param layer
@@ -312,42 +245,54 @@ void TileMap::render(Vec2 position) {
 }
 
 /*!
-	@fn int TileMap::get_width() const
-	@brief A getter of the attribute mapWidth
-	@return A positive integer, that represents the width of a tile map
+	@fn int& TileMap::at(int position_x,int position_y,int position_z)
+	@brief Method that returns element of the corresponding position of the tile
+  matrix
+	@param position_x
+	@brief A positive integer, that recives the x axis position of the element
+  @param position_y
+  @brief A positive integer, that recives the y axis position of the element
+  @param position_z
+  @brief A positive integer, that recives the z axis position of the element
+	@return A address to integer,that represents the tile of the tile matrix
 */
-int TileMap::get_width() const{
-	LOG_METHOD_START("TileMap::get_width");
-	LOG_METHOD_CLOSE("TileMap::get_width",map_width);
-	assert(map_width >= 0);
-	return map_width;
+int& TileMap::at(int position_x,int position_y,int position_z) {
+	LOG_METHOD_START("TileMap::at");
+	assert(position_x >= 0);
+	LOG_VARIABLE("position_x",position_x);
+	assert(position_y >= 0);
+	LOG_VARIABLE("position_y",position_y);
+	assert(position_z >= 0);
+	LOG_VARIABLE("position_z",position_z);
+	LOG_METHOD_CLOSE("TileMap::at",tile_matrix[position_x+(position_y*map_width)+(position_z*map_width*map_height)])
+	assert(tile_matrix[position_x+(position_y*map_width)+(position_z*map_width*map_height)] != NULL);
+	return tile_matrix[position_x+(position_y*map_width)+(position_z*map_width*map_height)];
 }
-
 
 /*!
-	@fn int TileMap::get_height() const
-	@brief A getter of the attribute mapHeight
-	@return A positive integer, that represents the height of a tile map
+	@fn int TileMap::at(int position_x,int position_y,int position_z) const
+	@brief Method that returns element of the corresponding position of the tile
+  matrix
+  @param position_x
+	@brief A positive integer, that recives the x axis position of the element
+  @param position_y
+  @brief A positive integer, that recives the y axis position of the element
+  @param position_z
+  @brief A positive integer, that recives the z axis position of the element
+	@return A integer,that represents the tile of the tile matrix
 */
-int TileMap::get_height() const{
-	LOG_METHOD_START("TileMap::get_height");
-	LOG_METHOD_CLOSE("TileMap::get_height",map_height);
-	assert(map_height >= 0);
-	return map_height;
+int TileMap::at(int position_x,int position_y,int position_z) const{
+	LOG_METHOD_START("TileMap::at");
+	assert(position_x >= 0);
+	LOG_VARIABLE("position_x",position_x);
+	assert(position_y >= 0);
+	LOG_VARIABLE("position_y",position_y);
+	assert(position_z >= 0);
+	LOG_VARIABLE("position_z",position_z);
+	LOG_METHOD_CLOSE("TileMap::at",tile_matrix[position_x+(position_y*map_width)+(position_z*map_width*map_height)])
+	assert(tile_matrix[position_x+(position_y*map_width)+(position_z*map_width*map_height)] != NULL);
+	return tile_matrix[position_x+(position_y*map_width)+(position_z*map_width*map_height)];
 }
-
-/*!
-	@fn int TileMap::get_depth() const
-	@brief A getter of the attribute mapDepth
-	@return A positive integer, that represents the depth of a tile map
-*/
-int TileMap::get_depth() const{
-	LOG_METHOD_START("TileMap::get_depth");
-	LOG_METHOD_CLOSE("TileMap::get_depth",map_depth);
-	assert(map_depth >= 0);
-	return map_depth;
-}
-
 
 /*!
 	@fn void TileMap::change_size(int new_width,int new_height)
@@ -386,4 +331,58 @@ void TileMap::change_size(int new_width,int new_height) {
 	tile_matrix.clear();
 	tile_matrix = new_matrix;
 	LOG_METHOD_CLOSE("TileMap::change_size","void");
+}
+
+/*!
+	@fn void TileMap::set_tile_set(Tile_set* ts)
+	@brief A setter of the attribute tile_set
+  @param ts
+  @brief A pointer to TileSet, that represents the new first tile set of the
+  tile map
+  @return The execution of this method returns no value
+*/
+void TileMap::set_tile_set(TileSet* tile_set) {
+	LOG_METHOD_START("TileMap::set_tile_set");
+	assert(tile_set != NULL);
+	LOG_VARIABLE("tile_set",tile_set);
+	this->tile_set = tile_set;
+	LOG_METHOD_CLOSE("TileMap::set_tile_set","void");
+}
+
+
+/*!
+	@fn int TileMap::get_width() const
+	@brief A getter of the attribute mapWidth
+	@return A positive integer, that represents the width of a tile map
+*/
+int TileMap::get_width() const{
+	LOG_METHOD_START("TileMap::get_width");
+	LOG_METHOD_CLOSE("TileMap::get_width",map_width);
+	assert(map_width >= 0);
+	return map_width;
+}
+
+
+/*!
+	@fn int TileMap::get_height() const
+	@brief A getter of the attribute mapHeight
+	@return A positive integer, that represents the height of a tile map
+*/
+int TileMap::get_height() const{
+	LOG_METHOD_START("TileMap::get_height");
+	LOG_METHOD_CLOSE("TileMap::get_height",map_height);
+	assert(map_height >= 0);
+	return map_height;
+}
+
+/*!
+	@fn int TileMap::get_depth() const
+	@brief A getter of the attribute mapDepth
+	@return A positive integer, that represents the depth of a tile map
+*/
+int TileMap::get_depth() const{
+	LOG_METHOD_START("TileMap::get_depth");
+	LOG_METHOD_CLOSE("TileMap::get_depth",map_depth);
+	assert(map_depth >= 0);
+	return map_depth;
 }
