@@ -103,7 +103,9 @@ void TileSet::load(int  width, int height, string file_path) {
 
   //! Defines the numbers of rows and columns of the tile set
   rows = tileSet.GetHeight()/tile_height;
+	assert(rows >= 0);
 	columns = tileSet.GetWidth()/tile_width;
+	assert(columns >= 0);
 	LOG_METHOD_CLOSE("TileSet::load","void");
 }
 
