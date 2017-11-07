@@ -158,9 +158,11 @@ void TileMap::render_layer(int layer,int position_x ,int position_y) {
 	LOG_VARIABLE("position_y",position_y);
 	//! @var width
 	int width=tile_set->get_width(); //!< a integer that represents the tile set width
+	assert(width >= 0);
   //! @var height
 	int height=tile_set->get_height(); //!< a integer that represents the tile set height
-  //! @var tile
+	assert(height >= 0);
+	//! @var tile
 	int tile; //! a integer that represents a tile
   //! @var firstX
 	int firstX=0; //!< a integer that represents the beginning of the layer in the axis x
@@ -265,7 +267,6 @@ int& TileMap::at(int position_x,int position_y,int position_z) {
 	assert(position_z >= 0);
 	LOG_VARIABLE("position_z",position_z);
 	LOG_METHOD_CLOSE("TileMap::at",tile_matrix[position_x+(position_y*map_width)+(position_z*map_width*map_height)])
-	assert(tile_matrix[position_x+(position_y*map_width)+(position_z*map_width*map_height)] != NULL);
 	return tile_matrix[position_x+(position_y*map_width)+(position_z*map_width*map_height)];
 }
 
@@ -290,7 +291,6 @@ int TileMap::at(int position_x,int position_y,int position_z) const{
 	assert(position_z >= 0);
 	LOG_VARIABLE("position_z",position_z);
 	LOG_METHOD_CLOSE("TileMap::at",tile_matrix[position_x+(position_y*map_width)+(position_z*map_width*map_height)])
-	assert(tile_matrix[position_x+(position_y*map_width)+(position_z*map_width*map_height)] != NULL);
 	return tile_matrix[position_x+(position_y*map_width)+(position_z*map_width*map_height)];
 }
 
@@ -313,8 +313,10 @@ void TileMap::change_size(int new_width,int new_height) {
   vector<int> new_matrix(new_width*new_height*map_depth, EMPTY_TILE); //!<  A integer vector, that represents the tile map with the new size
 	//! @var max_x
   int max_x = min(new_width, map_width); //!< A integer, that represents the lower value between newWidth and mapWidth
+	assert(max_x >= 0);
 	//! @var max_y
   int max_y = min(new_height, map_height); //!< A integer, that represents the lower value between newHeight and mapHeight
+	assert(max_y >= 0);
 
   //! Iterates z from 0 to the tile map depth
 	FOR(depth_iterator,map_depth)
