@@ -50,7 +50,7 @@ void CompAI::update(float time) {
   LOG_VARIABLE("time", time);
 
   foo(this, time);  // Maybe I should leave it's name like this
-  
+
   LOG_METHOD_CLOSE("CompAI::update", "void");
 }
 
@@ -70,7 +70,7 @@ void CompAI::render_component_ai() {
 
 /*!
   @fn       Component::type CompAI::get_type()const
-  @brief    Method that picks a component type and returns it
+  @brief    Method that picks a component type && returns it
   @param    none
   @return   Component::type
   @warning  none
