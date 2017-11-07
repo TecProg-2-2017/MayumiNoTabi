@@ -63,7 +63,7 @@ Vec2 Vec2::operator= (const Vec2& b) {
 	@warning Method that requires review of comment
 */
 
-Vec2 Vec2::operator+ (const Vec2& b)const{
+Vec2 Vec2::operator+ (const Vec2& b)const {
 	return {x_axis + b.x_axis, y_axis + b.y_axis};
 }
 
@@ -952,12 +952,37 @@ void Circle::floor() {
 	r = std::floor(r);
 }
 
-/* TODO The comment
+/*!
+	@fn ConvexPolygon::ConvexPolygon():count{0}
+	@brief Method that starts the counter fromo polygons
+	@return The execution of this method returns no value
+	@warning Method that requires review of comment
 */
-ConvexPolygon::ConvexPolygon():count{0}{}
-ConvexPolygon::ConvexPolygon(vector<Vec2> v,bool all):count{0}{
+
+ConvexPolygon::ConvexPolygon():count{0} {
+	// Nothing to do
+}
+
+/*!
+	@fn ConvexPolygon::ConvexPolygon(vector<Vec2> v,bool all):count{0}
+	@brief Method that adds points to polygon matched by points v and all
+	@param v It's a point in vector
+	@param all
+	@return The execution of this method returns no value
+	@warning Method that requires review of comment
+*/
+
+ConvexPolygon::ConvexPolygon(vector<Vec2> v,bool all):count{0} {
 	AddPoints(v,all);
 }
+
+/*!
+	@fn bool ConvexPolygon::AddPoint(Vec2 p)
+	@brief Method that searchs points from the polygon
+	@param p It's a vector2
+	@return The execution of this method returns a bool
+	@warning Method that requires review of comment
+*/
 
 bool ConvexPolygon::AddPoint(Vec2 p) {
 	p -= GetSource();
@@ -974,6 +999,9 @@ bool ConvexPolygon::AddPoint(Vec2 p) {
 		else if (boundingRect.y2() < p.y) {
 			boundingRect.h = p.y-boundingRect.y;
 		}
+		else {
+				// Nothing to do
+		}
 	}
 
 	if (find(points.begin(), points.end(), p-GetSource()) != points.end()) {
@@ -989,6 +1017,14 @@ bool ConvexPolygon::AddPoint(Vec2 p) {
 
 	return true;
 }
+
+/*!
+	@fn bool ConvexPolygon::AddPoints(const vector<Vec2> &pts,bool all)
+	@brief Method that fix points from the polygon
+	@param &pts It's a vector2
+	@return The execution of this method returns a bool, false if no added points.
+	@warning Method that requires review of comment
+*/
 
 bool ConvexPolygon::AddPoints(const vector<Vec2> &pts,bool all) {
 	if (all) {
@@ -1008,11 +1044,27 @@ bool ConvexPolygon::AddPoints(const vector<Vec2> &pts,bool all) {
 	return true;
 }
 
+/*!
+	@fn bool ConvexPolygon::RemovePoint(Vec2 p)
+	@brief Method that removes points from the polygon
+	@param p It's a vector2
+	@return The execution of this method returns a bool
+	@warning Method that requires review of comment
+*/
+
 bool ConvexPolygon::RemovePoint(Vec2 p) {
 	auto it = find(points.begin(), points.end(), p);
 
 	return RemovePoint(it - points.begin());
 }
+
+/*!
+	@fn bool ConvexPolygon::RemovePoint(int ind)
+	@brief Method that removes points from the polygon
+	@param ind It's a indices from vector's polygon
+	@return The execution of this method returns a bool
+	@warning Method that requires review of comment
+*/
 
 bool ConvexPolygon::RemovePoint(int ind) {
 	if (ind < 0 || ind >= count) {
@@ -1021,8 +1073,10 @@ bool ConvexPolygon::RemovePoint(int ind) {
 	else {
 		// Nothing to do
 	}
+
 	pointsAng.erase(points[ind]);
 	points.erase(points.begin() + ind);
+
 	if (ind == 0) {
 		ReorderPoints();
 	}
@@ -1031,16 +1085,26 @@ bool ConvexPolygon::RemovePoint(int ind) {
 	}
 
 	float x1 = 0, x2 = 0, y1 = 0, y2 = 0;
+
 	for (auto &p:points) {
 		x1 = min(x1,p.x);
 		x2 = max(x2,p.x);
 		y1 = min(y1,p.y);
 		y2 = max(y2,p.y);
 	}
+
 	boundingRect = Rect{x1,y1,x2-x1,y2-y1};
 
 	return true;
 }
+
+/*!
+	@fn void ConvexPolygon::SetSource(const Vec2 &p)
+	@brief Method that sets source points from polygon
+	@param &p It's a reference to Vec2
+	@return The execution of this method returns no value
+	@warning Method that requires review of comment
+*/
 
 void ConvexPolygon::SetSource(const Vec2 &p) {
 	Vec2 move = GetSource()-p;
