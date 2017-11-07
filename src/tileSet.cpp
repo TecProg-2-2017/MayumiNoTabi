@@ -15,23 +15,15 @@
 */
 
 //! A constructor.
-    /*!
-    This is a empty constructor method of TileSet class
-    */
-TileSet::TileSet() {
-
-}
-
-//! A constructor.
-    /*!
-    *	This is a constructor method of TileSet class
-		*	\param width
-		*	\brief A positive integer, that represents width of a tile
-		*	\param height
-		*	\brief A positive integer, that represents height of a tile
-		*	\param file_path
-		*	\brief A string, that represents path of the file with the tile set
-    */
+/*!
+*	This is a constructor method of TileSet class
+*	\param width
+*	\brief A positive integer, that represents width of a tile
+*	\param height
+*	\brief A positive integer, that represents height of a tile
+*	\param file_path
+*	\brief A string, that represents path of the file with the tile set
+*/
 TileSet::TileSet(int width, int height, string file_path) {
 	LOG_METHOD_START("TileSet::TileSet");
 	LOG_VARIABLE("width",width);
@@ -45,6 +37,43 @@ TileSet::TileSet(int width, int height, string file_path) {
 	LOG_METHOD_CLOSE("TileSet::TileSet","constructor");
 }
 
+//! A constructor.
+    /*!
+    This is a empty constructor method of TileSet class
+    */
+TileSet::TileSet() {
+	LOG_METHOD_START("TileSet::TileSet");
+	LOG_METHOD_CLOSE("TileSet::TileSet","constructor");
+}
+
+/*!
+	@fn void TileSet::render(unsigned int index,float position_x,float position_y, float extended_scale)
+	@brief Method that renders the tile set
+	@param index
+	@brief A unsigned integer
+	@param position_x
+	@brief A float
+	@param position_y
+	@brief A float
+	@param extended_scale
+	@brief A float
+	@return The execution of this method returns no value
+	@warning Method that requires review of comment
+*/
+void TileSet::render(unsigned int index,float position_x,float position_y, float extended_scale) {
+	LOG_METHOD_START("TileSet::render");
+	LOG_VARIABLE("index",index);
+	LOG_VARIABLE("position_x",position_x);
+	LOG_VARIABLE("position_y",position_y);
+	LOG_VARIABLE("extended_scale",extended_scale);
+	//! Checks if the number of tiles is bigger that the index
+	if ((int)index<(rows*columns)) {
+		tileSet.SetClip(tile_width*(index%columns),(tile_height*(index/columns)),tile_width,tile_height);
+		tileSet.render(position_x,position_y,0,extended_scale);
+	}
+	//! \warning else (do nothing)
+	LOG_METHOD_CLOSE("TileSet::render","void");
+}
 
 /*!
 	@fn void TileSet::load(int  width, int height, string file_path)
@@ -76,35 +105,6 @@ void TileSet::load(int  width, int height, string file_path) {
   rows = tileSet.GetHeight()/tile_height;
 	columns = tileSet.GetWidth()/tile_width;
 	LOG_METHOD_CLOSE("TileSet::load","void");
-}
-
-/*!
-	@fn void TileSet::render(unsigned int index,float position_x,float position_y, float extended_scale)
-	@brief Method that renders the tile set
-	@param index
-	@brief A unsigned integer
-	@param position_x
-	@brief A float
-	@param position_y
-	@brief A float
-	@param extended_scale
-	@brief A float
-	@return The execution of this method returns no value
-	@warning Method that requires review of comment
-*/
-void TileSet::render(unsigned int index,float position_x,float position_y, float extended_scale) {
-	LOG_METHOD_START("TileSet::render");
-	LOG_VARIABLE("index",index);
-	LOG_VARIABLE("position_x",position_x);
-	LOG_VARIABLE("position_y",position_y);
-	LOG_VARIABLE("extended_scale",extended_scale);
-	//! Checks if the number of tiles is bigger that the index
-	if ((int)index<(rows*columns)) {
-		tileSet.SetClip(tile_width*(index%columns),(tile_height*(index/columns)),tile_width,tile_height);
-		tileSet.render(position_x,position_y,0,extended_scale);
-	}
-	//! \warning else (do nothing)
-	LOG_METHOD_CLOSE("TileSet::render","void");
 }
 
 /*!
