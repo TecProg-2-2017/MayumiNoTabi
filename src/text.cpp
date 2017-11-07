@@ -343,7 +343,7 @@ void Text::set_line(int line, string txt) {
 	assert(txt != NULL);
 	LOG_VARIABLE("txt",txt);
 	//! Checks if the line number exists in the array of lines
-	if (line >= 0 && line < (int)line_array.size()) {
+	if (line >= 0 and line < (int)line_array.size()) {
 		//! Replaces the line text for the new line text
 		line_array[line].text = txt;
 
