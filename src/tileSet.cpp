@@ -6,6 +6,8 @@
 *  \sa tileSet.hpp
 */
 #include <tileSet.hpp>
+#include <assert.h>
+
 
 /*!
 	@class TileSet
@@ -33,8 +35,11 @@ TileSet::TileSet() {
 TileSet::TileSet(int width, int height, string file_path) {
 	LOG_METHOD_START("TileSet::TileSet");
 	LOG_VARIABLE("width",width);
+	assert(width >= 0);
 	LOG_VARIABLE("height",height);
+	assert(height >= 0);
 	LOG_VARIABLE("file_path",file_path);
+	assert(file_path != NULL)
 	LOG_MSG("This is a constructor method of TileSet class");
 	load(width, height, file_path);
 	LOG_METHOD_CLOSE("TileSet::TileSet","constructor");
@@ -55,8 +60,11 @@ TileSet::TileSet(int width, int height, string file_path) {
 void TileSet::load(int  width, int height, string file_path) {
 	LOG_METHOD_START("TileSet::load");
 	LOG_VARIABLE("width",width);
+	assert(width >= 0);
 	LOG_VARIABLE("height",height);
+	assert(height >= 0);
 	LOG_VARIABLE("file_path",file_path);
+	assert(file_path != NULL);
   //! Attributes the value of the width and height of a tile
 	tile_width = width;
 	tile_height = height;
@@ -107,6 +115,7 @@ void TileSet::render(unsigned int index,float position_x,float position_y, float
 int TileSet::get_width() {
 	LOG_METHOD_START("TileSet::get_width");
 	LOG_METHOD_CLOSE("TileSet::get_width",tile_width);
+	assert(tile_width >= 0);
 	return tile_width;
 }
 
@@ -118,6 +127,7 @@ int TileSet::get_width() {
 int TileSet::get_height() {
 	LOG_METHOD_START("TileSet::get_height");
 	LOG_METHOD_CLOSE("TileSet::get_height",tile_height);
+	assert(tile_height >= 0);
 	return tile_height;
 }
 
@@ -129,5 +139,6 @@ int TileSet::get_height() {
 int TileSet::get_tile_count() {
 	LOG_METHOD_START("TileSet::get_tile_count");
 	LOG_METHOD_CLOSE("TileSet::get_tile_count",rows*colums);
+	assert(rows * colums >= 0);
 	return rows*columns;
 }
