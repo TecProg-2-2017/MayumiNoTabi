@@ -9,6 +9,7 @@
 #include <camera.hpp>
 #include <game.hpp>
 #include <resources.hpp>
+#include <assert.h>
 
 /*!
 	@class Text
@@ -38,12 +39,17 @@
 Text::Text(const string& txt, int fSize, SDL_Color c, Style st,
 		string file, int x, int y) : font_name{file} {
 	LOG_METHOD_START("Text::Text");
+	assert(txt != NULL);
 	LOG_VARIABLE("txt",txt);
 	LOG_VARIABLE("fSize",fSize);
+	assert(c != NULL);
 	LOG_VARIABLE("c",c);
 	LOG_VARIABLE("st",st);
+	assert(file != NULL);
 	LOG_VARIABLE("file",file);
+	assert(x >= 0);
 	LOG_VARIABLE("x",x);
+	assert(y >= 0);
 	LOG_VARIABLE("y",y);
 	SetColor(c);
 	SetText(txt);
@@ -83,6 +89,8 @@ Text::~Text() {
 */
 void Text::render(Vec2 camera, Rect* clipRect) {
 	LOG_METHOD_START("Text::render");
+	assert(camera.x >= 0);
+	assert(camera.y >= 0);
 	LOG_VARIABLE("camera",camera);
 	LOG_VARIABLE("clipRect",clipRect);
 	//! @var pos
@@ -164,7 +172,7 @@ void Text::render(Vec2 camera, Rect* clipRect) {
 			SDL_RenderCopy(GAMERENDER,i.texture,nullptr,&dest);
 		}
 	}
-	LOG_METHOD_CLOSE("Text::Render","void");
+	LOG_METHOD_CLOSE("Text::render","void");
 }
 
 /*!
@@ -180,12 +188,14 @@ void Text::render(Vec2 camera, Rect* clipRect) {
   @return The execution of this method returns no value
 */
 void Text::set_box_position(int x,int y) {
-	LOG_METHOD_START("Text::SetPos");
+	LOG_METHOD_START("Text::set_box_position");
+	assert(x > 0);
 	LOG_VARIABLE("x",x);
+	assert(y > 0);
 	LOG_VARIABLE("y",y);
 	box.x = x;
 	box.y = y;
-	LOG_METHOD_CLOSE("Text::SetPos","void");
+	LOG_METHOD_CLOSE("Text::set_box_position","void");
 }
 
 /*!
@@ -196,10 +206,13 @@ void Text::set_box_position(int x,int y) {
   @return The execution of this method returns no value
 */
 void Text::set_box_position(Vec2 v) {
-	LOG_METHOD_START("Text::SetPos");
+	LOG_METHOD_START("Text::set_box_position");
+	assert(v != NULL);
+	assert(v.x >= 0);
+	assert(v.y >= 0);
 	LOG_VARIABLE("v",v);
 	SetPos(v.x, v.y);
-	LOG_METHOD_CLOSE("Text::SetPos","void");
+	LOG_METHOD_CLOSE("Text::set_box_position","void");
 }
 
 /*!
@@ -210,7 +223,8 @@ void Text::set_box_position(Vec2 v) {
   @return The execution of this method returns no value
 */
 void Text::set_text(string txt) {
-	LOG_METHOD_START("Text::SetText");
+	LOG_METHOD_START("Text::set_text");
+	assert(txt != NULL);
 	LOG_VARIABLE("txt",txt);
 	//! Checks if the txt is empty
 	if (txt == ""){
@@ -231,7 +245,7 @@ void Text::set_text(string txt) {
 	}
 
 	remake_texture();
-	LOG_METHOD_CLOSE("Text::SetText","void");
+	LOG_METHOD_CLOSE("Text::set_text","void");
 }
 
 
@@ -246,8 +260,9 @@ void Text::set_text(string txt) {
   @return The execution of this method returns no value
 */
 void Text::set_line(int line, string txt) {
-	LOG_METHOD_START("Text::SetLine");
+	LOG_METHOD_START("Text::set_line");
 	LOG_VARIABLE("line",line);
+	assert(txt != NULL);
 	LOG_VARIABLE("txt",txt);
 	//! Checks if the line number exists in the array of lines
 	if (line >= 0 && line < (int)line_array.size()) {
@@ -256,7 +271,7 @@ void Text::set_line(int line, string txt) {
 
 		remake_texture();
 	}
-	LOG_METHOD_CLOSE("Text::SetLine","void");
+	LOG_METHOD_CLOSE("Text::set_line","void");
 }
 
 void Text::set_alignment(Align al){
@@ -273,6 +288,7 @@ void Text::set_alignment(Align al){
 */
 void Text::set_color(SDL_Color c) {
 	LOG_METHOD_START("Text::SetColor");
+	assert(c != NULL);
 	LOG_VARIABLE("c",c);
 	color.r = c.r;
 	color.g = c.g;
@@ -409,7 +425,7 @@ void Text::remake_texture() {
 
 		}
 	}
-	LOG_METHOD_CLOSE("Text::RemakeTexture","void");
+	LOG_METHOD_CLOSE("Text::remake_texture","void");
 }
 
 Text::TextLine::TextLine() {}
