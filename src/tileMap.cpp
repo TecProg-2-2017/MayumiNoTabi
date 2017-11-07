@@ -12,6 +12,7 @@
 #include <game.hpp>
 #include <gameObject.hpp>
 #include <tileSet.hpp>
+#include <assert.h>
 
   /*!
 	@class TileMap
@@ -33,8 +34,11 @@
 
 TileMap::TileMap(int width, int height, TileSet* tile_set) : tile_set{tile_set},map_width{width},map_height{height},map_depth{1} {
 	LOG_METHOD_START("TileMap::TileMap");
+	assert(width >= 0);
 	LOG_VARIABLE("width",width);
+	assert(height >= 0);
 	LOG_VARIABLE("height",height);
+	assert(tile_set != NULL);
 	LOG_VARIABLE("tile_set",tale_set);
 	tile_matrix.reserve(map_width*map_height);
   //! Iterates through tileMatrix height of tile map
@@ -55,6 +59,8 @@ TileMap::TileMap(int width, int height, TileSet* tile_set) : tile_set{tile_set},
     */
 TileMap::TileMap(TileSet* tile_set):tile_set{tile_set}{
 	LOG_METHOD_START("TileMap::TileMap");
+	assert(tile_set != NULL);
+	LOG_VARIABLE("tile_set",tile_set);
 	LOG_METHOD_CLOSE("TileMap::TileMap","constructor");
 }
 
@@ -68,6 +74,7 @@ TileMap::TileMap(TileSet* tile_set):tile_set{tile_set}{
 */
 void TileMap::load(ifstream& input_file) {
 	LOG_METHOD_START("TileMap::load");
+	assert(input_file != NULL);
 	LOG_VARIABLE("input_file",input_file);
   //! @var line
 	string line;//!< A string that represents the first line of the in file
@@ -108,6 +115,7 @@ void TileMap::load(ifstream& input_file) {
 */
 void TileMap::save(stringstream& output_file) {
 	LOG_METHOD_START("TileMap::save");
+	assert(output_file != NULL);
 	LOG_VARIABLE("output_file",output_file);
   //! Saves the width, height and depth of the tile matrix on out
 	output_file<<map_width<<","<<map_height<<","<<map_depth<<endl<<endl;
@@ -138,6 +146,7 @@ void TileMap::save(stringstream& output_file) {
 */
 void TileMap::set_tile_set(TileSet* tile_set) {
 	LOG_METHOD_START("TileMap::set_tile_set");
+	assert(tile_set != NULL);
 	LOG_VARIABLE("tile_set",tile_set);
 	this->tile_set = tile_set;
 	LOG_METHOD_CLOSE("TileMap::set_tile_set","void");
@@ -157,10 +166,14 @@ void TileMap::set_tile_set(TileSet* tile_set) {
 */
 int& TileMap::at(int position_x,int position_y,int position_z) {
 	LOG_METHOD_START("TileMap::at");
+	assert(position_x >= 0);
 	LOG_VARIABLE("position_x",position_x);
+	assert(position_y >= 0);
 	LOG_VARIABLE("position_y",position_y);
+	assert(position_z >= 0);
 	LOG_VARIABLE("position_z",position_z);
 	LOG_METHOD_CLOSE("TileMap::at",tile_matrix[position_x+(position_y*map_width)+(position_z*map_width*map_height)])
+	assert(tile_matrix[position_x+(position_y*map_width)+(position_z*map_width*map_height)] != NULL);
 	return tile_matrix[position_x+(position_y*map_width)+(position_z*map_width*map_height)];
 }
 
@@ -179,10 +192,14 @@ int& TileMap::at(int position_x,int position_y,int position_z) {
 */
 int TileMap::at(int position_x,int position_y,int position_z) const{
 	LOG_METHOD_START("TileMap::at");
+	assert(position_x >= 0);
 	LOG_VARIABLE("position_x",position_x);
+	assert(position_y >= 0);
 	LOG_VARIABLE("position_y",position_y);
+	assert(position_z >= 0);
 	LOG_VARIABLE("position_z",position_z);
 	LOG_METHOD_CLOSE("TileMap::at",tile_matrix[position_x+(position_y*map_width)+(position_z*map_width*map_height)])
+	assert(tile_matrix[position_x+(position_y*map_width)+(position_z*map_width*map_height)] != NULL);
 	return tile_matrix[position_x+(position_y*map_width)+(position_z*map_width*map_height)];
 }
 
@@ -202,7 +219,9 @@ int TileMap::at(int position_x,int position_y,int position_z) const{
 void TileMap::render_layer(int layer,int position_x ,int position_y) {
 	LOG_METHOD_START("TileMap::render_layer");
 	LOG_VARIABLE("layer"layer);
+	assert(position_x >= 0);
 	LOG_VARIABLE("position_x",position_x);
+	assert(position_y >= 0);
 	LOG_VARIABLE("position_y",position_y);
 	//! @var width
 	int width=tile_set->get_width(); //!< a integer that represents the tile set width
@@ -280,6 +299,9 @@ void TileMap::render_layer(int layer,int position_x ,int position_y) {
 
 void TileMap::render(Vec2 position) {
 	LOG_METHOD_START("TileMap::render",TileMap::render);
+	assert(position != NULL);
+	assert(position.x >= 0);
+	assert(position.y >= 0);
 	LOG_VARIABLE("position",position);
   //! Iterates through the layer of the tile map
 	FOR(depth_iterator,map_depth) {
@@ -297,6 +319,7 @@ void TileMap::render(Vec2 position) {
 int TileMap::get_width() const{
 	LOG_METHOD_START("TileMap::get_width");
 	LOG_METHOD_CLOSE("TileMap::get_width",map_width);
+	assert(map_width >= 0);
 	return map_width;
 }
 
@@ -309,6 +332,7 @@ int TileMap::get_width() const{
 int TileMap::get_height() const{
 	LOG_METHOD_START("TileMap::get_height");
 	LOG_METHOD_CLOSE("TileMap::get_height",map_height);
+	assert(map_height >= 0);
 	return map_height;
 }
 
@@ -320,6 +344,7 @@ int TileMap::get_height() const{
 int TileMap::get_depth() const{
 	LOG_METHOD_START("TileMap::get_depth");
 	LOG_METHOD_CLOSE("TileMap::get_depth",map_depth);
+	assert(map_depth >= 0);
 	return map_depth;
 }
 
@@ -335,7 +360,9 @@ int TileMap::get_depth() const{
 */
 void TileMap::change_size(int new_width,int new_height) {
 	LOG_METHOD_START("TileMap::change_size");
+	assert(map_width >= 0);
 	LOG_VARIABLE("new_width",new_width);
+	assert(map_height >= 0);
 	LOG_VARIABLE("new_height",new_height);
 	//! @var new_matrix
   vector<int> new_matrix(new_width*new_height*map_depth, EMPTY_TILE); //!<  A integer vector, that represents the tile map with the new size
