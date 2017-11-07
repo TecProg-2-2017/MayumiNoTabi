@@ -29,9 +29,11 @@
 StateTitle::StateTitle():State::State(), bg{Sprite(BACKGROUND)},
 																				bt1{"img/botao-editor.png", 2},
 																				bt2{"img/botao-inicio.png", 2}{
+	LOG_METHOD_START("StateTitle::StateTitle");
 	LoadAssets();
 
 	bg.StretchToFit(WINSIZE);
+	LOG_METHOD_CLOSE("StateTitle::StateTitle","constructor");
 }
 
 //! A destructor.
@@ -39,7 +41,8 @@ StateTitle::StateTitle():State::State(), bg{Sprite(BACKGROUND)},
       This is a destructor method of StateTitle class
     */
 StateTitle::~StateTitle() {
-
+	LOG_METHOD_START("StateTitle::~StateTitle");
+	LOG_METHOD_CLOSE("StateTitle::~StateTitle","destructor");
 }
 
 /*!
@@ -48,7 +51,8 @@ StateTitle::~StateTitle() {
 	@return The execution of this method returns no value
 */
 void StateTitle::LoadAssets() {
-
+	LOG_METHOD_START("StateTitle::LoadAssets");
+	LOG_METHOD_CLOSE("StateTitle::LoadAssets","void");
 }
 
 /*!
@@ -57,7 +61,8 @@ void StateTitle::LoadAssets() {
 	@return The execution of this method returns no value
 */
 void StateTitle::LoadGUI() {
-
+	LOG_METHOD_START("StateTitle::LoadGUI()");
+	LOG_METHOD_CLOSE("StateTitle::LoadGUI()","void");
 }
 
 /*!
@@ -66,6 +71,7 @@ void StateTitle::LoadGUI() {
 	@return The execution of this method returns no value
 */
 void StateTitle::Begin() {
+	LOG_METHOD_START("StateTitle::Begin");
 	//! Defines the GameObject
 	//! @var text
 	GameObject* text = new GameObject{Rect{(WINSIZE.x / 2), (WINSIZE.y / 2), 0,
@@ -73,6 +79,7 @@ void StateTitle::Begin() {
 	text->AddComponent(new CompText{INSTRUCTION_TEXT, 36, SDL_COLOR_WHITE,
 											Hotspot::CENTER});
 	AddObject(text->uid);
+	LOG_METHOD_CLOSE("StateTitle::Begin","void");
 }
 
 /*!
@@ -83,7 +90,8 @@ void StateTitle::Begin() {
 	@return The execution of this method returns no value
 */
 void StateTitle::update(float time) {
-
+	LOG_METHOD_START("StateTitle::update");
+	LOG_VARIABLE("time",time);
 	//! Checks if the user tried to quit
 	if (INPUT.QuitRequested() || INPUT.KeyPress(KEY_ESC)){
 		quitRequested = true;
@@ -109,6 +117,8 @@ void StateTitle::update(float time) {
 		GAMEINST.Push(new StateEditor{});
 	}
 	UpdateArray(time);
+
+	LOG_METHOD_CLOSE("StateTitle::update","void");
 }
 
 /*!
@@ -118,10 +128,12 @@ void StateTitle::update(float time) {
 */
 
 void StateTitle::render() {
+	LOG_METHOD_START("StateTitle::render");
 	bg.render(0,0);
 	bt1.render(500,300);
 	bt2.render(100,300);
 	// RenderArray();
+	LOG_METHOD_CLOSE("StateTitle::render","void");
 }
 
 /*!
@@ -130,7 +142,8 @@ void StateTitle::render() {
 	@return The execution of this method returns no value
 */
 void StateTitle::Pause() {
-
+	LOG_METHOD_START("StateTitle::Pause");
+	LOG_METHOD_CLOSE("StateTitle::Pause","void");
 }
 
 /*!
@@ -139,5 +152,7 @@ void StateTitle::Pause() {
 	@return The execution of this method returns no value
 */
 void StateTitle::Resume() {
+	LOG_METHOD_START("StateTitle::Resume");
 	CAMERA.x=CAMERA.y=0;
+	LOG_METHOD_CLOSE("StateTitle::Resume","void");
 }
