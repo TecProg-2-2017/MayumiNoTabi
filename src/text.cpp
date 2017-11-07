@@ -176,6 +176,77 @@ void Text::render(Vec2 camera, Rect* clipRect) {
 }
 
 /*!
+	@fn void Text::remake_texture()
+	@brief Method that remakes the texture of the text box
+	@return The execution of this method returns no value
+*/
+void Text::remake_texture() {
+	LOG_METHOD_START("Text::remake_texture");
+	//! Checks if the font was initialized
+	if (font.get()) {
+		//! @var surface
+		SDL_Surface *surface = nullptr; //!< A pointer to SDL_Surface, that represents a surface
+		box.w = box.h = 0;
+		//! Iterates through all lines of the line_array
+		for (auto& i : line_array) {
+			//! Checks if the line has texture
+			if (i.texture){
+				//! Destroies the line texture
+				SDL_DestroyTexture(i.texture);
+			}
+			//! Checks if the style is SOLID
+			if (style == Style::SOLID){
+				//! Applies the style is SOLID
+				surface = TTF_RenderText_Solid(font.get(), i.text.c_str(), color);
+			}
+			//! Checks if the style is SHADED
+			else if (style==Style::SHADED){
+				//! Applies the style is SHADED
+				surface = TTF_RenderText_Shaded(font.get(), i.text.c_str(),
+																					color,SDL_COLOR_BLACK);
+			}
+			//! Checks if the style is BLENDED
+			else if (style == Style::BLENDED){
+				//! Applies the style is BLENDED
+				surface = TTF_RenderText_Blended(font.get(), i.text.c_str(), color);
+			}
+			i.texture = SDL_CreateTextureFromSurface(GAMERENDER, surface);
+
+			//! Resize the text box
+			i.box.w = surface->w;
+			i.box.h = surface->h;
+			//!Checks if the width of the line is bigger than the box width
+			if (i.box.w > box.w){
+				box.w = i.box.w;
+			}
+			i.box.y = box.h;
+			box.h += i.box.h;
+		}
+		SDL_FreeSurface(surface);
+
+		//! Checks if the alignment is CENTERED
+		if (alignment == Align::CENTERED) {
+			//! Iterates through the line_array
+			for (auto& i : line_array){
+				//! Applies the alignment is CENTERED
+				i.box.x=(box.w-i.box.w)/2;
+			}
+
+		}
+		//! Checks if the alignment is RIGHT
+		else if (alignment == Align::RIGHT) {
+			//! Iterates through the line_array
+			for (auto& i : line_array){
+				//! Applies the alignment is RIGHT
+				i.box.x=(box.w-i.box.w);
+			}
+
+		}
+	}
+	LOG_METHOD_CLOSE("Text::remake_texture","void");
+}
+
+/*!
 	@fn void Text::SetPos(int x,int y)
 	@brief A setter for the text box position
   @param x
@@ -355,77 +426,6 @@ Rect Text::get_box()const {
 	LOG_METHOD_START("Text::get_box");
 	LOG_METHOD_CLOSE("Text::get_box",box);
 	return box;
-}
-
-/*!
-	@fn void Text::remake_texture()
-	@brief Method that remakes the texture of the text box
-	@return The execution of this method returns no value
-*/
-void Text::remake_texture() {
-	LOG_METHOD_START("Text::remake_texture");
-	//! Checks if the font was initialized
-	if (font.get()) {
-		//! @var surface
-		SDL_Surface *surface = nullptr; //!< A pointer to SDL_Surface, that represents a surface
-		box.w = box.h = 0;
-		//! Iterates through all lines of the line_array
-		for (auto& i : line_array) {
-			//! Checks if the line has texture
-			if (i.texture){
-				//! Destroies the line texture
-				SDL_DestroyTexture(i.texture);
-			}
-			//! Checks if the style is SOLID
-			if (style == Style::SOLID){
-				//! Applies the style is SOLID
-				surface = TTF_RenderText_Solid(font.get(), i.text.c_str(), color);
-			}
-			//! Checks if the style is SHADED
-			else if (style==Style::SHADED){
-				//! Applies the style is SHADED
-				surface = TTF_RenderText_Shaded(font.get(), i.text.c_str(),
-																					color,SDL_COLOR_BLACK);
-			}
-			//! Checks if the style is BLENDED
-			else if (style == Style::BLENDED){
-				//! Applies the style is BLENDED
-				surface = TTF_RenderText_Blended(font.get(), i.text.c_str(), color);
-			}
-			i.texture = SDL_CreateTextureFromSurface(GAMERENDER, surface);
-
-			//! Resize the text box
-			i.box.w = surface->w;
-			i.box.h = surface->h;
-			//!Checks if the width of the line is bigger than the box width
-			if (i.box.w > box.w){
-				box.w = i.box.w;
-			}
-			i.box.y = box.h;
-			box.h += i.box.h;
-		}
-		SDL_FreeSurface(surface);
-
-		//! Checks if the alignment is CENTERED
-		if (alignment == Align::CENTERED) {
-			//! Iterates through the line_array
-			for (auto& i : line_array){
-				//! Applies the alignment is CENTERED
-				i.box.x=(box.w-i.box.w)/2;
-			}
-
-		}
-		//! Checks if the alignment is RIGHT
-		else if (alignment == Align::RIGHT) {
-			//! Iterates through the line_array
-			for (auto& i : line_array){
-				//! Applies the alignment is RIGHT
-				i.box.x=(box.w-i.box.w);
-			}
-
-		}
-	}
-	LOG_METHOD_CLOSE("Text::remake_texture","void");
 }
 
 Text::TextLine::TextLine() {}

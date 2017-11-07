@@ -6,6 +6,7 @@
  *  \sa timer.hpp
  */
 #include <timer.hpp>
+#include <assert.h>
 
 /*!
 	@class Timer
@@ -55,5 +56,6 @@ void Timer::restart_time() {
 float Timer::get_time() {
 	LOG_METHOD_START("Timer::get_time");
 	LOG_METHOD_CLOSE("time",time);
+	assert(time >= 0);
 	return time;
 }
