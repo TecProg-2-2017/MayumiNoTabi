@@ -37,12 +37,21 @@
     */
 Text::Text(const string& txt, int fSize, SDL_Color c, Style st,
 		string file, int x, int y) : font_name{file} {
-	set_color(c);
-	set_text(txt);
-	set_style(st);
-	set_font_size(fSize);
+	LOG_METHOD_START("Text::Text");
+	LOG_VARIABLE("txt",txt);
+	LOG_VARIABLE("fSize",fSize);
+	LOG_VARIABLE("c",c);
+	LOG_VARIABLE("st",st);
+	LOG_VARIABLE("file",file);
+	LOG_VARIABLE("x",x);
+	LOG_VARIABLE("y",y);
+	SetColor(c);
+	SetText(txt);
+	SetStyle(st);
+	SetFontSize(fSize);
 	box.x = x;
 	box.y = y;
+	LOG_METHOD_CLOSE("Text::Text","constructor");
 }
 
 //! A destructor.
@@ -59,6 +68,7 @@ Text::~Text() {
 			SDL_DestroyTexture(i.texture);
 		}
 	}
+	LOG_METHOD_CLOSE("Text::~Text","destructor");
 }
 
 /*!
@@ -72,6 +82,9 @@ Text::~Text() {
 	@warning Method that requires review of comment
 */
 void Text::render(Vec2 camera, Rect* clipRect) {
+	LOG_METHOD_START("Text::render");
+	LOG_VARIABLE("camera",camera);
+	LOG_VARIABLE("clipRect",clipRect);
 	//! @var pos
 	Vec2 pos = box.hotspot(hotspot); //!< A Vec2 that representes the position of the text box hotspot
 
@@ -151,6 +164,7 @@ void Text::render(Vec2 camera, Rect* clipRect) {
 			SDL_RenderCopy(GAMERENDER,i.texture,nullptr,&dest);
 		}
 	}
+	LOG_METHOD_CLOSE("Text::Render","void");
 }
 
 /*!
@@ -166,8 +180,12 @@ void Text::render(Vec2 camera, Rect* clipRect) {
   @return The execution of this method returns no value
 */
 void Text::set_box_position(int x,int y) {
+	LOG_METHOD_START("Text::SetPos");
+	LOG_VARIABLE("x",x);
+	LOG_VARIABLE("y",y);
 	box.x = x;
 	box.y = y;
+	LOG_METHOD_CLOSE("Text::SetPos","void");
 }
 
 /*!
@@ -178,7 +196,10 @@ void Text::set_box_position(int x,int y) {
   @return The execution of this method returns no value
 */
 void Text::set_box_position(Vec2 v) {
-	set_box_position(v.x, v.y);
+	LOG_METHOD_START("Text::SetPos");
+	LOG_VARIABLE("v",v);
+	SetPos(v.x, v.y);
+	LOG_METHOD_CLOSE("Text::SetPos","void");
 }
 
 /*!
@@ -189,6 +210,8 @@ void Text::set_box_position(Vec2 v) {
   @return The execution of this method returns no value
 */
 void Text::set_text(string txt) {
+	LOG_METHOD_START("Text::SetText");
+	LOG_VARIABLE("txt",txt);
 	//! Checks if the txt is empty
 	if (txt == ""){
 		//! Attributes a white space to txt
@@ -208,6 +231,7 @@ void Text::set_text(string txt) {
 	}
 
 	remake_texture();
+	LOG_METHOD_CLOSE("Text::SetText","void");
 }
 
 
@@ -222,6 +246,9 @@ void Text::set_text(string txt) {
   @return The execution of this method returns no value
 */
 void Text::set_line(int line, string txt) {
+	LOG_METHOD_START("Text::SetLine");
+	LOG_VARIABLE("line",line);
+	LOG_VARIABLE("txt",txt);
 	//! Checks if the line number exists in the array of lines
 	if (line >= 0 && line < (int)line_array.size()) {
 		//! Replaces the line text for the new line text
@@ -229,6 +256,7 @@ void Text::set_line(int line, string txt) {
 
 		remake_texture();
 	}
+	LOG_METHOD_CLOSE("Text::SetLine","void");
 }
 
 void Text::set_alignment(Align al){
@@ -244,11 +272,14 @@ void Text::set_alignment(Align al){
   @return The execution of this method returns no value
 */
 void Text::set_color(SDL_Color c) {
+	LOG_METHOD_START("Text::SetColor");
+	LOG_VARIABLE("c",c);
 	color.r = c.r;
 	color.g = c.g;
 	color.b = c.b;
 	color.a = c.a;
 	remake_texture();
+	LOG_METHOD_CLOSE("Text::set_color","void");
 }
 
 /*!
@@ -259,8 +290,11 @@ void Text::set_color(SDL_Color c) {
   @return The execution of this method returns no value
 */
 void Text::set_style(Style st) {
+	LOG_METHOD_START("Text::SetStyle");
+	LOG_VARIABLE("st",st);
 	style = st;
 	remake_texture();
+	LOG_METHOD_CLOSE("Text::set_style","void");
 }
 
 
@@ -272,10 +306,13 @@ void Text::set_style(Style st) {
   @return The execution of this method returns no value
 */
 void Text::set_font_size(int fSize) {
-	font_size = fSize;
+	LOG_METHOD_START("Text::SetFontSize");
+	LOG_VARIABLE("fSize",fSize);
+	fontSize = fSize;
 	font = Resources::game_get_font(font_name,font_size);
 
 	remake_texture();
+	LOG_METHOD_CLOSE("Text::set_font_size","void");
 }
 
 
@@ -287,7 +324,10 @@ void Text::set_font_size(int fSize) {
   @return The execution of this method returns no value
 */
 void Text::set_hotspot(Hotspot h) {
+	LOG_METHOD_START("Text::set_hotspot");
+	LOG_VARIABLE("h",h);
 	hotspot = h;
+	LOG_METHOD_CLOSE("Text::set_hotspot","void");
 }
 
 /*!
@@ -296,6 +336,8 @@ void Text::set_hotspot(Hotspot h) {
 	@return A Rect, that represents the text box
 */
 Rect Text::get_box()const {
+	LOG_METHOD_START("Text::get_box");
+	LOG_METHOD_CLOSE("Text::get_box",box);
 	return box;
 }
 
@@ -305,6 +347,7 @@ Rect Text::get_box()const {
 	@return The execution of this method returns no value
 */
 void Text::remake_texture() {
+	LOG_METHOD_START("Text::remake_texture");
 	//! Checks if the font was initialized
 	if (font.get()) {
 		//! @var surface
@@ -366,6 +409,7 @@ void Text::remake_texture() {
 
 		}
 	}
+	LOG_METHOD_CLOSE("Text::RemakeTexture","void");
 }
 
 Text::TextLine::TextLine() {}
