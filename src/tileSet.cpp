@@ -68,7 +68,13 @@ void TileSet::render(unsigned int index,float position_x,float position_y, float
 	LOG_VARIABLE("extended_scale",extended_scale);
 	//! Checks if the number of tiles is bigger that the index
 	if ((int)index<(rows*columns)) {
-		tileSet.SetClip(tile_width*(index%columns),(tile_height*(index/columns)),tile_width,tile_height);
+		//! var sprite_start_x
+		//!< A positive integer that represents the start of the sprite in x
+		int setclip_start_x = tile_width*(index%columns);
+		//! var sprite_start_y
+		//!< A positive integer that represents the start of the sprite in y
+		int setclip_start_y = tile_height*(index/columns);
+		tileSet.SetClip(setclip_start_x,setclip_start_y,tile_width,tile_height);
 		tileSet.render(position_x,position_y,0,extended_scale);
 	}
 	//! \warning else (do nothing)
