@@ -37,12 +37,21 @@
     */
 Text::Text(const string& txt, int fSize, SDL_Color c, Style st,
 		string file, int x, int y) : fontName{file} {
+	LOG_METHOD_START("Text::Text");
+	LOG_VARIABLE("txt",txt);
+	LOG_VARIABLE("fSize",fSize);
+	LOG_VARIABLE("c",c);
+	LOG_VARIABLE("st",st);
+	LOG_VARIABLE("file",file);
+	LOG_VARIABLE("x",x);
+	LOG_VARIABLE("y",y);
 	SetColor(c);
 	SetText(txt);
 	SetStyle(st);
 	SetFontSize(fSize);
 	box.x = x;
 	box.y = y;
+	LOG_METHOD_CLOSE("Text::Text","constructor");
 }
 
 //! A destructor.
@@ -51,6 +60,7 @@ Text::Text(const string& txt, int fSize, SDL_Color c, Style st,
     */
 
 Text::~Text() {
+	LOG_METHOD_START("Text::~Text");
 	//! Iterates through all the lineArray lines
 	for (auto& i : lineArray) {
 		//! Checks if that line has texture
@@ -59,6 +69,7 @@ Text::~Text() {
 			SDL_DestroyTexture(i.texture)
 		}
 	}
+	LOG_METHOD_CLOSE("Text::~Text","destructor");
 }
 
 /*!
@@ -72,6 +83,9 @@ Text::~Text() {
 	@warning Method that requires review of comment
 */
 void Text::Render(Vec2 camera, Rect* clipRect) {
+	LOG_METHOD_START("Text::Render");
+	LOG_VARIABLE("camera",camera);
+	LOG_VARIABLE("clipRect",clipRect);
 	//! @var pos
 	Vec2 pos = box.hotspot(hotspot); //!< A Vec2 that representes the position of the text box hotspot
 
@@ -151,6 +165,7 @@ void Text::Render(Vec2 camera, Rect* clipRect) {
 			SDL_RenderCopy(GAMERENDER,i.texture,nullptr,&dest);
 		}
 	}
+	LOG_METHOD_CLOSE("Text::Render","void");
 }
 
 /*!
@@ -166,8 +181,12 @@ void Text::Render(Vec2 camera, Rect* clipRect) {
   @return The execution of this method returns no value
 */
 void Text::SetPos(int x,int y) {
+	LOG_METHOD_START("Text::SetPos");
+	LOG_VARIABLE("x",x);
+	LOG_VARIABLE("y",y);
 	box.x = x;
 	box.y = y;
+	LOG_METHOD_CLOSE("Text::SetPos","void");
 }
 
 /*!
@@ -178,7 +197,10 @@ void Text::SetPos(int x,int y) {
   @return The execution of this method returns no value
 */
 void Text::SetPos(Vec2 v) {
+	LOG_METHOD_START("Text::SetPos");
+	LOG_VARIABLE("v",v);
 	SetPos(v.x, v.y);
+	LOG_METHOD_CLOSE("Text::SetPos","void");
 }
 
 /*!
@@ -189,6 +211,8 @@ void Text::SetPos(Vec2 v) {
   @return The execution of this method returns no value
 */
 void Text::SetText(string txt) {
+	LOG_METHOD_START("Text::SetText");
+	LOG_VARIABLE("txt",txt);
 	//! Checks if the txt is empty
 	if (txt == ""){
 		//! Attributes a white space to txt
@@ -208,6 +232,7 @@ void Text::SetText(string txt) {
 	}
 
 	RemakeTexture();
+	LOG_METHOD_CLOSE("Text::SetText","void");
 }
 
 
@@ -222,6 +247,9 @@ void Text::SetText(string txt) {
   @return The execution of this method returns no value
 */
 void Text::SetLine(int line, string txt) {
+	LOG_METHOD_START("Text::SetLine");
+	LOG_VARIABLE("line",line);
+	LOG_VARIABLE("txt",txt);
 	//! Checks if the line number exists in the array of lines
 	if (line >= 0 && line < (int)lineArray.size()) {
 		//! Replaces the line text for the new line text
@@ -229,6 +257,7 @@ void Text::SetLine(int line, string txt) {
 
 		RemakeTexture();
 	}
+	LOG_METHOD_CLOSE("Text::SetLine","void");
 }
 
 /*!
@@ -239,11 +268,14 @@ void Text::SetLine(int line, string txt) {
   @return The execution of this method returns no value
 */
 void Text::SetColor(SDL_Color c) {
+	LOG_METHOD_START("Text::SetColor");
+	LOG_VARIABLE("c",c);
 	color.r = c.r;
 	color.g = c.g;
 	color.b = c.b;
 	color.a = c.a;
 	RemakeTexture();
+	LOG_METHOD_CLOSE("Text::SetColor","void");
 }
 
 /*!
@@ -254,8 +286,11 @@ void Text::SetColor(SDL_Color c) {
   @return The execution of this method returns no value
 */
 void Text::SetStyle(Style st) {
+	LOG_METHOD_START("Text::SetStyle");
+	LOG_VARIABLE("st",st);
 	style = st;
 	RemakeTexture();
+	LOG_METHOD_CLOSE("Text::SetStyle","void");
 }
 
 
@@ -267,10 +302,13 @@ void Text::SetStyle(Style st) {
   @return The execution of this method returns no value
 */
 void Text::SetFontSize(int fSize) {
+	LOG_METHOD_START("Text::SetFontSize");
+	LOG_VARIABLE("fSize",fSize);
 	fontSize = fSize;
 	font = Resources::GetFont(fontName,fontSize);
 
 	RemakeTexture();
+	LOG_METHOD_CLOSE("Text::SetFontSize","void");
 }
 
 
@@ -282,7 +320,10 @@ void Text::SetFontSize(int fSize) {
   @return The execution of this method returns no value
 */
 void Text::SetHotspot(Hotspot h) {
+	LOG_METHOD_START("Text::SetHotspot");
+	LOG_VARIABLE("h",h);
 	hotspot = h;
+	LOG_METHOD_CLOSE("Text::SetHotspot","void");
 }
 
 /*!
@@ -291,6 +332,8 @@ void Text::SetHotspot(Hotspot h) {
 	@return A Rect, that represents the text box
 */
 Rect Text::GetBox()const {
+	LOG_METHOD_START("Text::GetBox");
+	LOG_METHOD_CLOSE("Text::GetBox",box);
 	return box;
 }
 
@@ -300,6 +343,7 @@ Rect Text::GetBox()const {
 	@return The execution of this method returns no value
 */
 void Text::RemakeTexture() {
+	LOG_METHOD_START("Text::RemakeTexture");
 	//! Checks if the font was initialized
 	if (font.get()) {
 		//! @var surface
@@ -361,6 +405,7 @@ void Text::RemakeTexture() {
 
 		}
 	}
+	LOG_METHOD_CLOSE("Text::RemakeTexture","void");
 }
 
 Text::TextLine::TextLine() {}
