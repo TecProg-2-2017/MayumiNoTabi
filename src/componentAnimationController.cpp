@@ -25,12 +25,12 @@ CompAnimControl::CompAnimControl(string filename, CompCollider* collider) {
   LOG_METHOD_START("CompAnimControl::CompAnimControl");
   LOG_VARIABLE("filename", filename);
   LOG_VARIABLE("collider", collider.to_string());
-  
+
   assert(collider != NULL);
   assert(filename != "");
 
   ifstream in(ANIMATION_PATH + filename + ".txt");
-  
+
   // Checks if the animation's .txt file is already opened
   if (!in.is_open()) {
     cerr << "Erro ao abrir arquivo de grupo de animações '" << filename << "'";
@@ -42,12 +42,12 @@ CompAnimControl::CompAnimControl(string filename, CompCollider* collider) {
 
     in >> name;
     in >> animation_filename;
-    
+
     prev = name;
     cur = prev;
-    
+
     animations[name] = make_unique<CompAnim>(animation_filename, collider);
-    
+
     while (in >> name >> animation_filename) {
       animations[name] = make_unique<CompAnim>(animation_filename, collider);
     }
@@ -178,7 +178,7 @@ void CompAnimControl::update(float time) {
     get_current().update(time);
 
     // Checks if current animation is a looped type or set to repeat
-    if (!repeat and get_current().is_looped()) {
+    if (!repeat && get_current().is_looped()) {
 
       // Defines current frame as 'dead' if Mayumi dies
       if (dying) {
@@ -186,7 +186,7 @@ void CompAnimControl::update(float time) {
       }
       else {
         change_current(prev);
-        
+
         get_current().sp.looped = false;
         get_current().update(time);
       }
@@ -235,13 +235,13 @@ void CompAnimControl::own(GameObject *game_object) {
   LOG_VARIABLE("game_object", game_object.to_string());
 
   assert(game_object != NULL);
-  
+
   entity = go->uid;
-  
+
   for (auto &anim:animations) {
     anim.second->own(go);
   }
-  
+
   get_current().own(go);
   LOG_METHOD_CLOSE("CompAnimControl::own", "void");
 }
