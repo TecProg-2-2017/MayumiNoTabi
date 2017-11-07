@@ -9,6 +9,7 @@
 #include <camera.hpp>
 #include <game.hpp>
 #include <resources.hpp>
+#include <assert.h>
 
 /*!
 	@class Text
@@ -38,12 +39,17 @@
 Text::Text(const string& txt, int fSize, SDL_Color c, Style st,
 		string file, int x, int y) : fontName{file} {
 	LOG_METHOD_START("Text::Text");
+	assert(txt != NULL);
 	LOG_VARIABLE("txt",txt);
 	LOG_VARIABLE("fSize",fSize);
+	assert(c != NULL);
 	LOG_VARIABLE("c",c);
 	LOG_VARIABLE("st",st);
+	assert(file != NULL);
 	LOG_VARIABLE("file",file);
+	assert(x >= 0);
 	LOG_VARIABLE("x",x);
+	assert(y >= 0);
 	LOG_VARIABLE("y",y);
 	SetColor(c);
 	SetText(txt);
@@ -84,7 +90,11 @@ Text::~Text() {
 */
 void Text::Render(Vec2 camera, Rect* clipRect) {
 	LOG_METHOD_START("Text::Render");
+	assert(camera != NULL);
+	assert(camera.x >= 0);
+	assert(camera.y >= 0);
 	LOG_VARIABLE("camera",camera);
+	assert(clipRect != NULL);
 	LOG_VARIABLE("clipRect",clipRect);
 	//! @var pos
 	Vec2 pos = box.hotspot(hotspot); //!< A Vec2 that representes the position of the text box hotspot
@@ -182,7 +192,9 @@ void Text::Render(Vec2 camera, Rect* clipRect) {
 */
 void Text::SetPos(int x,int y) {
 	LOG_METHOD_START("Text::SetPos");
+	assert(x > 0);
 	LOG_VARIABLE("x",x);
+	assert(y > 0);
 	LOG_VARIABLE("y",y);
 	box.x = x;
 	box.y = y;
@@ -198,6 +210,9 @@ void Text::SetPos(int x,int y) {
 */
 void Text::SetPos(Vec2 v) {
 	LOG_METHOD_START("Text::SetPos");
+	assert(v != NULL);
+	assert(v.x >= 0);
+	assert(v.y >= 0);
 	LOG_VARIABLE("v",v);
 	SetPos(v.x, v.y);
 	LOG_METHOD_CLOSE("Text::SetPos","void");
@@ -212,6 +227,7 @@ void Text::SetPos(Vec2 v) {
 */
 void Text::SetText(string txt) {
 	LOG_METHOD_START("Text::SetText");
+	assert(txt != NULL);
 	LOG_VARIABLE("txt",txt);
 	//! Checks if the txt is empty
 	if (txt == ""){
@@ -249,6 +265,7 @@ void Text::SetText(string txt) {
 void Text::SetLine(int line, string txt) {
 	LOG_METHOD_START("Text::SetLine");
 	LOG_VARIABLE("line",line);
+	assert(txt != NULL);
 	LOG_VARIABLE("txt",txt);
 	//! Checks if the line number exists in the array of lines
 	if (line >= 0 && line < (int)lineArray.size()) {
@@ -269,6 +286,7 @@ void Text::SetLine(int line, string txt) {
 */
 void Text::SetColor(SDL_Color c) {
 	LOG_METHOD_START("Text::SetColor");
+	assert(c != NULL);
 	LOG_VARIABLE("c",c);
 	color.r = c.r;
 	color.g = c.g;
@@ -334,6 +352,7 @@ void Text::SetHotspot(Hotspot h) {
 Rect Text::GetBox()const {
 	LOG_METHOD_START("Text::GetBox");
 	LOG_METHOD_CLOSE("Text::GetBox",box);
+	assert(box >= NULL);
 	return box;
 }
 
