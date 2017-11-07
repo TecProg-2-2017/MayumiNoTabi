@@ -30,6 +30,60 @@ GUIManager::~GUIManager() {
 }
 
 /*!
+ *  @fn void GUIManager::update_gui_elements()
+ *  @brief Updates general user interface
+ *  @return The method returns no param
+ */
+void GUIManager::update_gui_elements() {
+    LOG_METHOD_START("GUIManager::update_gui_elements");
+
+    remove_last_gui_element_requested();
+
+    add_stored_element_to_gui();
+
+    //! If there's no elements in the gui, returns 
+    if (gui_elements.empty()) {
+         return;
+    }
+    else {
+        // Do nothing
+    }
+    
+    element_pop_requested = false;
+    
+    previous_button_state = current_button_state;
+
+    assing_pressed_button_to_current(); 
+   
+    gui_elements.back()->update();  
+
+    LOG_METHOD_CLOSE("GUIManager::update_gui_elements","void");
+}
+
+/*!
+ *  @fn void GUIManager::render_gui_elements()
+ *  @brief Renders general user interface
+ *  @return The method returns no param
+ */
+void GUIManager::render_gui_elements() {
+    LOG_METHOD_START("GUIManager::render_gui_elements");
+    
+    //! Iterates trough elements of interface to render it
+    for (auto& it:gui_elements){
+
+        //! If elements is visible renders it
+        if (it->IsVisible()){
+            LOG_MSG("Render gui element");
+            it->render();
+        }
+        else {
+            // Do nothing
+        }
+    }
+    LOG_METHOD_CLOSE("GUIManager::render_gui_elements","void");
+}
+
+/*!
  *  @fn void GUIManager::remove_last_gui_element_requested()
  *  @brief Remove last element if requested
  *  @return The method returns no param
@@ -50,6 +104,7 @@ void GUIManager::remove_last_gui_element_requested() {
     }
     LOG_METHOD_CLOSE("GUIManager::remove_last_gui_element_requested", "void");
 }
+
 /*!
  *  @fn void GUIManager::reset_gui_button()
  *  @brief Reset the button if it is selected 
@@ -125,60 +180,6 @@ void GUIManager::assing_pressed_button_to_current() {
     LOG_METHOD_CLOSE("GUIManager::assing_pressed_button_to_current","void");
 }
 
-/*!
- *  @fn void GUIManager::update_gui_elements()
- *  @brief Updates general user interface
- *  @return The method returns no param
- */
-void GUIManager::update_gui_elements() {
-    LOG_METHOD_START("GUIManager::update_gui_elements");
-
-    remove_last_gui_element_requested();
-
-    add_stored_element_to_gui();
-
-    //! If there's no elements in the gui, returns 
-    if (gui_elements.empty()) {
-         return;
-    }
-    else {
-        // Do nothing
-    }
-    
-    element_pop_requested = false;
-    
-    previous_button_state = current_button_state;
-
-    assing_pressed_button_to_current(); 
-   
-    gui_elements.back()->update();  
-
-    LOG_METHOD_CLOSE("GUIManager::update_gui_elements","void");
-}
-
-/*!
- *  @fn void GUIManager::render_gui_elements()
- *  @brief Renders general user interface
- *  @return The method returns no param
- */
-void GUIManager::render_gui_elements() {
-    LOG_METHOD_START("GUIManager::render_gui_elements");
-    
-    //! Iterates trough elements of interface to render it
-    for (auto& it:gui_elements){
-
-        //! If elements is visible renders it
-        if (it->IsVisible()){
-            LOG_MSG("Render gui element");
-            it->render();
-        }
-        else {
-            // Do nothing
-        }
-    }
-    LOG_METHOD_CLOSE("GUIManager::render_gui_elements","void");
-}
- 
 /*!
  *  @fn void GUIManager::push_gui_element(GUI_Element* element)
  *  @brief Push element to the general user interface 
@@ -305,47 +306,6 @@ bool GUIManager::gui_button_is_selected(GUI_Button* button)const{
 }
 
 /*!
- *  @fn bool GUIManager::selected_button_is_empty()
- *  @brief Avaliate if button is empty 
- *  @return True of False 
- */
-bool GUIManager::selected_button_is_empty()const {
-    LOG_METHOD_START("GUIManager::selected_button_is_empty");
-    
-    //! Return false for empty selected_gui_button
-    if (!selected_gui_button) {
-        LOG_MSG("Selected gui button is empty");
-        return true;
-    }
-    else {
-        LOG_MSG("Selected gui button is not empty");
-        return false;
-    }
-    LOG_METHOD_CLOSE("GUIManager::selected_button_is_empty","bool");
-}
-
-/*!
- *  @fn bool GUIManager::selected_button_is_empty()
- *  @brief Avaliate if button action is different from the param 
- *  @param uint action
- *  @return True of False 
- */
-bool GUIManager::is_button_action_different(uint action)const {
-    LOG_METHOD_START("GUIManager::is_button_action_different");
-    
-    //! Return false for action different from the selected button 
-    if (action && selected_gui_button->action != action) {
-        LOG_MSG("Selected gui button action is different");
-        return true;
-    }
-    else {
-        LOG_MSG("Selected gui button action is not different");
-        return false;
-    }
-    LOG_METHOD_CLOSE("GUIManager::is_button_action_different","bool");
-}
-
-/*!
  *  @fn bool GUIManager::gui_button_was_pressed(uint action)const    
  *  @brief Avaliate if button was pressed 
  *  @param unsigned int action 
@@ -407,6 +367,47 @@ bool GUIManager::gui_button_was_clicked(uint action)const{
         return (previous_button_state && !current_button_state && selected_gui_button->IsHovered());
     }
     LOG_METHOD_CLOSE("GUIManager::gui_button_was_clicked","bool");
+}
+
+/*!
+ *  @fn bool GUIManager::selected_button_is_empty()
+ *  @brief Avaliate if button is empty 
+ *  @return True of False 
+ */
+bool GUIManager::selected_button_is_empty()const {
+    LOG_METHOD_START("GUIManager::selected_button_is_empty");
+    
+    //! Return false for empty selected_gui_button
+    if (!selected_gui_button) {
+        LOG_MSG("Selected gui button is empty");
+        return true;
+    }
+    else {
+        LOG_MSG("Selected gui button is not empty");
+        return false;
+    }
+    LOG_METHOD_CLOSE("GUIManager::selected_button_is_empty","bool");
+}
+
+/*!
+ *  @fn bool GUIManager::selected_button_is_empty()
+ *  @brief Avaliate if button action is different from the param 
+ *  @param uint action
+ *  @return True of False 
+ */
+bool GUIManager::is_button_action_different(uint action)const {
+    LOG_METHOD_START("GUIManager::is_button_action_different");
+    
+    //! Return false for action different from the selected button 
+    if (action && selected_gui_button->action != action) {
+        LOG_MSG("Selected gui button action is different");
+        return true;
+    }
+    else {
+        LOG_MSG("Selected gui button action is not different");
+        return false;
+    }
+    LOG_METHOD_CLOSE("GUIManager::is_button_action_different","bool");
 }
 
 /*!
