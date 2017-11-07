@@ -31,6 +31,10 @@
     * tile map
     */
 TileMap::TileMap(int width, int height, TileSet* tile_set) : tileSet{tile_set},map_width{width},map_height{height},map_depth{1} {
+	LOG_METHOD_START("TileMap::TileMap");
+	LOG_VARIABLE("width",width);
+	LOG_VARIABLE("height",height);
+	LOG_VARIABLE("tile_set",tale_set);
 	tile_matrix.reserve(map_width*map_height);
   //! Iterates through tileMatrix height of tile map
 	FOR(height_iterator, map_height)
@@ -38,6 +42,7 @@ TileMap::TileMap(int width, int height, TileSet* tile_set) : tileSet{tile_set},m
     FOR(width_iterator, map_width)
       //! Empties the first layer of the tileMatrix
 			at(width_iterator, height_iterator, 0) = EMPTY_TILE;
+	LOG_METHOD_CLOSE("TileMap::TileMap","constructor");
 }
 
 //! A constructor.
@@ -48,6 +53,8 @@ TileMap::TileMap(int width, int height, TileSet* tile_set) : tileSet{tile_set},m
     * tile map
     */
 TileMap::TileMap(TileSet* tile_set):tileSet{tile_set}{
+	LOG_METHOD_START("TileMap::TileMap");
+	LOG_METHOD_CLOSE("TileMap::TileMap","constructor");
 }
 
 /*!
@@ -59,6 +66,8 @@ TileMap::TileMap(TileSet* tile_set):tileSet{tile_set}{
 	@return The execution of this method returns no value
 */
 void TileMap::load(ifstream& input_file) {
+	LOG_METHOD_START("TileMap::load");
+	LOG_VARIABLE("input_file",input_file);
   //! @var line
 	string line;//!< A string that represents the first line of the in file
 
@@ -71,7 +80,7 @@ void TileMap::load(ifstream& input_file) {
 
   //! @var tile
 	int tile;//!< a integer that represents a tile
-  
+
   //! Iterates through the tile matrix depth
 	FOR(d,map_depth) {
     //! Iterates through the tile matrix height
@@ -85,6 +94,7 @@ void TileMap::load(ifstream& input_file) {
 			}
 		}
 	}
+	LOG_METHOD_CLOSE("TileMap::load","void");
 }
 
 /*!
@@ -96,6 +106,8 @@ void TileMap::load(ifstream& input_file) {
 	@return The execution of this method returns no value
 */
 void TileMap::save(stringstream& output_file) {
+	LOG_METHOD_START("TileMap::save");
+	LOG_VARIABLE("output_file",output_file);
   //! Saves the width, height and depth of the tile matrix on out
 	output_file<<map_width<<","<<map_height<<","<<map_depth<<endl<<endl;
 
@@ -112,6 +124,7 @@ void TileMap::save(stringstream& output_file) {
 		}
 		output_file<<endl;
 	}
+	LOG_METHOD_CLOSE("TileMap::save","void");
 }
 
 /*!
@@ -123,7 +136,10 @@ void TileMap::save(stringstream& output_file) {
   @return The execution of this method returns no value
 */
 void TileMap::set_tile_set(TileSet* tile_set) {
+	LOG_METHOD_START("TileMap::set_tile_set");
+	LOG_VARIABLE("tile_set",tile_set);
 	this.tile_set = tile_set;
+	LOG_METHOD_CLOSE("TileMap::set_tile_set","void");
 }
 
 /*!
@@ -139,6 +155,11 @@ void TileMap::set_tile_set(TileSet* tile_set) {
 	@return A address to integer,that represents the tile of the tile matrix
 */
 int& TileMap::at(int position_x,int position_y,int position_z) {
+	LOG_METHOD_START("TileMap::at");
+	LOG_VARIABLE("position_x",position_x);
+	LOG_VARIABLE("position_y",position_y);
+	LOG_VARIABLE("position_z",position_z);
+	LOG_METHOD_CLOSE("TileMap::at",tile_matrix[position_x+(position_y*map_width)+(position_z*map_width*map_height)])
 	return tile_matrix[position_x+(position_y*map_width)+(position_z*map_width*map_height)];
 }
 
@@ -156,6 +177,11 @@ int& TileMap::at(int position_x,int position_y,int position_z) {
 	@return A integer,that represents the tile of the tile matrix
 */
 int TileMap::at(int position_x,int position_y,int position_z) const{
+	LOG_METHOD_START("TileMap::at");
+	LOG_VARIABLE("position_x",position_x);
+	LOG_VARIABLE("position_y",position_y);
+	LOG_VARIABLE("position_z",position_z);
+	LOG_METHOD_CLOSE("TileMap::at",tile_matrix[position_x+(position_y*map_width)+(position_z*map_width*map_height)])
 	return tile_matrix[position_x+(position_y*map_width)+(position_z*map_width*map_height)];
 }
 
@@ -170,10 +196,14 @@ int TileMap::at(int position_x,int position_y,int position_z) const{
   @brief A positive integer, that recives a position in the y axis
   @return The execution of this method returns no value
   @warning Method that requires review of comment
-*/ 
+*/
 
 void TileMap::render_layer(int layer,int position_x ,int position_y) {
-  //! @var width
+	LOG_METHOD_START("TileMap::render_layer");
+	LOG_VARIABLE("layer"layer);
+	LOG_VARIABLE("position_x",position_x);
+	LOG_VARIABLE("position_y",position_y);
+	//! @var width
 	int width=tile_set->get_width(); //!< a integer that represents the tile set width
   //! @var height
 	int height=tile_set->get_height(); //!< a integer that represents the tile set height
@@ -194,20 +224,20 @@ void TileMap::render_layer(int layer,int position_x ,int position_y) {
 		firstX = (CAMERA.x-position_x)/width;
   }
 	//! \warning else (do nothing)
-    
+
   //! Checks if the camera is ahead of the posy in axis y
   if (position_y<CAMERA.y){
     //! Reallocates the beginning of the layer in the axis y
 		firstY = (CAMERA.y-position_y)/height;
    }
    //! \warning else (do nothing)
-  
+
   //! Defines the map and camera corners
   //! @var mapCorner
 	Vec2 mapCorner = Vec2(position_x+(map_width*width),position_y+(map_height*height));//!< a two-dimensional vector, that represents the positons of the coners of the map
 	//! @var cameraConer
   Vec2 cameraCorner = CAMERA+(WINSIZE/CAMERAZOOM);//!< a two-dimensional vector, that represents the positons of the coners of the camera
-	
+
   //! Checks if the coner of the map is ahead of the coner of the camera in axis
   //! x
   if (mapCorner.x>cameraCorner.x){
@@ -215,7 +245,7 @@ void TileMap::render_layer(int layer,int position_x ,int position_y) {
     lastX -= (mapCorner.x-cameraCorner.x)/width;
   }
   //! \warning else (do nothing)
-	
+
   if (mapCorner.y>cameraCorner.y){
     //! Reallocates the end of the layer in the axis y
 		lastY -= (mapCorner.y-cameraCorner.y)/height;
@@ -226,7 +256,7 @@ void TileMap::render_layer(int layer,int position_x ,int position_y) {
 	for (int y_iterator=firstY;y_iterator<=lastY;y_iterator++) {
 		//! Iterates the width of the layer
     for (int x_iterator=firstX;x_iterator<=lastX;x_iterator++) {
-    
+
 			tile = at(x_iterator, y_iterator, layer);
       //! Checks if the tile is empty
 			if (tile != EMPTY_TILE)
@@ -234,6 +264,7 @@ void TileMap::render_layer(int layer,int position_x ,int position_y) {
 				tile_set->render(tile, RENDERPOSX(position_x+(x_iterator*width)), RENDERPOSY(position_y+(y_iterator*height)), CAMERAZOOM);
 		}
 	}
+	LOG_METHOD_CLOSE("TileMap::render_layer","void");
 }
 
 /*!
@@ -247,11 +278,14 @@ void TileMap::render_layer(int layer,int position_x ,int position_y) {
 */
 
 void TileMap::render(Vec2 position) {
+	LOG_METHOD_START("TileMap::render",TileMap::render);
+	LOG_VARIABLE("position",position);
   //! Iterates through the layer of the tile map
 	FOR(depth_iterator,map_depth) {
 		//! Renders the tile map layer
     RenderLayer(depth_iterator,positions.x,positions.y);
 	}
+	LOG_METHOD_CLOSE("TileMap::render","void");
 }
 
 /*!
@@ -260,6 +294,8 @@ void TileMap::render(Vec2 position) {
 	@return A positive integer, that represents the width of a tile map
 */
 int TileMap::get_width() const{
+	LOG_METHOD_START("TileMap::get_width");
+	LOG_METHOD_CLOSE("TileMap::get_width",map_width);
 	return map_width;
 }
 
@@ -270,6 +306,8 @@ int TileMap::get_width() const{
 	@return A positive integer, that represents the height of a tile map
 */
 int TileMap::get_height() const{
+	LOG_METHOD_START("TileMap::get_height");
+	LOG_METHOD_CLOSE("TileMap::get_height",map_height);
 	return map_height;
 }
 
@@ -279,6 +317,8 @@ int TileMap::get_height() const{
 	@return A positive integer, that represents the depth of a tile map
 */
 int TileMap::get_depth() const{
+	LOG_METHOD_START("TileMap::get_depth");
+	LOG_METHOD_CLOSE("TileMap::get_depth",map_depth);
 	return map_depth;
 }
 
@@ -293,6 +333,9 @@ int TileMap::get_depth() const{
   @return The execution of this method returns no value
 */
 void TileMap::change_size(int new_width,int new_height) {
+	LOG_METHOD_START("TileMap::change_size");
+	LOG_VARIABLE("new_width",new_width);
+	LOG_VARIABLE("new_height",new_height);
 	//! @var new_matrix
   vector<int> new_matrix(new_width*new_height*map_depth, EMPTY_TILE); //!<  A integer vector, that represents the tile map with the new size
 	//! @var max_x
@@ -314,4 +357,5 @@ void TileMap::change_size(int new_width,int new_height) {
 	map_height = new_height;
 	tile_matrix.clear();
 	tile_matrix = new_matrix;
+	LOG_METHOD_CLOSE("TileMap::change_size","void");
 }
