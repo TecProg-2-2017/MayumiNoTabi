@@ -95,6 +95,9 @@ void Text::render(Vec2 camera, Rect* clipRect) {
 	LOG_VARIABLE("clipRect",clipRect);
 	//! @var pos
 	Vec2 pos = box.hotspot(hotspot); //!< A Vec2 that representes the position of the text box hotspot
+	assert(pos != NULL);
+	assert(pos.x >= 0);
+	assert(pos.y >= 0);
 
 	//! @var x
 	int position_x = pos.x - (camera.x * CAMERAZOOM); //!< A positive integer that represents the beginning of the text box rectangle in the axis x
@@ -198,19 +201,23 @@ void Text::remake_texture() {
 			if (style == Style::SOLID){
 				//! Applies the style is SOLID
 				surface = TTF_RenderText_Solid(font.get(), i.text.c_str(), color);
+				assert(surface != NULL);
 			}
 			//! Checks if the style is SHADED
 			else if (style==Style::SHADED){
 				//! Applies the style is SHADED
 				surface = TTF_RenderText_Shaded(font.get(), i.text.c_str(),
 																					color,SDL_COLOR_BLACK);
+				assert(surface != NULL);
 			}
 			//! Checks if the style is BLENDED
 			else if (style == Style::BLENDED){
 				//! Applies the style is BLENDED
 				surface = TTF_RenderText_Blended(font.get(), i.text.c_str(), color);
+				assert(surface != NULL);
 			}
 			i.texture = SDL_CreateTextureFromSurface(GAMERENDER, surface);
+			assert(i.texture != NULL);
 
 			//! Resize the text box
 			i.box.w = surface->w;
