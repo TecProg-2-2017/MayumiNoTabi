@@ -12,6 +12,7 @@
 #include <inputManager.hpp>
 #include <stateStage.hpp>
 #include <stateEditor.hpp>
+#include <assert.h>
 
 #define BACKGROUND "img/tela-inicio2.png"
 #define INSTRUCTION_TEXT "IDJ-Projeto\n\nPress [Space] to continue\n[E] Level Editor\n"
@@ -91,6 +92,7 @@ void StateTitle::Begin() {
 */
 void StateTitle::update(float time) {
 	LOG_METHOD_START("StateTitle::update");
+	assert(time >= 0);
 	LOG_VARIABLE("time",time);
 	//! Checks if the user tried to quit
 	if (INPUT.get_quit_requested() || INPUT.key_pressed(KEY_ESC)){

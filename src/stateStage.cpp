@@ -13,6 +13,7 @@
 #include <game.hpp>
 #include <gameObject.hpp>
 #include <complib.hpp>
+#include <assert.h>
 
 /*!
 	@class StateStage
@@ -32,6 +33,7 @@ StateStage::StateStage(string lvl):levelName{lvl},
 	floresta_bg3{"img/jogotela-ponte-away.png"}
 	{
 	LOG_METHOD_START("StateStage::StateStage");
+	assert(lvl >= 0);
 	LOG_VARIABLE("lvl",lvl);
 	LoadAssets();
 	LOG_METHOD_CLOSE("StateStage::StateStage","constructor");
@@ -71,6 +73,7 @@ void StateStage::Begin() {
 */
 void StateStage::update(float time) {
 	LOG_METHOD_START("StateStage::update");
+	assert(lvl >= 0);
 	LOG_VARIABLE("time",time);
 	Camera::update(time);
 	//! Checks if the player requested to quit
