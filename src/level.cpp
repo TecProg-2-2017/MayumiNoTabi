@@ -59,66 +59,6 @@ Level::~Level() {
 }
 
 /*!
- *  @fn void Level::void Level::load_read_file(ifstream& file_input, string& file_parameters) 
- *  @brief Open a file to be read 
- *  @param ifstream& file_input, const string& file
- *  @return The method returns no param
- */
-void Level::load_read_file(ifstream& file_input, const string& file) {
-    file_input.open(LEVEL_PATH + file + ".txt");
-
-    //! Get an error while opening the file
-    if (!file_input.is_open()) {
-        cerr << "Erro ao abrir o arquivo \"" << file << "\", o programa ira encerrar agora" << endl;
-        exit(EXIT_FAILURE);
-    }
-    else {
-        // Do nothing
-    }
-
-}  
-
-/*!
- *  @fn void Level::void Level::load_write_file(ifstream& file_input, string& file_parameters) 
- *  @brief Open a file to be written 
- *  @param ifstream& file_input, const string& file
- *  @return The method returns no param
- */
-void Level::load_write_file(ofstream& file_output, const string& file) {
-    file_output.open(LEVEL_PATH + file + ".txt");
-
-    //! Get an error while opening the file
-    if (!file_output.is_open()) {
-        cerr << "Erro ao abrir o arquivo \"" << file << "\", o programa ira encerrar agora" << endl;
-        exit(EXIT_FAILURE);
-    }
-    else {
-        // Do nothing
-    }
-
-}
-
-/*!
- *  @fn void Level::void Level::load_tile_set(ifstream& file_input, string& file_parameters) 
- *  @brief Load level tile set 
- *  @param ifstream& file_input, const string& file
- *  @return The method returns no param
- */
-void Level::load_tile_set(ifstream& file_input, string& file_parameters) {
-
-    //! Loading the tileset
-    getline(file_input, level_tile_set_filename);
-    getline(file_input, file_parameters);
-
-    int level_tile_width = 0;//! <Tile level width 
-    int level_tile_height = 0; //! <Tile level height
-
-    sscanf(file_parameters.c_str(), " %d,%d", &level_tile_width, &level_tile_height);
-    level_tile_set.load(level_tile_width, level_tile_height, level_tile_set_filename);
-    file_input.ignore(1);
-}
-
-/*!
  *  @fn void Level::load_level_from_file(const string& file) 
  *  @brief Load level from the level file 
  *  @param const string& file
@@ -203,33 +143,6 @@ void Level::load_level_from_file(const string& file) {
     //! <End of Loading the object list
 
     file_input.close();
-}
-
-/*!
- *  @fn void Level::save_collision_layer(stringstream& level_stream_out)
- *  @brief Save level collision layer 
- *  @param stringstream& level_stream_out
- *  @return The method returns no param
- */
-void Level::save_collision_layer(stringstream& level_stream_out) {
-
-    assert(level_stream_out != NULL);
-
-    int level_map_width = level_tile_map.get_width();
-    int level_map_height = level_tile_map.get_height();
-
-    FOR(y,level_map_height) {
-        FOR(x,level_map_width) {
-            char s[200] = {0};
-
-            sprintf(s,"%02d-%03d, ",level_collision_layer[(y*level_map_width)+x]+1,level_collision_groups[(y*level_map_width)+x]);
-            string str(s);
-
-            level_stream_out << str;
-        }
-        level_stream_out << endl;
-    }
-    level_stream_out << endl;
 }
 
 /*!
@@ -436,6 +349,94 @@ void Level::save_level_objects(const vector<pair<ii,ii>>& grouped) {
             }
         }
     }
+}
+
+
+/*!
+ *  @fn void Level::void Level::load_read_file(ifstream& file_input, string& file_parameters) 
+ *  @brief Open a file to be read 
+ *  @param ifstream& file_input, const string& file
+ *  @return The method returns no param
+ */
+void Level::load_read_file(ifstream& file_input, const string& file) {
+    file_input.open(LEVEL_PATH + file + ".txt");
+
+    //! Get an error while opening the file
+    if (!file_input.is_open()) {
+        cerr << "Erro ao abrir o arquivo \"" << file << "\", o programa ira encerrar agora" << endl;
+        exit(EXIT_FAILURE);
+    }
+    else {
+        // Do nothing
+    }
+
+}  
+
+/*!
+ *  @fn void Level::void Level::load_write_file(ifstream& file_input, string& file_parameters) 
+ *  @brief Open a file to be written 
+ *  @param ifstream& file_input, const string& file
+ *  @return The method returns no param
+ */
+void Level::load_write_file(ofstream& file_output, const string& file) {
+    file_output.open(LEVEL_PATH + file + ".txt");
+
+    //! Get an error while opening the file
+    if (!file_output.is_open()) {
+        cerr << "Erro ao abrir o arquivo \"" << file << "\", o programa ira encerrar agora" << endl;
+        exit(EXIT_FAILURE);
+    }
+    else {
+        // Do nothing
+    }
+
+}
+
+/*!
+ *  @fn void Level::void Level::load_tile_set(ifstream& file_input, string& file_parameters) 
+ *  @brief Load level tile set 
+ *  @param ifstream& file_input, const string& file
+ *  @return The method returns no param
+ */
+void Level::load_tile_set(ifstream& file_input, string& file_parameters) {
+
+    //! Loading the tileset
+    getline(file_input, level_tile_set_filename);
+    getline(file_input, file_parameters);
+
+    int level_tile_width = 0;//! <Tile level width 
+    int level_tile_height = 0; //! <Tile level height
+
+    sscanf(file_parameters.c_str(), " %d,%d", &level_tile_width, &level_tile_height);
+    level_tile_set.load(level_tile_width, level_tile_height, level_tile_set_filename);
+    file_input.ignore(1);
+}
+
+/*!
+ *  @fn void Level::save_collision_layer(stringstream& level_stream_out)
+ *  @brief Save level collision layer 
+ *  @param stringstream& level_stream_out
+ *  @return The method returns no param
+ */
+void Level::save_collision_layer(stringstream& level_stream_out) {
+
+    assert(level_stream_out != NULL);
+
+    int level_map_width = level_tile_map.get_width();
+    int level_map_height = level_tile_map.get_height();
+
+    FOR(y,level_map_height) {
+        FOR(x,level_map_width) {
+            char s[200] = {0};
+
+            sprintf(s,"%02d-%03d, ",level_collision_layer[(y*level_map_width)+x]+1,level_collision_groups[(y*level_map_width)+x]);
+            string str(s);
+
+            level_stream_out << str;
+        }
+        level_stream_out << endl;
+    }
+    level_stream_out << endl;
 }
 
 /*!
