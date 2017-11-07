@@ -77,6 +77,7 @@ void StateTitle::Begin() {
 	//! @var text
 	GameObject* text = new GameObject{Rect{(WINSIZE.x / 2), (WINSIZE.y / 2), 0,
 																					0}};//!< A GameObject with the informations of the game
+	assert(text != NULL);
 	text->AddComponent(new CompText{INSTRUCTION_TEXT, 36, SDL_COLOR_WHITE,
 											Hotspot::CENTER});
 	AddObject(text->uid);
