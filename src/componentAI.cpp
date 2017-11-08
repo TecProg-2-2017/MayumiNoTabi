@@ -70,7 +70,7 @@ void CompAI::render_component_ai() {
 
 /*!
   @fn       Component::type CompAI::get_type()const
-  @brief    Method that picks a component type && returns it
+  @brief    Method that picks a component type and returns it
   @param    none
   @return   Component::type
   @warning  none

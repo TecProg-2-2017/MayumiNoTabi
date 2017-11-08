@@ -28,13 +28,13 @@ SDL_Color generate_color(int red,		// red value, 	range: 0 -> 255
   LOG_METHOD_START("Common::generate_color");
 
   LOG_VARIABLE("red", red);
-  assert(red >= 0 && red <= 255);
+  assert(red >= 0 and red <= 255);
 
   LOG_VARIABLE("green", green);
-  assert(green >= 0 && green <= 255);
+  assert(green >= 0 and green <= 255);
 
   LOG_VARIABLE("blue", blue);
-  assert(blue >= 0 && blue <= 255);
+  assert(blue >= 0 and blue <= 255);
 
   LOG_VARIABLE("alpha", alpha);
   assert(alpha >= 0);
@@ -48,10 +48,10 @@ SDL_Color generate_color(int red,		// red value, 	range: 0 -> 255
   color.a = alpha;
 
   LOG_METHOD_CLOSE("Common::generate_color", color.to_string());
-  assert(color.red >= 0 && color.red <= 255);
-  assert(color.green >= 0 && color.green <= 255);
-  assert(color.blue >= 0 && color.blue <= 255);
-  assert(color.alpha >= 0 && color.alpha <= 255);
+  assert(color.red >= 0 and color.red <= 255);
+  assert(color.green >= 0 and color.green <= 255);
+  assert(color.blue >= 0 and color.blue <= 255);
+  assert(color.alpha >= 0 and color.alpha <= 255);
   return color;
 }
 
@@ -61,7 +61,7 @@ SDL_Color generate_color(int red,		// red value, 	range: 0 -> 255
   @brief    Function that cannot be comprehended by mere human beings
   @param    const float &from, const float &to, const float &change
   @return   A float result (???)
-  @warning  TODO: this method must be refactorated for better underst&&ing
+  @warning  TODO: this method must be refactorated for better understanding
 */
 
 float close_distance(const float &from, const float &to, const float &change) {
@@ -91,7 +91,7 @@ float close_distance(const float &from, const float &to, const float &change) {
 }
 
 // Hotspot screen positions to be used as shortcuts
-// The number on the left is x axis && the right one is y axis
+// The number on the left is x axis and the right one is y axis
 pair<float, float> hotspot_positions[] = {
   // TOP_LEFT
   {0.0, 0.0},
@@ -115,7 +115,7 @@ pair<float, float> hotspot_positions[] = {
 
 /*!
   @fn       bool equals(const float &a, const float &b)
-  @brief    Compares two float constants && returns the boolean result
+  @brief    Compares two float constants and returns the boolean result
   @param    const float &a, const float &b
   @return   boolean value of the comparisson between the two params
   @warning  PRECISION is a constant with 0.0001 as value, it validates the
@@ -136,7 +136,7 @@ bool equals(const float &a, const float &b) {
 
 /*!
   @fn       string convert_float_to_str(float f)
-  @brief    Converts a float number to a string && returns it
+  @brief    Converts a float number to a string and returns it
   @param    float number f
   @return   The number passed as param transformed in a string
   @warning  none

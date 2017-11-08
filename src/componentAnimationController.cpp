@@ -178,7 +178,7 @@ void CompAnimControl::update(float time) {
     get_current().update(time);
 
     // Checks if current animation is a looped type or set to repeat
-    if (!repeat && get_current().is_looped()) {
+    if (!repeat and get_current().is_looped()) {
 
       // Defines current frame as 'dead' if Mayumi dies
       if (dying) {

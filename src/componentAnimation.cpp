@@ -175,7 +175,7 @@ bool CompAnim::Looped()const {
   bool is_animation_looped = sp.Looped();
 
   LOG_METHOD_CLOSE("CompAnim::Looped", is_animation_looped);
-  assert(is_animation_looped == true || is_animation_looped == false);
+  assert(is_animation_looped == true or is_animation_looped == false);
   return is_animation_looped;
 }
 
@@ -199,7 +199,7 @@ void CompAnim::Update(float time) {
   LOG_VARIABLE("frame1", frame1);
   LOG_VARIABLE("frame2", frame2);
 
-  // Checks if the animation has not been called && calls it
+  // Checks if the animation has not been called and calls it
   checks_animation_call(frame1);
 
   sp.Update(time);
@@ -282,7 +282,7 @@ void CompAnim::own(GameObject* go) {
 
   entity = go->uid;
 
-  // Iterates through the colliders && defines its ownage if they're not null
+  // Iterates through the colliders and defines its ownage if they're not null
   for (CompCollider *coll:colliders) {
     if (coll != nullptr) {
       coll->own(go);
