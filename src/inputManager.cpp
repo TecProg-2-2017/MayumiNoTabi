@@ -36,6 +36,8 @@ InputManager& InputManager::get_input_manager_instance() {
 
     static InputManager uniqueInst;
 
+    assert(uniqueInst != NULL);
+
     LOG_METHOD_CLOSE("InputManager& InputManager::get_input_manager_instance", "InputManager");
     return uniqueInst;
 }
@@ -317,9 +319,14 @@ void InputManager::update_key_button_state(SDL_Event event) {
  */
 bool InputManager::key_pressed(int key) {
     LOG_METHOD_START("InputManager::key_pressed");
+    bool key_press;
+
+    key_press = (key_current_state[key] && key_updated_state[key]==update_counter-1);
+
+    assert(key_press == true || key_press == false);
     LOG_METHOD_CLOSE("InputManager::key_pressed","bool");
 
-    return (key_current_state[key] && key_updated_state[key]==update_counter-1);
+    return key_press; 
 }
 
 /*!
@@ -331,9 +338,14 @@ bool InputManager::key_pressed(int key) {
  */
 bool InputManager::key_released(int key) {
     LOG_METHOD_START("InputManager::key_released");
+    bool key_release;
+
+    key_release = ((!key_current_state[key]) && key_updated_state[key]==update_counter-1);
+    
+    assert(key_release == true || key_release == false); 
     LOG_METHOD_CLOSE("InputManager::key_released","bool");
 
-    return ((!key_current_state[key]) && key_updated_state[key]==update_counter-1);
+    return key_release;
 }
 
 /*!
@@ -344,9 +356,14 @@ bool InputManager::key_released(int key) {
  */
 bool InputManager::key_is_down(int key) {
     LOG_METHOD_START("InputManager::key_is_down");
+    bool key_down;
+
+    key_down = (key_current_state[key]);
+
+    assert(key_down == true || key_down == false);
     LOG_METHOD_CLOSE("InputManager::key_is_down","bool");
 
-    return (key_current_state[key]);
+    return key_down;
 }
 
 /*!
@@ -358,9 +375,14 @@ bool InputManager::key_is_down(int key) {
  */
 bool InputManager::mouse_button_pressed(int button) {
     LOG_METHOD_START("InputManager::mouse_button_pressed");
+    bool button_pressed;
+
+    button_pressed = (mouse_current_state[button] && mouse_updated_state[button]==update_counter-1);
+
+    assert(button_pressed == true || button_pressed == false);
     LOG_METHOD_CLOSE("InputManager::mouse_button_pressed","bool");
 
-    return (mouse_current_state[button] && mouse_updated_state[button]==update_counter-1);
+    return button_pressed; 
 }
 
 /*!
@@ -372,9 +394,14 @@ bool InputManager::mouse_button_pressed(int button) {
  */
 bool InputManager::mouse_button_released(int button) {
     LOG_METHOD_START("InputManager::mouse_button_released");
+    bool button_released;
+
+    button_released = ((!mouse_current_state[button]) && mouse_updated_state[button]==update_counter-1);
+
+    assert(button_released == true || button_released == false);
     LOG_METHOD_CLOSE("InputManager::mouse_button_released","bool");
 
-    return ((!mouse_current_state[button]) && mouse_updated_state[button]==update_counter-1);
+    return button_released; 
 }
 
 /*!
@@ -385,9 +412,14 @@ bool InputManager::mouse_button_released(int button) {
  */
 bool InputManager::mouse_button_is_down(int button) {
     LOG_METHOD_START("InputManager::mouse_button_is_down");
+    bool mouse_down;
+    
+    mouse_down = (mouse_current_state[button]);
+    
+    assert(mouse_down == true || mouse_down == false);
     LOG_METHOD_CLOSE("InputManager::mouse_button_is_down","bool");
 
-    return (mouse_current_state[button]);
+    return mouse_down; 
 }
 
 /*!
@@ -397,9 +429,14 @@ bool InputManager::mouse_button_is_down(int button) {
  */
 bool InputManager::mouse_is_moving() {
     LOG_METHOD_START("InputManager::mouse_is_moving");
+    bool mouse_move;
+
+    mouse_move = mouse_motion;
+
+    assert(mouse_move== true || mouse_move == false);
     LOG_METHOD_CLOSE("InputManager::mouse_is_moving","bool");
 
-    return mouse_motion;
+    return mouse_move;
 }
 
 /*!
@@ -409,6 +446,8 @@ bool InputManager::mouse_is_moving() {
  */
 Vec2 InputManager::get_mouse_position() {
     LOG_METHOD_START("InputManager::get_mouse_position");
+
+    assert(mouse_position != NULL); 
     LOG_METHOD_CLOSE("InputManager::get_mouse_position","Vec2");
 
     return mouse_position;
@@ -445,6 +484,7 @@ int InputManager::get_mouse_y_position() {
  */
 uint InputManager::get_text_cursor_position() {
     LOG_METHOD_START("InputManager::get_text_cursor_position");
+    assert(text_cursor > 0);
     LOG_METHOD_CLOSE("InputManager::get_text_cursor_position","uint");
 
     return text_cursor;
@@ -458,9 +498,14 @@ uint InputManager::get_text_cursor_position() {
  */
 bool InputManager::text_cursor_blink() {
     LOG_METHOD_START("InputManager::text_cursor_blink");
+    bool cursor_blink;
+    
+    cursor_blink = !((int)(text_cursor_blinker.get_time()/0.5)%2);
+
+    assert(cursor_blink == true || cursor_blink == false);
     LOG_METHOD_CLOSE("InputManager::text_cursor_blink","bool");
 
-    return !((int)(text_cursor_blinker.get_time()/0.5)%2);
+    return cursor_blink; 
 }
 
 /*!
@@ -470,6 +515,8 @@ bool InputManager::text_cursor_blink() {
  */
 bool InputManager::get_quit_requested() {
     LOG_METHOD_START("InputManager::get_quit_requested");
+
+    assert(quit_requested == true || quit_requested == false);
     LOG_METHOD_CLOSE("InputManager::get_quit_requested","bool");
 
     return quit_requested;
