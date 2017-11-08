@@ -249,7 +249,11 @@ bool GUIManager::gui_window_is_selected(GUI_Window* window)const {
     LOG_METHOD_START("GUIManager::gui_window_is_selected");
     
     assert(window != NULL);
-    return window==selected_gui_window;
+    
+    bool window_selected = window==selected_gui_window;
+    assert(window_selected == true || window_selected == false);
+
+    return window_selected; 
 
     LOG_METHOD_CLOSE("GUIManager::gui_window_is_selected","void");
 }
@@ -261,17 +265,22 @@ bool GUIManager::gui_window_is_selected(GUI_Window* window)const {
  */
 int GUIManager::get_gui_selected_window_ID()const {
     LOG_METHOD_START("GUIManager::get_gui_selected_window_ID");
-
+    
+    int window_id = 0;
     //If there's a window selected, returns it ID
     if (selected_gui_window){
-        return selected_gui_window->id;
+        window_id = selected_gui_window->id;
     }
     else if (gui_elements.size() == 1) { 
-        return 0;
+        window_id = 0;
     }
     else {
-        return -1;
+        window_id = -1;
     }
+
+    assert(window_id >= -1);
+
+    return window_id;
     LOG_METHOD_CLOSE("GUIManager::get_gui_selected_window_ID","void");
 }
 
@@ -302,7 +311,11 @@ bool GUIManager::gui_button_is_selected(GUI_Button* button)const{
     assert(button!= NULL);
 
     LOG_METHOD_CLOSE("GUIManager::gui_button_is_selected","bool");
-    return button && button==selected_gui_button;
+    bool button_selected = (button && button==selected_gui_button);
+
+    assert(button_selected == true || button_selected == false);
+
+    return button_selected; 
 }
 
 /*!
@@ -315,14 +328,20 @@ bool GUIManager::gui_button_is_selected(GUI_Button* button)const{
 bool GUIManager::gui_button_was_pressed(uint action)const{
     LOG_METHOD_START("GUIManager::gui_button_was_pressed");
 
+    bool button_pressed;
+
     if(selected_button_is_empty() || is_button_action_different(action)) {
         LOG_MSG("Gui button was not pressed");
-        return false;
+        button_pressed = false;
     }
     else {
-        return (!previous_button_state && current_button_state);
+        button_pressed = (!previous_button_state && current_button_state);
     }
+    assert(button_pressed == true || button_pressed == false);
+
     LOG_METHOD_CLOSE("GUIManager::gui_button_was_pressed","bool");
+
+    return button_pressed;
 }
 
 /*!
@@ -334,18 +353,24 @@ bool GUIManager::gui_button_was_pressed(uint action)const{
  */
 bool GUIManager::gui_button_was_released(uint action)const{
     LOG_METHOD_START("GUIManager::gui_button_was_released");
+    
+    bool button_released;
 
     if(selected_button_is_empty() || is_button_action_different(action)) {
         LOG_MSG("Gui button was not released");
 
-        return false;
+        button_released = false;
     }
     else {
         LOG_MSG("Gui button was released");
 
-        return (previous_button_state && !current_button_state);
+        button_released = (previous_button_state && !current_button_state);
     }
+    assert(button_released == true || button_released == false);
+
     LOG_METHOD_CLOSE("GUIManager::gui_button_was_released","bool");
+    
+    return button_released;
 }
 
 /*!
@@ -358,15 +383,21 @@ bool GUIManager::gui_button_was_released(uint action)const{
 bool GUIManager::gui_button_was_clicked(uint action)const{
     LOG_METHOD_START("GUIManager::gui_button_was_clicked");
 
+    bool button_clicked;
+
     if(selected_button_is_empty() || is_button_action_different(action)) {
         LOG_MSG("Gui button was not clicked");
-        return false;
+        button_clicked = false;
     }
     else {
         LOG_MSG("Gui button was clicked");
-        return (previous_button_state && !current_button_state && selected_gui_button->IsHovered());
+        button_clicked = (previous_button_state && !current_button_state && selected_gui_button->IsHovered());
     }
+    assert(button_clicked == true || button_clicked == false); 
+
     LOG_METHOD_CLOSE("GUIManager::gui_button_was_clicked","bool");
+
+    return button_clicked;
 }
 
 /*!
@@ -377,16 +408,23 @@ bool GUIManager::gui_button_was_clicked(uint action)const{
 bool GUIManager::selected_button_is_empty()const {
     LOG_METHOD_START("GUIManager::selected_button_is_empty");
     
+    bool button_empty;
+    
     //! Return false for empty selected_gui_button
     if (!selected_gui_button) {
         LOG_MSG("Selected gui button is empty");
-        return true;
+        button_empty = true;
     }
     else {
         LOG_MSG("Selected gui button is not empty");
-        return false;
+        button_empty = false;
     }
+    
+    assert(button_empty == true || button_empty == false);
+
     LOG_METHOD_CLOSE("GUIManager::selected_button_is_empty","bool");
+
+    return button_empty;
 }
 
 /*!
@@ -398,16 +436,22 @@ bool GUIManager::selected_button_is_empty()const {
 bool GUIManager::is_button_action_different(uint action)const {
     LOG_METHOD_START("GUIManager::is_button_action_different");
     
+    bool action_different;
+    
     //! Return false for action different from the selected button 
     if (action && selected_gui_button->action != action) {
         LOG_MSG("Selected gui button action is different");
-        return true;
+        action_different = true;
     }
     else {
         LOG_MSG("Selected gui button action is not different");
-        return false;
+        action_different = false;
     }
+    assert(action_different == true || action_different == false);
+
     LOG_METHOD_CLOSE("GUIManager::is_button_action_different","bool");
+    
+    return action_different;
 }
 
 /*!
@@ -418,16 +462,22 @@ bool GUIManager::is_button_action_different(uint action)const {
  */
 bool GUIManager::gui_button_is_down(uint action)const{
     LOG_METHOD_START("GUIManager::gui_button_is_down");
+    
+    bool button_down;
 
     if(selected_button_is_empty() || is_button_action_different(action)) {
         LOG_MSG("Gui button is not down");
 
-        return false;
+        button_down = false;
     }
     else {
         LOG_MSG("Gui button is down");
 
-        return current_button_state;
+        button_down = current_button_state;
     }
+    assert(button_down == true || button_down == false);
+
     LOG_METHOD_CLOSE("GUIManager::gui_button_is_down","bool");
+    
+    return button_down;
 }
