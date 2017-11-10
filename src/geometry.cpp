@@ -7,6 +7,104 @@
 #include <geometry.hpp>
 #include <camera.hpp>
 
+/**
+	Prototypes from geometry methods.
+*/
+
+Vec2::Vec2(const float &a,const float &b):x{a},y{b};
+Vec2::Vec2(const Vec2 &b):x{b.x},y{b.y};
+Vec2 Vec2::makeVec2(const float &object_lenght,const float &angle);
+Vec2 Vec2::operator= (const Vec2& b);
+Vec2 Vec2::operator+ (const Vec2& b);
+void Vec2::operator+= (const Vec2& b);
+Vec2 Vec2::operator- (const Vec2& b);
+void Vec2::operator-= (const Vec2& b);
+Vec2 Vec2::operator* (const float& r);
+void Vec2::operator*= (const float& ratio);
+Vec2 Vec2::operator/ (const float& ratio);
+void Vec2::operator/= (const float& r);
+bool Vec2::operator== (const Vec2& b);
+bool Vec2::operator!= (const Vec2& b);
+bool Vec2::operator< (const Vec2& b);
+void Vec2::floor();
+float Vec2::std::vector_lenght();
+float Vec2::angle();
+float Vec2::distance(const Vec2 &b);
+float Vec2::angle(const Vec2 &position);
+Vec2 Vec2::unit();
+Vec2 Vec2::renderPosition();
+Vec2 Vec2::rotate(float angle);
+ConvexPolygon Vec2::polygon();
+std::ostream& operator<< (std::ostream& os, const Vec2& obj);
+Rect::Rect(const float &side_a,const float &side_b,const float &side_c,
+	         const float &side_d):x{a},y{b},w{c},h{d};
+Rect::Rect(const Vec2 &position,const Vec2 &object_size):x{pos.x}, \
+                                       y{pos.y},w{sz.x},h{sz.y};
+Rect::Rect(const Rect &b):x{b.x},y{b.y},w{b.w},h{b.h};
+Rect Rect::operator= (const Rect& b);
+Rect Rect::operator+ (const Vec2& b);
+void Rect::operator+= (const Vec2& b);
+Rect Rect::operator- (const Vec2& b);
+void Rect::operator-= (const Vec2& b);
+bool Rect::operator== (const Rect& b);
+bool Rect::operator!= (const Rect& b);
+void Rect::floor();
+void Rect::setPosition(const Vec2& b);
+void Rect::setCenter(const Vec2& b);
+float Rect::x2();
+float Rect::y2();
+Vec2 Rect::distCenter(const Rect& b);
+Vec2 Rect::distEdge(const Rect& b);
+Vec2 Rect::hotspot(Hotspot object_hotspot);
+Vec2 Rect::corner();
+Vec2 Rect::corner2();
+Vec2 Rect::corner3();
+Vec2 Rect::corner4();
+Vec2 Rect::center();
+Vec2 Rect::size();
+Vec2 Rect::relativePosition(const Vec2 &relative, bool inverted);
+Rect Rect::relativeBox(const Rect &relative,bool inverted);
+Rect Rect::renderBox();
+Rect Rect::sum(const Rect &other);
+ConvexPolygon Rect::polygon(const float &r);
+SDL_Rect Rect::sdlRect();
+bool Rect::contains(const float &i,const float &j);
+bool Rect::contains(const Vec2& b);
+bool Rect::collides(const Rect& b);
+std::ostream& operator<<(std::ostream& os, const Rect& obj);
+Circle::Circle(float xx,float yy,float rr):x{xx},y{yy},r{rr};
+bool Circle::contains(const Vec2 &p);
+bool Circle::contains(const float &px,const float &py);
+void Circle::floor();
+ConvexPolygon::ConvexPolygon():count{0};
+ConvexPolygon::ConvexPolygon(vector<Vec2> v,bool all):count{0};
+bool ConvexPolygon::AddPoint(Vec2 p);
+bool ConvexPolygon::AddPoints(const vector<Vec2> &pts,bool all);
+bool ConvexPolygon::RemovePoint(Vec2 p);
+bool ConvexPolygon::RemovePoint(int ind);
+void ConvexPolygon::SetSource(const Vec2 &p);
+void ConvexPolygon::MoveSource(const Vec2 &p);
+void ConvexPolygon::ReorderPoints();
+void ConvexPolygon::ReorderPoints(vector<Vec2> &pts,map<Vec2,float> &ptsAng);
+vector<Vec2> ConvexPolygon::GetPoints();
+const Vec2& ConvexPolygon::GetSource();
+Vec2 ConvexPolygon::GetCenter();
+int ConvexPolygon::GetCount();
+float ConvexPolygon::GetPointAng(const Vec2& p);
+float ConvexPolygon::GetPointAng(int ind);
+bool ConvexPolygon::IsConvex(const Vec2 &p);
+bool ConvexPolygon::IsConvex(const vector<Vec2> &pts);
+bool ConvexPolygon::Contains(Vec2 p);
+bool ConvexPolygon::Collides(const ConvexPolygon& other);
+ConvexPolygon ConvexPolygon::operator+(const Vec2& p);
+ConvexPolygon ConvexPolygon::operator*(const float& f);
+void ConvexPolygon::Floor();
+Rect ConvexPolygon::BoundingRect();
+ConvexPolygon ConvexPolygon::AtOrigin();
+ConvexPolygon ConvexPolygon::MinkowskySum(const ConvexPolygon& polygon);
+std::ostream& operator<<(std::ostream& os, const ConvexPolygon& obj);
+
+
 //! A constructor.
     /*!
     This is a constructor method of Vec2 class
@@ -15,7 +113,9 @@
 		@warning Method that requires review of comment
 		*/
 
-Vec2::Vec2(const float &a,const float &b):x{a},y{b}{}
+Vec2::Vec2(const float &a,const float &b):x{a},y{b} {
+	// Nothing to do
+}
 
 //! A constructor.
     /*!
@@ -24,7 +124,9 @@ Vec2::Vec2(const float &a,const float &b):x{a},y{b}{}
 		@warning Method that requires review of comment
 		*/
 
-Vec2::Vec2(const Vec2 &b):x{b.x},y{b.y}{}
+Vec2::Vec2(const Vec2 &b):x{b.x},y{b.y} {
+	// Nothing to do
+}
 
 /*!
 	@fn Vec2 Vec2::makeVec2(const float &len,const float &ang)
@@ -369,7 +471,7 @@ Rect::Rect(const Vec2 &position,const Vec2 &object_size):x{pos.x}, \
 }
 
 Rect::Rect(const Rect &b):x{b.x},y{b.y},w{b.w},h{b.h} {
-// Nothing to do
+	// Nothing to do
 }
 
 /*!
@@ -905,7 +1007,9 @@ std::ostream& operator<<(std::ostream& os, const Rect& obj) {
 		@warning Method that requires review of comment
 		*/
 
-Circle::Circle(float xx,float yy,float rr):x{xx},y{yy},r{rr}{}
+Circle::Circle(float xx,float yy,float rr):x{xx},y{yy},r{rr} {
+	// Nothing to do
+}
 
 /*!
 	@fn Circle::contains(const Vec2 &p)
@@ -1141,7 +1245,7 @@ void ConvexPolygon::ReorderPoints(vector<Vec2> &pts,map<Vec2,float> &ptsAng)cons
 	ptsAng[pts[0]] = 0;
 }
 
-vector<Vec2> ConvexPolygon::GetPoints()const{
+vector<Vec2> ConvexPolygon::GetPoints()const {
 
 	vector<Vec2> v;
 
