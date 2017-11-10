@@ -250,7 +250,7 @@ bool GUIManager::gui_window_is_selected(GUI_Window* window)const {
     
     assert(window != NULL);
     
-    bool window_selected = window==selected_gui_window;
+    bool window_selected = (window == selected_gui_window);
     assert(window_selected == true || window_selected == false);
 
     return window_selected; 

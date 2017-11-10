@@ -60,7 +60,10 @@ void InputManager::input_event_handler(float time) {
     LOG_VARIABLE("x_position",x_position);
     LOG_VARIABLE("y_position",y_position);
 
-    mouse_motion = (mouse_position.x!=x_position || mouse_position.y!=y_position);
+    bool mouse_postion_x_is_different = mouse_position.x != x_position;
+    bool mouse_postion_y_is_different = mouse_position.y != y_position;
+
+    mouse_motion = (mouse_position_x_is_different || mouse_position_y_is_different);
 
     mouse_position.x = (float)x_position;
     mouse_position.y = (float)y_position;
@@ -266,8 +269,11 @@ void InputManager::update_mouse_button_state(SDL_Event event) {
         mouse_state = false;
         LOG_VARIABLE("mouse_state","false");
     }
+    
+    bool event_button_is_less_than_six = event.button.button < 6;
+    bool mouse_current_state_is_different = mouse_current_state[event.button.button]!=mouse_state
 
-    if (/*event.button.button>=0 && */event.button.button<6 && mouse_current_state[event.button.button]!=mouse_state) {
+    if (/*event.button.button>=0 && */event_button_is_less_than_six && mouse_current_state_is_different) {
         mouse_updated_state[event.button.button]=update_counter;
         mouse_current_state[event.button.button]=mouse_state;
     }
@@ -320,8 +326,9 @@ void InputManager::update_key_button_state(SDL_Event event) {
 bool InputManager::key_pressed(int key) {
     LOG_METHOD_START("InputManager::key_pressed");
     bool key_press;
+    bool key_is_updated = (key_updated_state[key]==update_counter-1);
 
-    key_press = (key_current_state[key] && key_updated_state[key]==update_counter-1);
+    key_press = (key_current_state[key] && key_is_updated);
 
     assert(key_press == true || key_press == false);
     LOG_METHOD_CLOSE("InputManager::key_pressed","bool");
@@ -339,8 +346,9 @@ bool InputManager::key_pressed(int key) {
 bool InputManager::key_released(int key) {
     LOG_METHOD_START("InputManager::key_released");
     bool key_release;
+    bool key_is_updated = (key_updated_state[key]==update_counter-1);
 
-    key_release = ((!key_current_state[key]) && key_updated_state[key]==update_counter-1);
+    key_release = ((!key_current_state[key]) && key_is_updated);
     
     assert(key_release == true || key_release == false); 
     LOG_METHOD_CLOSE("InputManager::key_released","bool");
@@ -376,8 +384,9 @@ bool InputManager::key_is_down(int key) {
 bool InputManager::mouse_button_pressed(int button) {
     LOG_METHOD_START("InputManager::mouse_button_pressed");
     bool button_pressed;
+    bool mouse_is_updated = (mouse_updated_state[button]==update_counter-1);
 
-    button_pressed = (mouse_current_state[button] && mouse_updated_state[button]==update_counter-1);
+    button_pressed = (mouse_current_state[button] && mouse_is_updated);
 
     assert(button_pressed == true || button_pressed == false);
     LOG_METHOD_CLOSE("InputManager::mouse_button_pressed","bool");
@@ -395,8 +404,9 @@ bool InputManager::mouse_button_pressed(int button) {
 bool InputManager::mouse_button_released(int button) {
     LOG_METHOD_START("InputManager::mouse_button_released");
     bool button_released;
+    bool mouse_is_updated = (mouse_updated_state[button]==update_counter-1);
 
-    button_released = ((!mouse_current_state[button]) && mouse_updated_state[button]==update_counter-1);
+    button_released = ((!mouse_current_state[button]) && mouse_is_updated);
 
     assert(button_released == true || button_released == false);
     LOG_METHOD_CLOSE("InputManager::mouse_button_released","bool");
@@ -499,8 +509,9 @@ uint InputManager::get_text_cursor_position() {
 bool InputManager::text_cursor_blink() {
     LOG_METHOD_START("InputManager::text_cursor_blink");
     bool cursor_blink;
+    float two_times_cursor_blinker = (text_cursor_blinker.get_time()/0.5); 
     
-    cursor_blink = !((int)(text_cursor_blinker.get_time()/0.5)%2);
+    cursor_blink = !((int)(two_times_cursor_blinker)%2);
 
     assert(cursor_blink == true || cursor_blink == false);
     LOG_METHOD_CLOSE("InputManager::text_cursor_blink","bool");
