@@ -30,16 +30,87 @@
 
 #define ICON_X "img/editor/icon_x.png"
 
+
+/**
+	Prototypes from gui.cpp' methods.
+*/
+
+GUI_Element::GUI_Element(const Vec2& pos): box{pos.x,pos.y,DEFAULT_WIDTH, \
+	                                               DEFAULT_HEIGHT};
+GUI_Element::~GUI_Element();
+void GUI_Element::SetPos(const Vec2& pos);
+Rect GUI_Element::GetBox();
+void GUI_Element::SetVisible(bool v);
+bool GUI_Element::IsVisible();
+GUI_Button::GUI_Button(uint a,const Vec2& pos):GUI_Element(pos),action{a};
+void GUI_Button::Update();
+void GUI_Button::render();
+void GUI_Button::Reset();
+bool GUI_Button::IsPressed();
+bool GUI_Button::IsHovered();
+GUI_CheckButton::GUI_CheckButton(bool& v,const Vec2& pos): \
+                             GUI_Button(GUI_NONE,pos),value{v};
+void GUI_CheckButton::Update() ;
+GUI_TextButton::GUI_TextButton(uint a,const string& l,const Vec2& pos): \
+                                GUI_Button(a,pos),label{l, DEFAULT_FONT_SIZE};
+void GUI_TextButton::render();
+GUI_IconButton::GUI_IconButton(uint a,string i,const Vec2& pos): \
+                                               GUI_Button(a,pos), icon{i};
+void GUI_IconButton::render();
+GUI_InputBox::GUI_InputBox(const Vec2& pos,Size s): \
+                     GUI_Button(GUI_NONE,pos),text{"", DEFAULT_FONT_SIZE};
+GUI_InputBox::~GUI_InputBox();
+void GUI_InputBox::Update();
+void GUI_InputBox::render();
+GUI_StringBox::GUI_StringBox(string& v,Size s,const Vec2& pos): \
+                                      GUI_InputBox(pos,s),value{v};
+void GUI_StringBox::SetValue();
+string GUI_StringBox::GetValue();
+GUI_IntBox::GUI_IntBox(int& v,int l,int h,Size s,const Vec2& pos): \
+                                 GUI_InputBox(pos,s),value{v},low{l},high{h};
+void GUI_IntBox::SetValue();
+string GUI_IntBox::GetValue();
+GUI_Label::GUI_Label(const string& t,Snap s,const Vec2& pos):GUI_Element(pos), \
+                 text{t,DEFAULT_FONT_SIZE,generate_color(LABEL_COLOR)},snap{s};
+void GUI_Label::update();
+void GUI_Label::render();
+GUI_Array::GUI_Array(vector<GUI_Element*>& v,const Vec2& pos): \
+                                     GUI_Element(pos),array{v};
+GUI_Array::GUI_Array(vector<GUI_Element*>& v): \
+                                     GUI_Element({0,0}),array{v};
+GUI_Array::~GUI_Array();
+void GUI_Array::Update();
+void GUI_Array::render();
+GUI_HBar::GUI_HBar(vector<GUI_Element*>& v,uint width,const Vec2& pos): \
+                                                         GUI_Array(v,pos);
+void GUI_HBar::render();
+GUI_VBar::GUI_VBar(vector<GUI_Element*>& v,uint height,const Vec2& pos):
+										GUI_Array(v,pos);
+void GUI_VBar::render();
+GUI_Window::GUI_Window(vector<GUI_Element*>& v,int i,const string& l, \
+	                     const Vec2& pos):GUI_Element(pos),array{v}, \
+											 label{l,DEFAULT_FONT_SIZE},closeButton{GUI_CLOSE,ICON_X},\
+											       id{i};
+void GUI_Window::update();
+void GUI_Window::render();
+
+
 //GUI_Element
-GUI_Element::GUI_Element(const Vec2& pos):box{pos.x,pos.y,DEFAULT_WIDTH,DEFAULT_HEIGHT}{}
-GUI_Element::~GUI_Element() {}
+GUI_Element::GUI_Element(const Vec2& pos): box{pos.x,pos.y,DEFAULT_WIDTH, \
+	                                               DEFAULT_HEIGHT} {
+	// Nothing to do
+}
+
+GUI_Element::~GUI_Element() {
+	// Nothing to do
+}
 
 void GUI_Element::SetPos(const Vec2& pos) {
 	box.x = pos.x;
 	box.y = pos.y;
 }
 
-Rect GUI_Element::GetBox()const{
+Rect GUI_Element::GetBox()const {
 	return box;
 }
 
@@ -53,6 +124,7 @@ bool GUI_Element::IsVisible()const {
 
 //GUI_Button
 GUI_Button::GUI_Button(uint a,const Vec2& pos):GUI_Element(pos),action{a} {
+	// Nothing to do
 }
 
 void GUI_Button::Update() {
@@ -128,7 +200,8 @@ bool GUI_Button::IsHovered()const{
 
 //GUI_CheckButton
 GUI_CheckButton::GUI_CheckButton(bool& v,const Vec2& pos): \
-                             GUI_Button(GUI_NONE,pos),value{v}{
+                             GUI_Button(GUI_NONE,pos),value{v} {
+		// Nothing to do
 }
 
 void GUI_CheckButton::Update() {
@@ -411,7 +484,8 @@ string GUI_IntBox::GetValue()const {
 }
 
 //GUI_Label
-GUI_Label::GUI_Label(const string& t,Snap s,const Vec2& pos):GUI_Element(pos),text{t,DEFAULT_FONT_SIZE,generate_color(LABEL_COLOR)},snap{s}{
+GUI_Label::GUI_Label(const string& t,Snap s,const Vec2& pos):GUI_Element(pos), \
+                 text{t,DEFAULT_FONT_SIZE,generate_color(LABEL_COLOR)},snap{s}{
 	text.set_hotspot();
 	box.w = text.get_box().w;
 
@@ -447,13 +521,13 @@ void GUI_Label::render() {
 
 //GUI_Array
 GUI_Array::GUI_Array(vector<GUI_Element*>& v,const Vec2& pos): \
-                                     GUI_Element(pos),array{v}{
-// Nothing to do
+                                     GUI_Element(pos),array{v} {
+		// Nothing to do
 }
 
 GUI_Array::GUI_Array(vector<GUI_Element*>& v): \
                                      GUI_Element({0,0}),array{v} {
-// Nothing to do
+   // Nothing to do
 }
 
 GUI_Array::~GUI_Array() {
@@ -562,7 +636,8 @@ void GUI_HBar::render() {
 }
 
 //GUI_VBar
-GUI_VBar::GUI_VBar(vector<GUI_Element*>& v,uint height,const Vec2& pos):GUI_Array(v,pos) {
+GUI_VBar::GUI_VBar(vector<GUI_Element*>& v,uint height,const Vec2& pos):
+										GUI_Array(v,pos) {
 	if (height) {
 		box.h = height;
 	}
@@ -700,7 +775,7 @@ void GUI_Window::render() {
 	CLIP_RECT(rect,1);
 	rect.h = DEFAULT_HEIGHT;
 	FILL_RECT(&rect);
-	label.set_box_position({box.x + DEFAULT_MARGIN,box.y + (DEFAULT_HEIGHT/2)});
+	label.set_box_position({box.x + DEFAULT_MARGIN,box.y + (DEFAULT_HEIGHT / 2)});
 	Rect textClip{0,0,box.w -(DEFAULT_WIDTH+DEFAULT_MARGIN),DEFAULT_FONT_SIZE+2};
 	label.render({0,0}, &textClip);
 	closeButton.SetPos({box.x + box.w - DEFAULT_WIDTH - 1, box.y});
