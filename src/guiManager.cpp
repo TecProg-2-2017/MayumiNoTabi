@@ -8,13 +8,34 @@
 #include <gui.hpp>
 #include <inputManager.hpp>
 
+/**
+  Prototypes from guiManeger's methods.
+*/
+
+GUIManager::GUIManager();
+GUIManager::~GUIManager();
+void GUIManager::update_gui_elements();
+void GUIManager::render_gui_elements();
+void GUIManager::push_gui_element(GUI_Element* element);
+void GUIManager::request_gui_element_pop(GUI_Element* element);
+void GUIManager::select_gui_window(GUI_Window* window);
+bool GUIManager::gui_window_is_selected(GUI_Window* window);
+int GUIManager::get_gui_selected_window_ID();
+void GUIManager::select_gui_button(GUI_Button* button);
+bool GUIManager::gui_button_is_selected(GUI_Button* button);
+bool GUIManager::gui_button_was_pressed(uint action);
+bool GUIManager::gui_button_was_released(uint action);
+bool GUIManager::gui_button_was_clicked(uint action);
+bool GUIManager::gui_button_is_down(uint action);
+
+
 /*!
  *  @fn GUIManager::GUIManager()
  *  @brief Constructor method for general user interface
  *  @return A GUIManager object
  */
 GUIManager::GUIManager() {
-
+    // Nothing to do
 }
 
 /*!
