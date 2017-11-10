@@ -6,4 +6,8 @@
 
 #include <gameException.hpp>
 
-GameException::GameException(string msg):msg(msg) {}
+GameException::GameException(string msg):msg(msg);
+
+GameException::GameException(string msg):msg(msg) {
+  // Nothing to do
+}

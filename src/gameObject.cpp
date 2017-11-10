@@ -12,7 +12,48 @@
 #include <txtFuncs.hpp>
 #include <music.hpp>
 
+GameObject::GameObject():uid{goCount++};
+GameObject::GameObject (const Vec2 &pos_,float r,Hotspot hs,bool a);
+GameObject::GameObject (const Rect &rect,float r,Hotspot hs,bool a);
+GameObject::GameObject (const Rect &rect,float r,Hotspot hs,bool a);
+GameObject::~GameObject();
+void GameObject::update(float time);
+void GameObject::Render();
+void GameObject::render();
+void GameObject::AddComponent(Component* component);
+void GameObject::ReplaceComponent(Component* component);
+void GameObject::RemoveComponent(Component::type t);
+void GameObject::SetComponent(Component::type t,Component* component);
+bool GameObject::HasComponent(size_t t);
+void GameObject::AttachObj(GameObject* obj);
+void GameObject::AttachTo(GameObject* obj);
+void GameObject::UnAttachObj(GameObject* obj);
+void GameObject::UnAttach();
+bool GameObject::IsDead();
+bool GameObject::Remove();
+Rect GameObject::Box();
+Rect GameObject::Box(const Vec2& p,const Vec2 &sz);
+Rect GameObject::FullBox();
+template<int atkDist,int seeDist,
+         int id> void HostileAIfunc(CompAI* ai,float time);
+void PassiveAIfunc(CompAI* ai,float time);
+template<int atkDist,int seeDist,int stCD,int atkCount,int stompCount >
+                               void PumbaAiFunc(CompAI* ai,float time);
+void PlayerControlFunc(GameObject* go, float time);
+void PlayerMonsterCollision(const CompCollider::Coll &a,const CompCollider::Coll &b);
+void PlayerBlockCollision(const CompCollider::Coll &a,const CompCollider::Coll &b);
+void EmptyCollision(const CompCollider::Coll &a,const CompCollider::Coll &b);
+uint GameObject::MakePlayer(const Vec2 &pos);
+uint GameObject::Create(const string& blueprint, const Vec2& pos, const Vec2& aux);
+uint GameObject::MakeTarget(const Vec2 &pos);
+uint GameObject::MakeMike(const Vec2 &pos);
+uint GameObject::MakeBanshee(const Vec2 &pos,const Vec2 &pos2);
+uint GameObject::MakeMask(const Vec2 &pos);
+uint GameObject::makeBoar(const Vec2 &pos);
+
+
 uint GameObject::goCount = 0;
+
 map<uint, unique_ptr<GameObject>> GameObject::entities;
 
 //! A constructor.
@@ -68,7 +109,6 @@ GameObject::GameObject (const Rect &rect,float r,Hotspot hs,bool a):
 	entities[uid] = unique_ptr<GameObject>(this);
 }
 
-
 //! A destructor.
     /*!
       This is a destructor method of GameObject class
@@ -90,12 +130,12 @@ GameObject::~GameObject() {
 		}
 	}
 
-	if (Camera::GetFocus() == uid) {
-		Camera::Unfollow();
-	}
-	else {
-		// Nothing to do
-	}
+		if (Camera::GetFocus() == uid) {
+			Camera::Unfollow();
+		}
+		else {
+			// Nothing to do
+		}
 
 	entities.erase(uid);
 }
