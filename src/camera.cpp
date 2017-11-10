@@ -22,6 +22,8 @@
 #define MAX_ZOOM 1.0f		 	// unit:
 #define MIN_ZOOM 0.2f			// unit:
 
+#define FIFTY_PERCENT_OF 0.5
+
 // uint is actually the short for unsigned int
 uint Camera::camera_focus = 0; //!<  Global variable defining camera focus value
 
@@ -117,7 +119,7 @@ void Camera::update_camera(float time) {
 
   Vec2 half_winsize = WINSIZE / 2;
 
-  Vec2 center = camera_position + (half_winsize / camera_zoom); //!< Newvalue for center
+  Vec2 center = camera_position + (half_winsize / camera_zoom); //!< New value for center
 
   LOG_VARIABLE("center", center.to_string);
   assert(center != NULL);
@@ -186,7 +188,8 @@ void Camera::update_camera_zoom(float time) {
   if (INPUT.IsKeyDown(KEY(z))) {
     LOG_MSG("if (INPUT.IsKeyDown(KEY(z)))");
 
-    camera_zoom = camera_zoom + (0.5 * time);
+    
+    camera_zoom = camera_zoom + (FIFTY_PERCENT_OF * time);
     camera_zoom = min(camera_zoom, MAX_ZOOM);
   }
   else {
@@ -197,7 +200,7 @@ void Camera::update_camera_zoom(float time) {
   if (INPUT.key_is_down(KEY(x))) {
     LOG_MSG("if (INPUT.IsKeyDown(KEY(x)))");
 
-    camera_zoom = (0.5 * time) - camera_zoom;
+    camera_zoom = (FIFTY_PERCENT_OF * time) - camera_zoom;
     camera_zoom = max(camera_zoom, MIN_ZOOM);
   }
   else {
@@ -274,8 +277,8 @@ void Camera::update_camera_speed(float time) {
       // Do nothing
     }
 
-    camera_speed = camera_speed / camera_zoom;
-    camera_speed = camera_speed * time;
+    camera_speed    = camera_speed / camera_zoom;
+    camera_speed    = camera_speed * time;
     camera_position = camera_position + camera_speed;
   }
   LOG_METHOD_CLOSE("Camera::update_camera_speed", "void");
