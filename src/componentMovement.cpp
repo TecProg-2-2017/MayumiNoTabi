@@ -16,15 +16,46 @@
 #include <componentMovement.hpp>
 #include <assert.h>
 
+/*!
+@fn CompMovement::CompMovement(const Vec2& sprite, moveType move_type)
+@brief Constructor method for CompMovement
+@params const Vec2& sprite, moveType move_type
+*/
 
-//! Functions to be called by the methods in order to perform actions
+CompMovement::CompMovement(const Vec2& sprite, moveType move_type): mType{move_type},speed{s} {
+  LOG_METHOD_START('CompMovement::CompMovement');
+  LOG_VARIABLE("CompMovement::CompMovement", "sprite", "move_type");
+
+  assert(sprite >= 0);
+  assert(move_type != NULL);
+
+  LOG_METHOD_CLOSE('CompMovement::CompMovement', "constructor");
+
+}
+/*!
+@fn CompMovement::~CompMovement()
+@brief Desstructor method for CompMovement
+@params No params
+*/
+
+CompMovement::~CompMovement() {
+  LOG_METHOD_START('CompMovement::~CompMovement');
+
+  LOG_METHOD_CLOSE('CompMovement::~CompMovement', "destructor");
+
+}
+/*!
+	@fn chooseTypeComponentMovement(float time)
+	@brief Sets the type of the movement of the component
+	@params float time
+*/
 
 void chooseTypeComponentMovement(float time){
 
  	assert(time > 0.0 and time < 60.0 ); // CPPCheck avalia a condição da assertiva (Se está sempre true)
 
 	UNUSED(time);
-	GO(entity)->position += move;
+	GO(entity)->position = GO(entity)->position + move;
 
 	if (mType == moveType::type_bullet){
 		GO(entity)->rotation = speed.angle();
@@ -36,44 +67,11 @@ void chooseTypeComponentMovement(float time){
 
 /*!
 	@fn CompMovement::CompMovement()
-	@brief Constructor method for CompMovement
-	@params const Vec2& sprite, moveType move_type
-*/
-
-CompMovement::CompMovement(const Vec2& sprite, moveType move_type): mType{move_type},speed{s} {
-	LOG_METHOD_START('CompMovement::CompMovement');
-	LOG_VARIABLE("CompMovement::CompMovement", "sprite", "move_type");
-
-	assert(sprite >= 0);
-	assert(move_type != NULL);
-
-	LOG_METHOD_CLOSE('CompMovement::CompMovement', "constructor");
-
-}
-
-/*!
-	@fn CompMovement::~CompMovement()
-	@brief Desstructor method for CompMovement
-	@params No params
-*/
-
-CompMovement::~CompMovement() {
-	LOG_METHOD_START('CompMovement::~CompMovement');
-
-	LOG_METHOD_CLOSE('CompMovement::~CompMovement', "destructor");
-	// Method body its empty
-
-
-}
-
-
-/*!
-	@fn CompMovement::CompMovement()
 	@brief Selects type of components
 	@params const Vec2& sprite, moveType move_type
 */
 
-void choose_type_component_movement(float time){
+void choose_type_component_movement(float time) {
 	LOG_METHOD_START('choose_type_component_movement');
 	LOG_VARIABLE("choose_type_component_movement", "time");
 
@@ -112,16 +110,14 @@ void CompMovement::update(float time) {
 	assert(time > 0.0 and time < 60.0 );
 
 	UNUSED(time);
-	GO(entity)->position += move;
+	GO(entity)->position = GO(entity)->position + move;
 
 	assert(time > 0.0 and time < 60.0 )
 	chooseTypeComponentMovement(time);
 
-
 	if (mType == moveType::type_bullet){
 		GO(entity)->rotation = speed.angle();
 	}
-
 }
 
 /*!

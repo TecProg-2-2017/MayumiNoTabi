@@ -229,7 +229,6 @@ bool CompCollider::kills_component(float time) {
 	else {
 		// Nothing to Do
 	}
-
 	if(GO(entity)->HasComponent(Component::type::t_animation_control)) {
 		return true;
 	}
@@ -358,7 +357,7 @@ Vec2 CompCollider::Coll::collides(const Coll &other_component,const Vec2 &move,c
 	assert(move != NULL);
 	assert(moved != NULL);
 
-	const int precision = 100; //!< TODO: Refactorate this magic number
+	const int precision = 100; //!< Defines equality precision between float values
 
 	Rect rectangle = Box() + moved; //!< Updates the current value of the rectangle
 	Rect another_rectangle = other_component.Box(); //!< Updates the value of another rectangle

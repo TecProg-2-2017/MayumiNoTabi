@@ -133,7 +133,7 @@ void CompHP::render() {
   LOG_METHOD_START('CompHP::render');
 
 	//! Shows HP on screen if it's set player and bigget than zero
-	if(SETTINGS.showHP && showHP && current>0) {
+	if(SETTINGS.showHP and showHP and current>0) {
 		Rect box{0,-GO(entity)->Box().w/5.0f - GO(entity)->Box().w/10.0f,GO(entity)->Box().w,GO(entity)->Box().w/5.0f};
 		box = box + GO(entity)->Box().corner();
 
@@ -146,8 +146,8 @@ void CompHP::render() {
 		SDL_SetRenderDrawColor(GAMERENDER, 255, 0, 0, 255);
 		rect.w = rect.w * current;
 		rect.w = rect.w / total;
-		rect.x ++;
-		rect.y ++;
+		rect.x = rect.x + 1;
+		rect.y = rect.y + 1;
 		rect.w = rect.w - 2;
 		rect.h = rect.h - 2;
 		SDL_RenderFillRect(GAMERENDER, &rect);

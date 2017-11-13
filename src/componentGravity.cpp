@@ -50,7 +50,7 @@ void CompGravity::update(float time) {
 
 	//! Verifies if element has a type that characterizes movement in Y axis
 	if(GO(entity)->HasComponent(Component::type::t_movement)) {
-		COMPMOVEp(GO(entity))->speed.y = COMPMOVEp(GO(entity))->speed.y + gravity*time;
+		COMPMOVEp(GO(entity))->speed.y = COMPMOVEp(GO(entity))->speed.y + gravity * time;
 	}
 	else {
 		// Nothing to Do

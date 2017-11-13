@@ -37,18 +37,16 @@
 
 # Doxygen files
 latex
-src/html/**/*
-src/latex/*
+src/html/
+src/latex/
+html/
+latex/
 
 # Ignores the vscode folder
-.vscode/**/*
+.vscode/
 
-#executavel
+# Executable
 JOGO
-
-#pastas geradas pelo Doxygen
-html/*
-latex/*
 
 #Vim swp
 *.swp
