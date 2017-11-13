@@ -106,28 +106,41 @@ GUI_Element::~GUI_Element() {
 }
 
 void GUI_Element::SetPos(const Vec2& pos) {
+	LOG_METHOD_START("GUI_Element::SetPos");
+  LOG_VARIABLE("&pos", &pos);
 	box.x = pos.x;
 	box.y = pos.y;
 }
 
 Rect GUI_Element::GetBox()const {
+	LOG_METHOD_START("GUI_Element::GetBox");
+	LOG_METHOD_CLOSE("GUI_Element::GetBox", box);
 	return box;
 }
 
 void GUI_Element::SetVisible(bool v) {
+	LOG_METHOD_START("GUI_Element::SetVisible");
+  LOG_VARIABLE("v", v);
 	visible = v;
 }
 
 bool GUI_Element::IsVisible()const {
+	LOG_METHOD_START("GUI_Element::IsVisible");
+	LOG_METHOD_CLOSE("GUI_Element::IsVisible", visible);
 	return visible;
 }
 
 //GUI_Button
 GUI_Button::GUI_Button(uint a,const Vec2& pos):GUI_Element(pos),action{a} {
+	LOG_METHOD_START("GUI_Button::GUI_Button");
+  LOG_VARIABLE("a", a);
+	LOG_VARIABLE("pos", pos);
 	// Nothing to do
 }
 
 void GUI_Button::Update() {
+	LOG_METHOD_START("GUI_Button::Update");
+
 	if (gui.gui_button_is_selected(this)) {
 		return;
 	}
@@ -161,6 +174,8 @@ void GUI_Button::Update() {
 }
 
 void GUI_Button::render() {
+	LOG_METHOD_START("GUI_Button::render");
+
 	SDL_Rect rect = box.sdlRect();
 
 	SET_COLOR(BASE_COLOR);
@@ -186,25 +201,36 @@ void GUI_Button::render() {
 }
 
 void GUI_Button::Reset() {
+	LOG_METHOD_START("GUI_Button::Reset");
+
 	press = false;
 	hover = false;
 }
 
-bool GUI_Button::IsPressed()const{
+bool GUI_Button::IsPressed()const {
+	LOG_METHOD_START("GUI_Button::IsPressed");
+  LOG_METHOD_CLOSE("GUI_Button::IsPressed", press);
 	return press;
 }
 
-bool GUI_Button::IsHovered()const{
+bool GUI_Button::IsHovered()const {
+	LOG_METHOD_START("GUI_Button::IsHovered");
+  LOG_METHOD_CLOSE("GUI_Button::IsHovered", hover);
 	return hover;
 }
 
 //GUI_CheckButton
 GUI_CheckButton::GUI_CheckButton(bool& v,const Vec2& pos): \
-                             GUI_Button(GUI_NONE,pos),value{v} {
+GUI_Button(GUI_NONE,pos),value{v} {
+
+	LOG_METHOD_START("GUI_CheckButton::GUI_CheckButton");
+	LOG_VARIABLE("v", &v);
+	LOG_VARIABLE("pos", &pos);
 		// Nothing to do
 }
 
 void GUI_CheckButton::Update() {
+	LOG_METHOD_START("GUI_CheckButton::Update");
 	if (gui.gui_button_is_selected(this)) {
 		return;
 	}
@@ -243,6 +269,7 @@ void GUI_CheckButton::Update() {
 }
 
 void GUI_CheckButton::render() {
+	LOG_METHOD_START("GUI_CheckButton::render");
 	SDL_Rect rect = box.sdlRect();
 
 	SET_COLOR(BASE_COLOR);
@@ -267,13 +294,19 @@ void GUI_CheckButton::render() {
 }
 
 //GUI_TextButton
-GUI_TextButton::GUI_TextButton(uint a,const string& l,const Vec2& pos): \
+GUI_TextButton::GUI_TextButton(uint a, const string& l, const Vec2& pos): \
                                 GUI_Button(a,pos),label{l, DEFAULT_FONT_SIZE} {
+	LOG_METHOD_START("GUI_TextButton::GUI_TextButton");
+	LOG_VARIABLE("a", a);
+	LOG_VARIABLE("l", l);
+	LOG_VARIABLE("pos", pos);
+
 	label.set_hotspot();
 	box.w = label.get_box().w + DEFAULT_MARGIN * 4;
 }
 
 void GUI_TextButton::render() {
+	LOG_METHOD_START("GUI_TextButton::render");
 	GUI_Button::render();
 
 	label.set_box_position(box.center());
@@ -283,19 +316,29 @@ void GUI_TextButton::render() {
 //GUI_IconButton
 GUI_IconButton::GUI_IconButton(uint a,string i,const Vec2& pos): \
                                                GUI_Button(a,pos), icon{i} {
+	LOG_METHOD_START("GUI_IconButton::GUI_IconButton");
+ 	LOG_VARIABLE("a", a);
+ 	LOG_VARIABLE("i", i);
+ 	LOG_VARIABLE("pos", pos);
 	icon.SetBlend(true);
-	box.w = icon.GetWidth()+DEFAULT_MARGIN*4;
-	box.h = icon.GetHeight()+DEFAULT_MARGIN*4;
+	box.w = icon.GetWidth() + DEFAULT_MARGIN * 4;
+	box.h = icon.GetHeight() + DEFAULT_MARGIN * 4;
 }
 
 void GUI_IconButton::render() {
+	LOG_METHOD_START("GUI_IconButton::render");
 	GUI_Button::render();
-	icon.render((int)(box.x+DEFAULT_MARGIN*2), (int)(box.y + DEFAULT_MARGIN * 2));
+	icon.render((int)(box.x + DEFAULT_MARGIN*2), \
+	             (int)(box.y + DEFAULT_MARGIN * 2));
 }
 
 //GUI_InputBox
 GUI_InputBox::GUI_InputBox(const Vec2& pos,Size s): \
                      GUI_Button(GUI_NONE,pos),text{"", DEFAULT_FONT_SIZE} {
+  LOG_METHOD_START("GUI_InputBox::GUI_InputBox");
+	LOG_VARIABLE("pos", pos);
+	LOG_VARIABLE("s", s);
+
 	box.w = DEFAULT_TEXTBOX_WIDTH;
 	if (s == SHORT_SIZE) {
 		box.w /= 2;
@@ -312,10 +355,12 @@ GUI_InputBox::GUI_InputBox(const Vec2& pos,Size s): \
 
 
 GUI_InputBox::~GUI_InputBox() {
+		LOG_METHOD_START("GUI_InputBox::GUI_InputBox");
 		INPUT.stop_text_input(&input);
 }
 
 void GUI_InputBox::Update() {
+	LOG_METHOD_START("GUI_InputBox::GUI_InputBox");
 	if (gui.gui_button_is_selected(this)) {
 		return;
 	}
@@ -383,6 +428,7 @@ void GUI_InputBox::Update() {
 }
 
 void GUI_InputBox::render() {
+	LOG_METHOD_START("GUI_InputBox::render");
 	SDL_Rect rect = box.sdlRect();
 
 	SET_COLOR(BASE_COLOR);
@@ -450,23 +496,38 @@ void GUI_InputBox::render() {
 
 //GUI_StringBox
 GUI_StringBox::GUI_StringBox(string& v,Size s,const Vec2& pos): \
-                                      GUI_InputBox(pos,s),value{v}{}
+                                      GUI_InputBox(pos,s),value{v} {
+	LOG_METHOD_START("GUI_StringBox::GUI_StringBox");
+  LOG_VARIABLE("v", &v);
+  LOG_VARIABLE("pos", &pos);
+	// Nothing to do
+}
 
 void GUI_StringBox::SetValue() {
+	LOG_METHOD_START("GUI_StringBox::SetValue");
 	value = input;
 }
 
 string GUI_StringBox::GetValue()const {
+	LOG_METHOD_START("GUI_StringBox::GUI_StringBox");
+	LOG_METHOD_CLOSE("GUI_StringBox::GUI_StringBox", value);
 	return value;
 }
 
 //GUI_IntBox
 GUI_IntBox::GUI_IntBox(int& v,int l,int h,Size s,const Vec2& pos): \
                                  GUI_InputBox(pos,s),value{v},low{l},high{h} {
-// Nothing to do
+	LOG_METHOD_START("GUI_IntBox::GUI_IntBox");
+	LOG_VARIABLE("v", &v);
+	LOG_VARIABLE("l", l);
+	LOG_VARIABLE("h", &h);
+	LOG_VARIABLE("s", &s);
+	// Nothing to do
 }
 
 void GUI_IntBox::SetValue() {
+	LOG_METHOD_START("GUI_IntBox::SetValue");
+
 	while (!input.empty() && (input[0] < '0' || input[0] >'9'))
 		input.erase(0,1);
 	if (input.empty()) {
@@ -485,7 +546,13 @@ string GUI_IntBox::GetValue()const {
 
 //GUI_Label
 GUI_Label::GUI_Label(const string& t,Snap s,const Vec2& pos):GUI_Element(pos), \
-                 text{t,DEFAULT_FONT_SIZE,generate_color(LABEL_COLOR)},snap{s}{
+                 text{t,DEFAULT_FONT_SIZE,generate_color(LABEL_COLOR)},snap{s} {
+
+	LOG_METHOD_START("GUI_Label::GUI_Label");
+ 	LOG_VARIABLE("t", &t);
+ 	LOG_VARIABLE("s", s);
+ 	LOG_VARIABLE("pos", &pos);
+
 	text.set_hotspot();
 	box.w = text.get_box().w;
 
@@ -498,10 +565,12 @@ GUI_Label::GUI_Label(const string& t,Snap s,const Vec2& pos):GUI_Element(pos), \
 }
 
 void GUI_Label::update() {
+	LOG_METHOD_START("GUI_Label::update");
 	// Nothing to do
 }
 
 void GUI_Label::render() {
+	LOG_METHOD_START("GUI_Label::render");
 	SDL_Rect rect = box.sdlRect();
 
 	SET_COLOR(BASE_COLOR);
@@ -522,15 +591,21 @@ void GUI_Label::render() {
 //GUI_Array
 GUI_Array::GUI_Array(vector<GUI_Element*>& v,const Vec2& pos): \
                                      GUI_Element(pos),array{v} {
+		LOG_METHOD_START("GUI_Array::GUI_Array");
+ 	 	LOG_VARIABLE("v", &v);
+ 	 	LOG_VARIABLE("pos", &pos);
 		// Nothing to do
 }
 
 GUI_Array::GUI_Array(vector<GUI_Element*>& v): \
                                      GUI_Element({0,0}),array{v} {
-   // Nothing to do
+	 LOG_METHOD_START("GUI_Array::GUI_Array");
+	 LOG_VARIABLE("v", &v);
+	 // Nothing to do
 }
 
 GUI_Array::~GUI_Array() {
+	LOG_METHOD_START("GUI_Array::~GUI_Array");
 	for (auto& it:array) {
 		delete it;
 	}
@@ -538,6 +613,8 @@ GUI_Array::~GUI_Array() {
 
 
 void GUI_Array::Update() {
+	LOG_METHOD_START("GUI_Array::Update");
+
 	Vec2 mouse = INPUT.get_mouse_position();
 	for (auto it=array.rbegin(); it != array.rend(); it++) {
 		GUI_Element& element = **it;
@@ -552,6 +629,8 @@ void GUI_Array::Update() {
 }
 
 void GUI_Array::render() {
+	LOG_METHOD_START("GUI_Array::render");
+
 	for (auto& it:array) {
 		if (it->IsVisible()) {
 			it->render();
@@ -565,6 +644,11 @@ void GUI_Array::render() {
 //GUI_HBar
 GUI_HBar::GUI_HBar(vector<GUI_Element*>& v,uint width,const Vec2& pos): \
                                                          GUI_Array(v,pos) {
+	LOG_METHOD_START("GUI_HBar::GUI_HBar");
+	LOG_VARIABLE("v", &v);
+	LOG_VARIABLE("width", width);
+	LOG_VARIABLE("&pos", &pos);
+
 	if (width) {
 		box.w = width;
 	}
@@ -599,6 +683,8 @@ GUI_HBar::GUI_HBar(vector<GUI_Element*>& v,uint width,const Vec2& pos): \
 }
 
 void GUI_HBar::render() {
+	LOG_METHOD_START("GUI_HBar::render");
+
 	Vec2 pos(box.x, box.y);
 	int divX = 0;
 	int divY = pos.y + DEFAULT_MARGIN;
@@ -638,6 +724,11 @@ void GUI_HBar::render() {
 //GUI_VBar
 GUI_VBar::GUI_VBar(vector<GUI_Element*>& v,uint height,const Vec2& pos):
 										GUI_Array(v,pos) {
+	LOG_METHOD_START("GUI_VBar::GUI_VBar");
+  LOG_VARIABLE("v", &v);
+	LOG_VARIABLE("height", height);
+	LOG_VARIABLE("&pos", &pos);
+
 	if (height) {
 		box.h = height;
 	}
@@ -671,6 +762,8 @@ GUI_VBar::GUI_VBar(vector<GUI_Element*>& v,uint height,const Vec2& pos):
 }
 
 void GUI_VBar::render() {
+	LOG_METHOD_START("GUI_VBar::render");
+
 	Vec2 pos(box.x,box.y);
 	int divX = pos.x + DEFAULT_MARGIN;
 	int divY = 0;
@@ -711,6 +804,12 @@ GUI_Window::GUI_Window(vector<GUI_Element*>& v,int i,const string& l, \
 	                     const Vec2& pos):GUI_Element(pos),array{v}, \
 											 label{l,DEFAULT_FONT_SIZE},closeButton{GUI_CLOSE,ICON_X},\
 											       id{i} {
+
+	LOG_METHOD_START("GUI_Window::GUI_Window");
+	LOG_VARIABLE("v", &v);
+	LOG_VARIABLE("i", i);
+	LOG_VARIABLE("&l", &l);
+
 	box.w = array.GetBox().w;
 	box.h = array.GetBox().h + DEFAULT_HEIGHT;
 
@@ -727,6 +826,8 @@ GUI_Window::GUI_Window(vector<GUI_Element*>& v,int i,const string& l, \
 }
 
 void GUI_Window::update() {
+	LOG_METHOD_START("GUI_Window::update");
+
 	if (pop) {
 		GUI.request_gui_element_pop(this);
 		return;
@@ -765,6 +866,8 @@ void GUI_Window::update() {
 }
 
 void GUI_Window::render() {
+	LOG_METHOD_START("GUI_Window::render");
+
 	SDL_Rect rect = box.sdlRect();
 
 	SET_COLOR(SHADOW_COLOR);
