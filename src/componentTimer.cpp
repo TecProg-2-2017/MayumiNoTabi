@@ -18,6 +18,8 @@
 #include <gameObject.hpp>
 #include <assert.h>
 
+void update_time_by_limit();
+
 //! A constructor.
     /*!
     This is a constructor method of componentTimer class
@@ -109,7 +111,7 @@ Component::type CompTimer::get_type() const{
 
 //! Functions to be called by the methods in order to perform actions
 
-void updateTimeByLimit(){
+void update_time_by_limit(){
 
 	LOG_METHOD_START('updateTimeByLimit');
 
@@ -122,6 +124,6 @@ void updateTimeByLimit(){
 		//Nothing to do
 	}
 
-	LOG_METHOD_CLOSE('updateTimeByLimit', "void");
+	LOG_METHOD_CLOSE('update_time_by_limit', "void");
 
 }

@@ -108,7 +108,7 @@ Component::type CompText::get_type()const{
 
 void tex_position(){
 
-	LOG_METHOD_START('textPosition');
+	LOG_METHOD_START('text_position');
 
 	Vec2 p = pos + GO(entity)->Box().corner();
 	txt.SetPos(p);
