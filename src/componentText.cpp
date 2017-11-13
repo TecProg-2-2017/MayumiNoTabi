@@ -19,6 +19,8 @@
 //#include <inputManager.hpp>
 
 
+void text_position();
+
 //! A constructor.
     /*!
     This is a constructor method of componentText class
@@ -104,7 +106,7 @@ Component::type CompText::get_type()const{
 
 //! Functions to be called by the methods in order to perform actions
 
-void textPosition(){
+void tex_position(){
 
 	LOG_METHOD_START('textPosition');
 
