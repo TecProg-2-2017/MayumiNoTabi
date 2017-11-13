@@ -16,9 +16,7 @@ before_install:
 
 script:
         - make -v      
+        - make
 
 after_script:
         - ./analyze_code.sh
-
-after_success:
-        - make
