@@ -19,6 +19,8 @@
 //#include <inputManager.hpp>
 
 
+void camScaling(Vec2 position);
+
 //! A constructor.
     /*!
     This is a constructor method of componentStaticRender class
@@ -103,9 +105,9 @@ Component::type CompStaticRender::get_type()const{
 
 //! Functions to be called by the methods in order to perform actions
 
-void camScaling(Vec2 position){
+void camera_scaling(Vec2 position){
 
-	LOG_METHOD_START('camScaling');
+	LOG_METHOD_START('camera_scaling');
 	LOG_VARIABLE("CompMovement::position", "position");
 
 	assert(position != NULL);
@@ -113,13 +115,13 @@ void camScaling(Vec2 position){
 	position = GO(entity)->Box().corner() + position.rotate(GO(entity)->rotation);
 	sprite.SetFlipH(GO(entity)->flipped);
 
-	if (camScaling) {
+	if (camera_scaling) {
 			sprite.Render((position-CAMERA)*CAMERAZOOM,GO(entity)->rotation, CAMERAZOOM);
 	}
 	else {
 			sprite.Render(position,GO(entity)->rotation, 1);
 	}
 
-	LOG_METHOD_CLOSE('camScaling', "void");
+	LOG_METHOD_CLOSE('camera_scaling', "void");
 
 }
