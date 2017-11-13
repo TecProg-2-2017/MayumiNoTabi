@@ -138,7 +138,12 @@ Vec2::Vec2(const Vec2 &b):x{b.x},y{b.y} {
 */
 
 Vec2 Vec2::makeVec2(const float &object_lenght,const float &angle) {
+	LOG_METHOD_START("Vec2::makeVec2");
+	LOG_VARIABLE("&object_lenght", &object_lenght);
+	LOG_VARIABLE("&angle", &angle);
+
 	Vec2 vector {object_lenght,0.0f};
+	LOG_METHOD_CLOSE("Vec2::makeVec2", vector.rotate(angle));
 	return vector.rotate(angle);
 }
 
@@ -151,9 +156,12 @@ Vec2 Vec2::makeVec2(const float &object_lenght,const float &angle) {
 */
 
 Vec2 Vec2::operator= (const Vec2& b) {
+	LOG_METHOD_START("Vec2::operator=");
+	LOG_VARIABLE("&b", &b);
+
 	x_axis = b.x_axis; // x_axis is the axis x in cordinates.
 	y_axis = b.y_axis; // y_axis is the axis y in cordinates.
-
+	LOG_METHOD_CLOSE("Vec2::operator=", *this);
 	return *this;
 }
 
@@ -166,6 +174,9 @@ Vec2 Vec2::operator= (const Vec2& b) {
 */
 
 Vec2 Vec2::operator+ (const Vec2& b)const {
+	LOG_METHOD_START("Vec2::operator+");
+	LOG_VARIABLE("&b", &b);
+	LOG_METHOD_CLOSE("Vec2::operator+", {x_axis + b.x_axis, y_axis + b.y_axis});
 	return {x_axis + b.x_axis, y_axis + b.y_axis};
 }
 
@@ -178,6 +189,8 @@ Vec2 Vec2::operator+ (const Vec2& b)const {
 */
 
 void Vec2::operator+= (const Vec2& b) {
+	LOG_METHOD_START("Vec2::operator+=");
+	LOG_VARIABLE("&b", &b);
 	x_axis += b.x_axis; // x_axis is the axis x in cordinates.
 	y_axis += b.y_axis; // y_axis is the axis y in cordinates.
 }
@@ -191,6 +204,9 @@ void Vec2::operator+= (const Vec2& b) {
 */
 
 Vec2 Vec2::operator- (const Vec2& b)const {
+	LOG_METHOD_START("Vec2::operator-");
+	LOG_VARIABLE("&b", &b);
+	LOG_METHOD_CLOSE("Vec2::operator-", {x_axis - b.x_axis, y_axis - b.y_axis});
 	return {x_axis - b.x_axis, y_axis - b.y_axis};
 }
 
@@ -203,6 +219,8 @@ Vec2 Vec2::operator- (const Vec2& b)const {
 */
 
 void Vec2::operator-= (const Vec2& b) {
+	LOG_METHOD_START("Vec2::operator-=");
+	LOG_VARIABLE("&b", &b);
 	x_axis -= b.x_axis; // x_axis is the axis x in cordinates.
 	y_axis -= b.y_axis; // y_axis is the axis y in cordinates.
 }
@@ -216,6 +234,9 @@ void Vec2::operator-= (const Vec2& b) {
 */
 
 Vec2 Vec2::operator* (const float& r)const{
+	LOG_METHOD_START("Vec2::operator*");
+	LOG_VARIABLE("&b", &b);
+	LOG_METHOD_CLOSE("Vec2::operator*", {x_axis*r, y_axis*r});
 	return {x_axis*r, y_axis*r};
 }
 
@@ -228,6 +249,8 @@ Vec2 Vec2::operator* (const float& r)const{
 */
 
 void Vec2::operator*= (const float& ratio) {
+	LOG_METHOD_START("Vec2::operator*=");
+	LOG_VARIABLE("&ratio", &ratio);
 	x_axis *= ratio; // x_axis is the axis x in cordinates. r is rotation from object
 	y_axis *= ratio; // y_axis is the axis y in cordinates. r is rotation from object
 }
@@ -241,6 +264,9 @@ void Vec2::operator*= (const float& ratio) {
 */
 
 Vec2 Vec2::operator/ (const float& ratio)const {
+	LOG_METHOD_START("Vec2::operator/");
+	LOG_VARIABLE("&ratio", &ratio);
+	LOG_METHOD_CLOSE("Vec2::operator/", {x_axis / ratio, y_axis / ratio});
 	return {x_axis / ratio, y_axis / ratio};
 }
 
@@ -253,6 +279,8 @@ Vec2 Vec2::operator/ (const float& ratio)const {
 */
 
 void Vec2::operator/= (const float& r) {
+	LOG_METHOD_START("Vec2::operator/=");
+	LOG_VARIABLE("&r", &r);
 	x_axis /= r; // x_axis is the axis x in cordinates. r is rotation from object
 	y_axis /= r; // y_axis is the axis y in cordinates. r is rotation from object
 }
@@ -266,6 +294,10 @@ void Vec2::operator/= (const float& r) {
 */
 
 bool Vec2::operator== (const Vec2& b) const {
+	LOG_METHOD_START("Vec2::operator==");
+	LOG_VARIABLE("&b", &b);
+	LOG_METHOD_CLOSE("Vec2::operator==", (equals(x_axis, b.x_axis) &&
+																	equals(y_axis, b.y_axis)));
 	return (equals(x_axis, b.x_axis) && equals(y_axis, b.y_axis));
 }
 
@@ -278,6 +310,10 @@ bool Vec2::operator== (const Vec2& b) const {
 */
 
 bool Vec2::operator!= (const Vec2& b) const {
+	LOG_METHOD_START("Vec2::operator!=");
+	LOG_VARIABLE("&b", &b);
+	LOG_METHOD_CLOSE("Vec2::operator!=", !((*this) == b));
+
 	return !((*this) == b);
 }
 
@@ -290,12 +326,17 @@ bool Vec2::operator!= (const Vec2& b) const {
 */
 
 bool Vec2::operator< (const Vec2& b) const {
+	LOG_METHOD_START("Vec2::operator<");
+	LOG_VARIABLE("&b", &rb);
+
 	if (x_axis == b.x_axis) {
 		return (y_axis < b.y_axis);
 	}
 	else {
 		// Nothing to do
 	}
+	LOG_METHOD_CLOSE("Vec2::operator<", x_axis < b.x_axis);
+
 	return x_axis < b.x_axis;
 }
 
@@ -308,6 +349,8 @@ bool Vec2::operator< (const Vec2& b) const {
 */
 
 void Vec2::floor() {
+	LOG_METHOD_START("Vec2::floor");
+
 	x_axis = std::floor(x_axis); // x_axis is axis x in cartesian plan
 	y_axis = std::floor(y_axis); // y_axis is axis y in cartesian plan
 }
@@ -321,6 +364,8 @@ void Vec2::floor() {
 */
 
 float Vec2::std::vector_lenght() const {
+	LOG_METHOD_START("Vec2::std::vector_lenght");
+	LOG_METHOD_CLOSE("Vec2::std::vector_lenght", hypot(x,y));
 	return hypot(x,y); // x and y are two points in vector
 }
 
@@ -333,7 +378,10 @@ float Vec2::std::vector_lenght() const {
 */
 
 float Vec2::angle() const {
+	LOG_METHOD_START("Vec2::angle");
+
 	float f = DEGREES(atan(y / x) + (x < 0 ? PI : 0));
+	LOG_METHOD_CLOSE("Vec2::angle", ((f < 0) ? (360 + f) : (f)));
 
 	return ((f < 0) ? (360 + f) : (f));
 }
@@ -347,7 +395,10 @@ float Vec2::angle() const {
 	@warning Method that requires review of comment
 */
 
-float Vec2::distance(const Vec2 &b) const{
+float Vec2::distance(const Vec2 &b) const {
+	LOG_METHOD_START("Vec2::distance");
+	LOG_VARIABLE("b", &b);
+	LOG_METHOD_CLOSE("Vec2::distance", ((*this) - b).lenght());
 	return ((*this) - b).lenght();
 }
 
@@ -360,13 +411,17 @@ float Vec2::distance(const Vec2 &b) const{
 	@warning Method that requires review of comment
 */
 
-float Vec2::angle(const Vec2 &position) const{
+float Vec2::angle(const Vec2 &position) const {
+	LOG_METHOD_START("Vec2::angle");
+	LOG_VARIABLE("&position", &position);
+
 	if (*this == position) {
 		return 0.0f;
 	}
 	else {
 		// Nothing to do
 	}
+	LOG_METHOD_CLOSE("Vec2::angle", (position - (*this)).angle());
 
 	return (position - (*this)).angle();
 }
@@ -379,6 +434,9 @@ float Vec2::angle(const Vec2 &position) const{
 */
 
 Vec2 Vec2::unit() const {
+	LOG_METHOD_START("Vec2::unit");
+	LOG_METHOD_CLOSE("Vec2::unit", (*this)/lenght());
+
 	return (*this)/lenght(); // lenght of vector
 }
 
@@ -390,6 +448,8 @@ Vec2 Vec2::unit() const {
 */
 
 Vec2 Vec2::renderPosition() const {
+	LOG_METHOD_START("Vec2::renderPosition");
+	LOG_METHOD_CLOSE("Vec2::renderPosition", RENDERPOS(*this));
 	return RENDERPOS(*this);
 }
 
@@ -402,6 +462,9 @@ Vec2 Vec2::renderPosition() const {
 */
 
 Vec2 Vec2::rotate(float angle) {
+	LOG_METHOD_START("Vec2::rotate");
+	LOG_VARIABLE("angle", &angle);
+
 	Vec2 vector = null; // Initializing the variable vector
 	// Converts the angle to radianus. It's used by functions sin and cos
 	angle = RAD(angle);
@@ -409,6 +472,7 @@ Vec2 Vec2::rotate(float angle) {
 	vector.x_axis = x_axis*cos(angle) - y_axis*sin(angle);
 	vector.y_axis = y_axis*cos(angle) + x_axis*sin(angle);
 
+	LOG_METHOD_CLOSE("Vec2::rotate", vector);
 	return vector;
 }
 
@@ -420,10 +484,12 @@ Vec2 Vec2::rotate(float angle) {
 */
 
 ConvexPolygon Vec2::polygon() {
+	LOG_METHOD_START("Vec2::polygon");
+
 	ConvexPolygon polygon = new ConvexPolygon(); // Initializing the polygon
 	polygon.AddPoint({});
 	polygon.AddPoint(*this);
-
+	LOG_METHOD_CLOSE("Vec2::polygon", polygon);
 	return polygon;
 }
 
@@ -438,7 +504,8 @@ ConvexPolygon Vec2::polygon() {
 
 std::ostream& operator<< (std::ostream& os, const Vec2& obj) {
 	os << "(" << obj.x << "," << obj.y << ")";
-
+	LOG_METHOD_START("std::ostream& operator");
+	LOG_METHOD_CLOSE("operator", os);
 	return os;
 }
 
@@ -454,6 +521,11 @@ std::ostream& operator<< (std::ostream& os, const Vec2& obj) {
 
 Rect::Rect(const float &side_a,const float &side_b,const float &side_c,
 	         const float &side_d):x{a},y{b},w{c},h{d} {
+	LOG_METHOD_START("Rect::Rect");
+	LOG_VARIABLE("&side_a", &side_a);
+  LOG_VARIABLE("&side_b", &side_b);
+	LOG_VARIABLE("&side_c", &side_c);
+	LOG_VARIABLE("&side_d", &side_d);
 	// Nothing to do
 }
 
@@ -465,12 +537,26 @@ Rect::Rect(const float &side_a,const float &side_b,const float &side_c,
 				@warning Method that requires review of comment
 			*/
 
-Rect::Rect(const Vec2 &position,const Vec2 &object_size):x{pos.x}, \
-                                       y{pos.y},w{sz.x},h{sz.y} {
-//Nothing to do
+Rect::Rect(const Vec2 &position, const Vec2 &object_size):x{pos.x}, \
+                                       y{pos.y}, w{sz.x}, h{sz.y} {
+
+		 LOG_METHOD_START("Rect::Rect");
+	 	 LOG_VARIABLE("&position", &position);
+	   LOG_VARIABLE("&object_size", &object_size);
+		 LOG_VARIABLE("x{pos.x}", x{pos.x});
+		 LOG_VARIABLE("y{pos.y}", y{pos.y});
+		 LOG_VARIABLE("w{sz.x}", w{sz.x});
+		 LOG_VARIABLE("h{sz.y}", h{sz.y});
+		 //Nothing to do
 }
 
 Rect::Rect(const Rect &b):x{b.x},y{b.y},w{b.w},h{b.h} {
+	LOG_METHOD_START("Rect::Rect");
+	LOG_VARIABLE("&b", &b);
+	LOG_VARIABLE("x{b.x}", x{b.x});
+	LOG_VARIABLE("y{b.y}", y{b.y});
+	LOG_VARIABLE("w{b.w}", w{b.w});
+	LOG_VARIABLE("h{b.h}", h{b.h});
 	// Nothing to do
 }
 
@@ -483,11 +569,14 @@ Rect::Rect(const Rect &b):x{b.x},y{b.y},w{b.w},h{b.h} {
 */
 
 Rect Rect::operator= (const Rect& b) {
+	LOG_METHOD_START("Rect::operator=");
+	LOG_VARIABLE("&b", &b);
 	x_axis = b.x_axis;
 	y_axis = b.y_axis;
 	w_axis = b.w_axis;
 	h_axis = b.h_axis;
 
+	LOG_METHOD_CLOSE("Rect::operator=", *this);
 	return *this;
 }
 
@@ -499,7 +588,12 @@ Rect Rect::operator= (const Rect& b) {
 	@warning Method that requires review of comment
 */
 
-Rect Rect::operator+ (const Vec2& b) const{
+Rect Rect::operator+ (const Vec2& b) const {
+	LOG_METHOD_START("Rect::operator+");
+	LOG_VARIABLE("&b", &b);
+	LOG_METHOD_CLOSE("Rect::operator+", {x_axis + b.x_axis, y_axis + b.y_axis, \
+		               w, h});
+
 	return {x_axis + b.x_axis, y_axis + b.y_axis, w, h};
 }
 
@@ -512,6 +606,9 @@ Rect Rect::operator+ (const Vec2& b) const{
 */
 
 void Rect::operator+= (const Vec2& b) {
+	LOG_METHOD_START("Rect::operator+=");
+	LOG_VARIABLE("&b", &b);
+
 	x_axis += b.x_axis;
 	y_axis += b.y_axis;
 }
@@ -524,7 +621,12 @@ void Rect::operator+= (const Vec2& b) {
 	@warning Method that requires review of comment
 */
 
-Rect Rect::operator- (const Vec2& b) const{
+Rect Rect::operator- (const Vec2& b) const {
+	LOG_METHOD_START("Rect::operator-");
+	LOG_VARIABLE("&b", &b);
+	LOG_METHOD_CLOSE("Rect::operator-", \
+	                 Rect(x_axis - b.x_axis, y_axis - b.y_axis, w, h));
+
 	return Rect(x_axis - b.x_axis, y_axis - b.y_axis, w, h);
 }
 
@@ -537,6 +639,9 @@ Rect Rect::operator- (const Vec2& b) const{
 */
 
 void Rect::operator-= (const Vec2& b) {
+	LOG_METHOD_START("Rect::operator-=");
+	LOG_VARIABLE("&b", &b);
+
 	x_axis -= b.x_axis;
 	y_axis-= b.y_axis;
 }
@@ -550,6 +655,12 @@ void Rect::operator-= (const Vec2& b) {
 */
 
 bool Rect::operator== (const Rect& b) {
+	LOG_METHOD_START("Rect::operator==");
+	LOG_VARIABLE("&b", &b);
+	LOG_METHOD_CLOSE("Rect::operator==", (equals(x,b.x) && equals(y,b.y) &&
+	                                      equals(w,b.w) && equals(h,b.h)));
+
+
 	return (equals(x,b.x) && equals(y,b.y) && equals(w,b.w) && equals(h,b.h));
 }
 
@@ -562,6 +673,10 @@ bool Rect::operator== (const Rect& b) {
 */
 
 bool Rect::operator!= (const Rect& b) {
+	LOG_METHOD_START("Rect::operator!=");
+  LOG_VARIABLE("b", &b);
+  LOG_METHOD_CLOSE("Rect::operator!=", !((*this) == b));
+
 	return !((*this) == b);
 }
 
@@ -574,6 +689,8 @@ bool Rect::operator!= (const Rect& b) {
 */
 
 void Rect::floor() {
+	LOG_METHOD_START("Rect::floor");
+
 	x_axis = std::floor(x_axis);
 	y_axis = std::floor(y_axis);
 	w_axis = std::floor(w_axis);
@@ -588,6 +705,8 @@ void Rect::floor() {
 */
 
 void Rect::setPosition(const Vec2& b) {
+	LOG_METHOD_START("Rect::setPosition");
+
 	x_axis = b.x_axis;
 	y_axis = b.y_axis;
 }
@@ -600,6 +719,8 @@ void Rect::setPosition(const Vec2& b) {
 */
 
 void Rect::setCenter(const Vec2& b) {
+	LOG_METHOD_START("Rect::setCenter");
+
 	x_axis = b.x_axis - (w/2);
 	y_axis = b.y_axis - (h/2);
 }
@@ -611,7 +732,9 @@ void Rect::setCenter(const Vec2& b) {
 	@warning Method that requires review of comment
 */
 
-float Rect::x2() const{
+float Rect::x2() const {
+	LOG_METHOD_START("Rect::x2");
+	LOG_METHOD_CLOSE("Rect::x2", x_axis + weight);
 	return x_axis + weight;
 }
 
@@ -623,7 +746,9 @@ float Rect::x2() const{
 	@warning Method that requires review of comment
 */
 
-float Rect::y2() const{
+float Rect::y2() const {
+	LOG_METHOD_START("Rect::y2");
+	LOG_METHOD_CLOSE("Rect::y2", y_axis + height);
 	return y_axis + height;
 }
 
@@ -635,7 +760,9 @@ float Rect::y2() const{
 	@warning Method that requires review of comment
 */
 
-Vec2 Rect::distCenter(const Rect& b) const{
+Vec2 Rect::distCenter(const Rect& b) const {
+	LOG_METHOD_START("Rect::distCenter");
+	LOG_METHOD_CLOSE("Rect::distCenter", center() - b.center());
 	return center() - b.center();
 }
 
@@ -647,7 +774,10 @@ Vec2 Rect::distCenter(const Rect& b) const{
 	@warning Method that requires review of comment
 */
 
-Vec2 Rect::distEdge(const Rect& b) const{
+Vec2 Rect::distEdge(const Rect& b) const {
+	LOG_METHOD_START("Rect::distEdge");
+  LOG_VARIABLE("b", &b);
+
 	Vec2 rectangle;
 
 	if (!collides(b)) {
@@ -667,6 +797,8 @@ Vec2 Rect::distEdge(const Rect& b) const{
 	else {
 		//! Nothing to do
 	}
+	LOG_METHOD_CLOSE("Rect::distEdge", rectangle);
+
 	return rectangle;
 }
 
@@ -679,11 +811,15 @@ Vec2 Rect::distEdge(const Rect& b) const{
 */
 
 Vec2 Rect::hotspot(Hotspot object_hotspot) {
+	LOG_METHOD_START("Rect::hotspot");
+  LOG_VARIABLE("b", &b);
+
 	Vec2 object_vector{x_axis, y_axis};
 	auto &add = HotspotPos[object_hotspot];
 	object_vector.x_axis -= weight * add.first;
 	object_vector.y_axis -= height * add.second;
 
+	LOG_METHOD_CLOSE("Rect::hotspot", object_vector);
 	return object_vector;
 }
 
@@ -694,7 +830,10 @@ Vec2 Rect::hotspot(Hotspot object_hotspot) {
 	@warning Method that requires review of comment
 */
 
-Vec2 Rect::corner() const{
+Vec2 Rect::corner() const {
+	LOG_METHOD_START("Rect::corner");
+  LOG_METHOD_CLOSE("Rect::corner", {x_axis, y_axis});
+
 	return {x_axis, y_axis};
 }
 
@@ -705,7 +844,10 @@ Vec2 Rect::corner() const{
 	@warning Method that requires review of comment
 */
 
-Vec2 Rect::corner2() const{
+Vec2 Rect::corner2() const {
+	LOG_METHOD_START("Rect::corner2");
+  LOG_METHOD_CLOSE("Rect::corner2", {x2(),y_axis});
+
 	return {x2(),y_axis};
 }
 
@@ -716,7 +858,9 @@ Vec2 Rect::corner2() const{
 	@warning Method that requires review of comment
 */
 
-Vec2 Rect::corner3() const{
+Vec2 Rect::corner3() const {
+	LOG_METHOD_START("Rect::corner3");
+  LOG_METHOD_CLOSE("Rect::corner3", {x_axis,y2()});
 	return {x_axis,y2()};
 }
 
@@ -727,7 +871,10 @@ Vec2 Rect::corner3() const{
 	@warning Method that requires review of comment
 */
 
-Vec2 Rect::corner4() const{
+Vec2 Rect::corner4() const {
+	LOG_METHOD_START("Rect::corner4");
+  LOG_METHOD_CLOSE("Rect::corner4", {x2(),y2()});
+
 	return {x2(),y2()};
 }
 
@@ -739,6 +886,9 @@ Vec2 Rect::corner4() const{
 */
 
 Vec2 Rect::center() const {
+	LOG_METHOD_START("Rect::center");
+  LOG_METHOD_CLOSE("Rect::center", {x_axis + (weight/2), y_axis + (height/2));
+
 	return {x_axis + (weight/2), y_axis + (height/2)};
 }
 
@@ -750,6 +900,8 @@ Vec2 Rect::center() const {
 */
 
 Vec2 Rect::size() const {
+	LOG_METHOD_START("Rect::size");
+  LOG_METHOD_CLOSE("Rect::size", {weight, height});
 	return {weight, height};
 }
 
@@ -763,6 +915,10 @@ Vec2 Rect::size() const {
 */
 
 Vec2 Rect::relativePosition(const Vec2 &relative, bool inverted) const {
+	LOG_METHOD_START("Rect::relativePosition");
+  LOG_VARIABLE("&relative", &relative);
+	LOG_VARIABLE("inverted", inverted);
+
 	Vec2 positon {x_axis, y_axis};
 	if (inverted) {
 		position.x_axis +=  relative.x_axis  * weight;
@@ -771,6 +927,8 @@ Vec2 Rect::relativePosition(const Vec2 &relative, bool inverted) const {
 		 position.x_axis += (1-relative.x_axis) * weight;
 	}
 	position.y_axis += relative.y_axis * height;
+
+  LOG_METHOD_CLOSE("Rect::relativePosition", position);
 
 	return position;
 }
@@ -785,7 +943,11 @@ Vec2 Rect::relativePosition(const Vec2 &relative, bool inverted) const {
 	@warning Method that requires review of comment
 */
 
-Rect Rect::relativeBox(const Rect &relative,bool inverted) const{
+Rect Rect::relativeBox(const Rect &relative, bool inverted) const {
+	LOG_METHOD_START("Rect::relativeBox");
+  LOG_VARIABLE("&relative", &relative);
+	LOG_VARIABLE("inverted", inverted);
+
 	Rect box{x_axis, y_axis, weight, height};
 	if (inverted) {
 		box.x_axis +=    relative.x_axis  * weight;
@@ -797,6 +959,7 @@ Rect Rect::relativeBox(const Rect &relative,bool inverted) const{
 	box.weight *= relative.weight;
 	box.height *= relative.height;
 
+	LOG_METHOD_CLOSE("Rect::relativeBox", box);
 	return box;
 }
 
@@ -808,8 +971,12 @@ Rect Rect::relativeBox(const Rect &relative,bool inverted) const{
 	@warning Method that requires review of comment
 */
 
-Rect Rect::renderBox() const{
-	return {RENDERPOSX(x),RENDERPOSY(y),w*CAMERAZOOM,h*CAMERAZOOM};
+Rect Rect::renderBox() const {
+	LOG_METHOD_START("Rect::renderBox");
+  LOG_METHOD_CLOSE("Rect::renderBox", {RENDERPOSX(x), RENDERPOSY(y), \
+		                                 w * CAMERAZOOM, h * CAMERAZOOM});
+
+	return {RENDERPOSX(x), RENDERPOSY(y), w * CAMERAZOOM, h * CAMERAZOOM};
 }
 
 /*!
@@ -820,12 +987,16 @@ Rect Rect::renderBox() const{
 	@warning Method that requires review of comment
 */
 
-Rect Rect::sum(const Rect &other) const{
+Rect Rect::sum(const Rect &other) const {
+	LOG_METHOD_START("Rect::sum");
+  LOG_VARIABLE("other", &other);
+
 	float x_axis = min(min(x,x2()),min(other.x,other.x2()));
 	float y_axis = min(min(y,y2()),min(other.y,other.y2()));
 	float xx = max(max(x,x2()),max(other.x,other.x2()));
 	float yy = max(max(y,y2()),max(other.y,other.y2()));
 
+	LOG_METHOD_CLOSE("Rect::sum", Rect{x,y,xx - x,yy - y});
 	return Rect{x,y,xx - x,yy - y};
 }
 
@@ -837,7 +1008,10 @@ Rect Rect::sum(const Rect &other) const{
 	@warning Method that requires review of comment
 */
 
-ConvexPolygon Rect::polygon(const float &r) const{
+ConvexPolygon Rect::polygon(const float &r) const {
+	LOG_METHOD_START("Rect::polygon");
+  LOG_VARIABLE("r", &r);
+
 	ConvexPolygon polygon = new ConvexPolygon(); // Initializing a convex polygon
 	polygon.AddPoint(Vec2{});
 	polygon.AddPoint(Vec2{w,0.0f}.rotate(r));
@@ -845,6 +1019,7 @@ ConvexPolygon Rect::polygon(const float &r) const{
 	polygon.AddPoint(Vec2{w,h}.rotate(r));
 	polygon.MoveSource(corner());
 
+	LOG_METHOD_CLOSE("Rect::polygon", polygon);
 	return polygon;
 }
 
@@ -855,13 +1030,16 @@ ConvexPolygon Rect::polygon(const float &r) const{
 	@warning Method that requires review of comment
 */
 
-SDL_Rect Rect::sdlRect()const{
+SDL_Rect Rect::sdlRect()const {
+	LOG_METHOD_START("Rect::sdlRect");
+
 	SDL_Rect rect = new SDL_Rect();
 	rect.x_axis = x_axis;
 	rect.y_axis = y_axis;
 	rect.w = w;
 	rect.h = h;
 
+	LOG_METHOD_CLOSE("Rect::sdlRect", rect);
 	return rect;
 }
 
@@ -874,8 +1052,12 @@ SDL_Rect Rect::sdlRect()const{
 	@warning Method that requires review of comment
 */
 
-bool Rect::contains(const float &i,const float &j) const{
-	if (i < x) {
+bool Rect::contains(const float &i,const float &j) const {
+	LOG_METHOD_START("Rect::contains");
+  LOG_VARIABLE("&i", &i);
+  LOG_VARIABLE("&j", &j);
+
+		if (i < x) {
 		return false;
 	}
 	else {
@@ -903,6 +1085,7 @@ bool Rect::contains(const float &i,const float &j) const{
 		// Nothing to do
 	}
 
+	// LOG_METHOD_CLOSE("Rect::sdlRect", rect);
 	return true;
 }
 
@@ -914,7 +1097,10 @@ bool Rect::contains(const float &i,const float &j) const{
 	@warning Method that requires review of comment
 */
 
-bool Rect::contains(const Vec2& b) const{
+bool Rect::contains(const Vec2& b) const {
+	LOG_METHOD_START("Rect::contains");
+  LOG_VARIABLE("b", &b);
+
 	if (b.x < x) {
 		return false;
 	}
@@ -943,6 +1129,7 @@ bool Rect::contains(const Vec2& b) const{
 		// Nothing to do
 	}
 
+	LOG_METHOD_CLOSE("Rect::contains", ((*this) - b).lenght());
 	return true;
 }
 
@@ -960,6 +1147,8 @@ bool Rect::collides(const Rect& b) const{
 	// if (BETWEEN(y,b.y,b.y2()))return true;
 	// if (BETWEEN(b.y,y,y2()))return true;
 	// return false;
+	LOG_METHOD_START("Rect::collides");
+  LOG_VARIABLE("b", &b);
 
 	if (x > (b.x2())) {
 		return false;
@@ -989,6 +1178,7 @@ bool Rect::collides(const Rect& b) const{
 		// Nothing to do
 	}
 
+	//LOG_METHOD_CLOSE("Rect::collides", ((*this) - b).lenght());
 	return true;
 }
 
@@ -1008,6 +1198,10 @@ std::ostream& operator<<(std::ostream& os, const Rect& obj) {
 		*/
 
 Circle::Circle(float xx,float yy,float rr):x{xx},y{yy},r{rr} {
+	LOG_METHOD_START("Circle::Circle");
+	LOG_VARIABLE("xx", xx);
+	LOG_VARIABLE("yy", yy);
+	LOG_VARIABLE("rr", rr);
 	// Nothing to do
 }
 
@@ -1021,8 +1215,12 @@ Circle::Circle(float xx,float yy,float rr):x{xx},y{yy},r{rr} {
 */
 
 bool Circle::contains(const Vec2 &p)const {
+	LOG_METHOD_START("Circle::contains");
+  LOG_VARIABLE("&p", &p);
+
 	Vec2 center(x,y) = new Vec2(); // Initializing the vector
 
+	LOG_METHOD_CLOSE("Circle::contains", (center - p).len() <= r);
 	return (center - p).len() <= r;
 }
 
@@ -1036,10 +1234,15 @@ bool Circle::contains(const Vec2 &p)const {
 	@warning Method that requires review of comment
 */
 
-bool Circle::contains(const float &px,const float &py)const{
+bool Circle::contains(const float &px,const float &py)const {
+	LOG_METHOD_START("Circle::contains");
+  LOG_VARIABLE("&px", &px);
+	LOG_VARIABLE("&py", &py);
+
 	Vec2 center(x,y);
 	Vec2 p(px,py);
 
+	LOG_METHOD_CLOSE("Circle::contains", (center - p).len() <= r);
 	return (center-p).len() <= r;
 }
 
@@ -1051,6 +1254,8 @@ bool Circle::contains(const float &px,const float &py)const{
 */
 
 void Circle::floor() {
+	LOG_METHOD_START("Circle::floor");
+
 	x_axis = std::floor(x);
 	y_axis = std::floor(y);
 	r = std::floor(r);
@@ -1064,6 +1269,8 @@ void Circle::floor() {
 */
 
 ConvexPolygon::ConvexPolygon():count{0} {
+	LOG_METHOD_START("ConvexPolygon::ConvexPolygon");
+
 	// Nothing to do
 }
 
@@ -1077,6 +1284,10 @@ ConvexPolygon::ConvexPolygon():count{0} {
 */
 
 ConvexPolygon::ConvexPolygon(vector<Vec2> v,bool all):count{0} {
+	LOG_METHOD_START("ConvexPolygon::ConvexPolygon");
+	LOG_VARIABLE("v", v);
+	LOG_VARIABLE("all", all);
+
 	AddPoints(v,all);
 }
 
@@ -1089,10 +1300,14 @@ ConvexPolygon::ConvexPolygon(vector<Vec2> v,bool all):count{0} {
 */
 
 bool ConvexPolygon::AddPoint(Vec2 p) {
+	LOG_METHOD_START("ConvexPolygon::AddPoint");
+  LOG_VARIABLE("p", p);
+
 	p -= GetSource();
 
-	if (!count)boundingRect += p;
-	else {
+	if (!count) {
+		boundingRect += p;
+	} else {
 		if (boundingRect.x > p.x)boundingRect.x = p.x;
 		else if (boundingRect.x2() < p.x) {
 			boundingRect.w = p.x - boundingRect.x;
@@ -1119,6 +1334,8 @@ bool ConvexPolygon::AddPoint(Vec2 p) {
 	pointsAng[p] = points[0].angle(p);
 	count++;
 
+	//LOG_METHOD_CLOSE("ConvexPolygon::AddPoint", ((*this) - b).lenght());
+
 	return true;
 }
 
@@ -1131,6 +1348,11 @@ bool ConvexPolygon::AddPoint(Vec2 p) {
 */
 
 bool ConvexPolygon::AddPoints(const vector<Vec2> &pts,bool all) {
+	LOG_METHOD_START("ConvexPolygon::AddPoints");
+  LOG_VARIABLE("&pts", &pts);
+	LOG_VARIABLE("all", all);
+
+
 	if (all) {
 		ConvexPolygon polygon =* this;
 		if (!polygon.AddPoints(pts)) {
@@ -1145,6 +1367,7 @@ bool ConvexPolygon::AddPoints(const vector<Vec2> &pts,bool all) {
 		}
 	}
 
+  LOG_METHOD_CLOSE("ConvexPolygon::AddPoints", ((*this) - b).lenght());
 	return true;
 }
 
@@ -1157,8 +1380,13 @@ bool ConvexPolygon::AddPoints(const vector<Vec2> &pts,bool all) {
 */
 
 bool ConvexPolygon::RemovePoint(Vec2 p) {
+	LOG_METHOD_START("ConvexPolygon::RemovePoint");
+  LOG_VARIABLE("p", p);
+
 	auto it = find(points.begin(), points.end(), p);
 
+	LOG_METHOD_CLOSE("ConvexPolygon::RemovePoint", \
+	                  RemovePoint(it - points.begin()));
 	return RemovePoint(it - points.begin());
 }
 
@@ -1171,6 +1399,8 @@ bool ConvexPolygon::RemovePoint(Vec2 p) {
 */
 
 bool ConvexPolygon::RemovePoint(int ind) {
+	LOG_METHOD_START("ConvexPolygon::RemovePoint");
+  LOG_VARIABLE("ind", ind);
 	if (ind < 0 || ind >= count) {
 		return false;
 	}
@@ -1199,6 +1429,8 @@ bool ConvexPolygon::RemovePoint(int ind) {
 
 	boundingRect = Rect{x1,y1,x2-x1,y2-y1};
 
+	// LOG_METHOD_CLOSE("ConvexPolygon::RemovePoint", RemovePoint(it - points.begin()));
+
 	return true;
 }
 
@@ -1211,21 +1443,32 @@ bool ConvexPolygon::RemovePoint(int ind) {
 */
 
 void ConvexPolygon::SetSource(const Vec2 &p) {
+	LOG_METHOD_START("ConvexPolygon::SetSource");
+  LOG_VARIABLE("p", p);
 	Vec2 move = GetSource()-p;
 	for (auto &i:points)i += move;
 	source = p;
 }
 
 void ConvexPolygon::MoveSource(const Vec2 &p) {
+	LOG_METHOD_START("ConvexPolygon::MoveSource");
+  LOG_VARIABLE("p", p);
 	source = p;
 }
 
 void ConvexPolygon::ReorderPoints() {
+	LOG_METHOD_START("ConvexPolygon::ReorderPoints");
 	ReorderPoints(points,pointsAng);
 }
 
-void ConvexPolygon::ReorderPoints(vector<Vec2> &pts,map<Vec2,float> &ptsAng)const{
-	const auto &it=min_element(pts.begin(), pts.end(), \
+void ConvexPolygon::ReorderPoints(vector<Vec2> &pts, \
+	   map<Vec2,float> &ptsAng)const {
+
+		LOG_METHOD_START("ConvexPolygon::ReorderPoints");
+	  LOG_VARIABLE("pts", &pts);
+		LOG_VARIABLE("ptsAng", &ptsAng);
+
+	const auto &it = min_element(pts.begin(), pts.end(), \
 	                    [](const Vec2& a,const Vec2& b) {
 		if (equals(a.y,b.y)) {
 			return a.x>b.x;
@@ -1257,10 +1500,14 @@ vector<Vec2> ConvexPolygon::GetPoints()const {
 }
 
 const Vec2& ConvexPolygon::GetSource()const {
+	LOG_METHOD_START("ConvexPolygon::GetSource");
+  LOG_METHOD_CLOSE("ConvexPolygon::GetSource", source);
 	return source;
 }
 
 Vec2 ConvexPolygon::GetCenter()const {
+	LOG_METHOD_START("ConvexPolygon::GetSource");
+  LOG_METHOD_CLOSE("ConvexPolygon::GetSource", source);
 	Vec2 sum;
 
 	for (auto p:points) {
@@ -1271,25 +1518,37 @@ Vec2 ConvexPolygon::GetCenter()const {
 	return sum + GetSource();
 }
 
-int ConvexPolygon::GetCount()const{
+int ConvexPolygon::GetCount()const {
+	LOG_METHOD_START("ConvexPolygon::GetCount");
+  LOG_METHOD_CLOSE("ConvexPolygon::GetCount", count);
 	return count;
 }
 
-float ConvexPolygon::GetPointAng(const Vec2& p)const{
+float ConvexPolygon::GetPointAng(const Vec2& p)const {
+	LOG_METHOD_START("ConvexPolygon::GetPointAng");
+  LOG_VARIABLE("p", &p);
+
 	if (pointsAng.count(p)) {
 		return pointsAng.at(p);
 	}
 	else {
 		// Nothing to do
 	}
+	LOG_METHOD_CLOSE("ConvexPolygon::GetPointAng", ((*this) - b).lenght());
 	return 0.0f;
 }
 
-float ConvexPolygon::GetPointAng(int ind)const{
+float ConvexPolygon::GetPointAng(int ind)const {
+	LOG_METHOD_START("ConvexPolygon::GetPointAng");
+  LOG_VARIABLE("ind", ind);
+	LOG_METHOD_CLOSE("ConvexPolygon::GetPointAng", pointsAng.at(points[ind]));
 	return pointsAng.at(points[ind]);
 }
 
-bool ConvexPolygon::IsConvex(const Vec2 &p)const{
+bool ConvexPolygon::IsConvex(const Vec2 &p) const {
+	LOG_METHOD_START("ConvexPolygon::IsConvex");
+  LOG_VARIABLE("&p", &p);
+
 	if (count < 3) {
 		return true;
 	}
@@ -1302,7 +1561,7 @@ bool ConvexPolygon::IsConvex(const Vec2 &p)const{
 	ReorderPoints(v,vAng);
 	v.push_back(v[0]);
 
-	float prevAng = v[0].angle(v[1]),ang;
+	float prevAng = v[0].angle(v[1]), ang;
 	for (int i = 1; i <= count; i++) {
 		ang = v[i].angle(v[i + 1]);
 		if (ang > prevAng) {
@@ -1313,10 +1572,15 @@ bool ConvexPolygon::IsConvex(const Vec2 &p)const{
 		}
 		prevAng = ang;
 	}
+	//LOG_METHOD_CLOSE("ConvexPolygon::IsConvex", pointsAng.at(points[ind]));
+
 	return true;
 }
 
-bool ConvexPolygon::IsConvex(const vector<Vec2> &pts)const{
+bool ConvexPolygon::IsConvex(const vector<Vec2> &pts) const {
+	LOG_METHOD_START("ConvexPolygon::IsConvex");
+  LOG_VARIABLE("&pts", &pts);
+
 	vector<Vec2> v = points;
 	map<Vec2,float> vAng = pointsAng;
 
@@ -1337,10 +1601,13 @@ bool ConvexPolygon::IsConvex(const vector<Vec2> &pts)const{
 		}
 		prevAng = ang;
 	}
+	//LOG_METHOD_CLOSE("ConvexPolygon::IsConvex", pointsAng.at(points[ind]));
 	return true;
 }
 
-bool ConvexPolygon::Contains(Vec2 p)const{
+bool ConvexPolygon::Contains(Vec2 p) const {
+	LOG_METHOD_START("ConvexPolygon::Contains");
+  LOG_VARIABLE("p", p);
 	if (count < 3) {
 		return false;
 	}
@@ -1355,10 +1622,13 @@ bool ConvexPolygon::Contains(Vec2 p)const{
 		ang += p.angle(v[i+1]);
 		ang -= p.angle(v[i]);
 	}
+	//LOG_METHOD_CLOSE("ConvexPolygon::IsConvex", pointsAng.at(points[ind]));
 	return equals(ang,360.0f) || equals(ang,0.0f);
 }
 
-bool ConvexPolygon::Collides(const ConvexPolygon& other)const {
+bool ConvexPolygon::Collides(const ConvexPolygon& other) const {
+	LOG_METHOD_START("ConvexPolygon::Collides");
+  LOG_VARIABLE("other", other);
 	if (count < 3 || other.GetCount() < 3) {
 		return false;//degenerated polygons dont collide
 	}
@@ -1383,46 +1653,64 @@ bool ConvexPolygon::Collides(const ConvexPolygon& other)const {
 	ConvexPolygon ms = (AtOrigin()*-1.0f).MinkowskySum(other);
 
 	//if (ms.Contains(GetSource()))cout << *this << " collides with " << other << endl;
-
+	//LOG_METHOD_CLOSE("ConvexPolygon::IsConvex", pointsAng.at(points[ind]));
 	return ms.Contains(GetSource());
 }
 
-ConvexPolygon ConvexPolygon::operator+(const Vec2& p)const{
+ConvexPolygon ConvexPolygon::operator+(const Vec2& p) const {
+	LOG_METHOD_START("ConvexPolygon::operator+");
+  LOG_VARIABLE("p", &p);
+
 	ConvexPolygon polygon =* this;
 	polygon.AddPoint(p);
 
+	LOG_METHOD_CLOSE("ConvexPolygon::operator+", polygon);
 	return polygon;
 }
 
-ConvexPolygon ConvexPolygon::operator*(const float& f)const{
+ConvexPolygon ConvexPolygon::operator*(const float& f) const {
+	LOG_METHOD_START("ConvexPolygon::operator*");
+  LOG_VARIABLE("&f", &f);
+
 	ConvexPolygon polygon =  null;
 	for (auto p:points) {
 		pol.AddPoint(p*-f);
 	}
 	pol.MoveSource(GetSource());
 
+	LOG_METHOD_CLOSE("ConvexPolygon::operator*", polygon);
 	return polygon;
 }
 
 void ConvexPolygon::Floor() {
+	LOG_METHOD_START("ConvexPolygon::Floor");
+
 	for (auto &p:points) {
 		p.floor();
 	}
 	source.floor();
 }
 
-Rect ConvexPolygon::BoundingRect()const {
+Rect ConvexPolygon::BoundingRect() const {
+	LOG_METHOD_START("ConvexPolygon::BoundingRect");
+	LOG_METHOD_CLOSE("ConvexPolygon::BoundingRect", boundingRect + GetSource());
 	return boundingRect + GetSource();
 }
 
-ConvexPolygon ConvexPolygon::AtOrigin()const {
+ConvexPolygon ConvexPolygon::AtOrigin() const {
+	LOG_METHOD_START("ConvexPolygon::AtOrigin");
+
 	ConvexPolygon polygon =* this;
 	pol.MoveSource(Vec2{});
 
+	LOG_METHOD_CLOSE("ConvexPolygon::AtOrigin", polygon);
 	return polygon;
 }
 
-ConvexPolygon ConvexPolygon::MinkowskySum(const ConvexPolygon& polygon)const {
+ConvexPolygon ConvexPolygon::MinkowskySum(const ConvexPolygon& polygon) const {
+	LOG_METHOD_START("ConvexPolygon::MinkowskySum");
+	LOG_VARIABLE("polygon", polygon);
+
 	if (count <= 0 || polygon.count <= 0) {
 		return ConvexPolygon();
 	}
@@ -1490,11 +1778,14 @@ ConvexPolygon ConvexPolygon::MinkowskySum(const ConvexPolygon& polygon)const {
 	for (auto &p:vPol3)minkSum.AddPoint(p);
 
 	//cout << *this << " + " << pol << " = " << minkSum << endl;
-
+	LOG_METHOD_CLOSE("ConvexPolygon::MinkowskySum", minkSum);
 	return minkSum;
 }
 
 std::ostream& operator<<(std::ostream& os, const ConvexPolygon& obj) {
+	LOG_METHOD_START("std::ostream& operator<<");
+	LOG_VARIABLE("os", os);
+	LOG_VARIABLE("obj", obj);
 	// auto pts=obj.GetPoints();
 	// if (pts.size()==0)return os << "{}";
 	// os << "{(" << (int)pts[0].x << "," << (int)pts[0].y << ")";
@@ -1515,6 +1806,7 @@ std::ostream& operator<<(std::ostream& os, const ConvexPolygon& obj) {
 	}
 	os << "}";
 
+	LOG_METHOD_CLOSE("std::ostream& operator<<", os);
 	return os;
 
 	// auto pts=obj.GetPoints();
