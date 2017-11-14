@@ -9,7 +9,7 @@
 #include <componentCollider.hpp>
 
 #define COMPANIM(x)  ((CompAnim*)x. components[Component::type::t_animation])
-#define COMPANIMp(x) ((CompAnim*)x->components[Component::type::t_animation])
+#define COMPANIMPOINTER(x) ((CompAnim*)x->components[Component::type::t_animation])
 
 class CompAnim : public Component{
 public:
@@ -30,14 +30,14 @@ public:
 
 	bool Looped()const;
 
-  void Update(float time);
+  void update(float time);
   void checks_animation_call(int frame);
   bool compare_frames(int frame1, int frame2);
   void set_new_frame(int frame1, int frame2);
 
 	void own(GameObject *go);
-	void Render();
-	Component::type GetType()const;
+	void render();
+	Component::type get_type()const;
 };
 
 #endif

@@ -43,10 +43,10 @@ CompAnim::CompAnim(string filename, CompCollider* temporary_collider) {
   assert(filename != "");
   assert(temporary_collider != NULL);
 
-  ifstream in(ANIMATION_PATH + filename + ".txt");
+	ifstream in(ANIMATION_PATH + filename + ".txt");
 
-  // Treats possible file opening error
-  if (!in.is_open()) {
+	// Treats possible file opening error
+	if (!in.is_open()) {
     cerr << "Erro ao abrir arquivo de animação '" << filename << "'" << endl;
   }
   else {
@@ -72,18 +72,18 @@ CompAnim::CompAnim(string filename, CompCollider* temporary_collider) {
     in >> f_counter_y;
     in >> f_time;
 
-    sp.Open(img_file, f_counter_x, f_counter_y, f_time, f_count);
+		sp.Open(img_file, f_counter_x, f_counter_y, f_time, f_count);
 
-    colliders.resize(f_count, nullptr);
+		colliders.resize(f_count, nullptr);
 
-    FOR(i, f_count) {
+		FOR(i, f_count) {
       in >> collider_counter;
 
-      if (collider_counter) {
+			if (collider_counter) {
         colliders[i] = new CompCollider{};
-        colliders[i]->entity = entity;
+				colliders[i]->entity = entity;
 
-        FOR(j, collider_counter) {
+				FOR(j, collider_counter) {
 
           in >> x_axis;
           in >> y_axis;
@@ -180,15 +180,15 @@ bool CompAnim::Looped()const {
 }
 
 /*!
-  @fn       void CompAnim::Update(float time)
-  @brief    Updates the animation
-  @param    float time
-  @return   void
-  @warning  none
+	@fn       void CompAnim::update(float time)
+	@brief    updates the animation
+	@param    float time
+	@return   void
+	@warning  none
 */
 
-void CompAnim::Update(float time) {
-  LOG_METHOD_START("CompAnim::Update");
+void CompAnim::update(float time) {
+  LOG_METHOD_START("CompAnim::update");
   LOG_VARIABLE("time", time);
   assert(sp != NULL);
 
@@ -202,11 +202,11 @@ void CompAnim::Update(float time) {
   // Checks if the animation has not been called && calls it
   checks_animation_call(frame1);
 
-  sp.Update(time);
+	sp.update(time);
 
   set_new_frame(frame1, frame2);
 
-  LOG_METHOD_CLOSE("CompAnim::Update", "void");
+  LOG_METHOD_CLOSE("CompAnim::update", "void");
 }
 
 /*!
@@ -240,15 +240,15 @@ void CompAnim::checks_animation_call(int frame) {
 }
 
 /*!
-  @fn       void CompAnim::Render()
-  @brief    Renders current animation
-  @param    none
-  @return   void
-  @warning  none
+	@fn       void CompAnim::render()
+	@brief    renders current animation
+	@param    none
+	@return   void
+	@warning  none
 */
 
-void CompAnim::Render() {
-  LOG_METHOD_START("CompAnim::Render");
+void CompAnim::render() {
+  LOG_METHOD_START("CompAnim::render");
   assert(sp != NULL);
 
   Vec2 full_box = GO(entity)->FullBox(); //!< Used to save the
@@ -261,9 +261,9 @@ void CompAnim::Render() {
   assert(pos != NULL);
 
   sp.SetFlipH(GO(entity)->flipped);
-  sp.Render(pos, GO(entity)->rotation, Camera::zoom);
+	sp.render(pos, GO(entity)->rotation, Camera::zoom);
 
-  LOG_METHOD_CLOSE("CompAnim::Render", "void");
+  LOG_METHOD_CLOSE("CompAnim::render", "void");
 }
 
 /*!
@@ -280,10 +280,10 @@ void CompAnim::own(GameObject* go) {
 
   assert(go != NULL);
 
-  entity = go->uid;
+	entity = go->uid;
 
-  // Iterates through the colliders && defines its ownage if they're not null
-  for (CompCollider *coll:colliders) {
+	// Iterates through the colliders and defines its ownage if they're not null
+	for (CompCollider *coll:colliders) {
     if (coll != nullptr) {
       coll->own(go);
     }
@@ -465,16 +465,16 @@ void CompAnim::set_current_frame_by_force(int frame,
 }
 
 /*!
-  @fn       Component::type CompAnim::GetType()const
-  @brief    Returns type of the animation as a constant value
-  @param    none
-  @return   Component::type type of the animation
-  @warning  none
+	@fn       Component::type CompAnim::get_type()const
+	@brief    Returns type of the animation as a constant value
+	@param    none
+	@return   Component::type type of the animation
+	@warning  none
 */
 
-Component::type CompAnim::GetType()const {
-  LOG_METHOD_START("CompAnim::GetType");
-  LOG_METHOD_CLOSE("CompAnim::GetType", Component::type::t_animation);
+Component::type CompAnim::get_type()const {
+  LOG_METHOD_START("CompAnim::get_type");
+  LOG_METHOD_CLOSE("CompAnim::get_type", Component::type::t_animation);
   assert(Component::type::t_animation != NULL);
   return Component::type::t_animation;
 }
