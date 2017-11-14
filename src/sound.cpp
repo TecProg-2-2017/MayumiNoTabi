@@ -26,7 +26,7 @@ Sound::Sound(string file) {
 * @param int times
 */
 
-void Sound::Play(int times) {
+void Sound::play_music(int times) {
 	channel = Mix_PlayChannel(-1,chunk.get(),times);
 }
 
@@ -53,7 +53,7 @@ void Sound::Stop() {
 * @param string file
 */
 
-void Sound::Open(string file) {
+void Sound::open_music_file(string file) {
 	chunk=Resources::game_get_sound(file);
 }
 
