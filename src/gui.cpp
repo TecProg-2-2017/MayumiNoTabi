@@ -320,6 +320,10 @@ GUI_IconButton::GUI_IconButton(uint a,string i,const Vec2& pos): \
  	LOG_VARIABLE("a", a);
  	LOG_VARIABLE("i", i);
  	LOG_VARIABLE("pos", pos);
+	assert(a != NULL);
+	assert(i != NULL);
+	assert(pos != NULL);
+
 	icon.SetBlend(true);
 	box.w = icon.GetWidth() + DEFAULT_MARGIN * 4;
 	box.h = icon.GetHeight() + DEFAULT_MARGIN * 4;
@@ -338,6 +342,8 @@ GUI_InputBox::GUI_InputBox(const Vec2& pos,Size s): \
   LOG_METHOD_START("GUI_InputBox::GUI_InputBox");
 	LOG_VARIABLE("pos", pos);
 	LOG_VARIABLE("s", s);
+	assert(pos != NULL);
+	assert(s != NULL);
 
 	box.w = DEFAULT_TEXTBOX_WIDTH;
 	if (s == SHORT_SIZE) {
@@ -500,6 +506,8 @@ GUI_StringBox::GUI_StringBox(string& v,Size s,const Vec2& pos): \
 	LOG_METHOD_START("GUI_StringBox::GUI_StringBox");
   LOG_VARIABLE("v", &v);
   LOG_VARIABLE("pos", &pos);
+	assert(v != NULL);
+	assert(&pos != NULL);
 	// Nothing to do
 }
 
@@ -522,6 +530,10 @@ GUI_IntBox::GUI_IntBox(int& v,int l,int h,Size s,const Vec2& pos): \
 	LOG_VARIABLE("l", l);
 	LOG_VARIABLE("h", &h);
 	LOG_VARIABLE("s", &s);
+	assert(v != NULL);
+	assert(l != NULL);
+	assert(h != NULL);
+	assert(s != NULL);
 	// Nothing to do
 }
 
@@ -552,6 +564,9 @@ GUI_Label::GUI_Label(const string& t,Snap s,const Vec2& pos):GUI_Element(pos), \
  	LOG_VARIABLE("t", &t);
  	LOG_VARIABLE("s", s);
  	LOG_VARIABLE("pos", &pos);
+	assert(&t != NULL);
+	assert(s != NULL);
+	assert(&pos != NULL);
 
 	text.set_hotspot();
 	box.w = text.get_box().w;
@@ -594,6 +609,8 @@ GUI_Array::GUI_Array(vector<GUI_Element*>& v,const Vec2& pos): \
 		LOG_METHOD_START("GUI_Array::GUI_Array");
  	 	LOG_VARIABLE("v", &v);
  	 	LOG_VARIABLE("pos", &pos);
+		assert(v != NULL);
+		assert(pos != NULL);
 		// Nothing to do
 }
 
@@ -601,6 +618,7 @@ GUI_Array::GUI_Array(vector<GUI_Element*>& v): \
                                      GUI_Element({0,0}),array{v} {
 	 LOG_METHOD_START("GUI_Array::GUI_Array");
 	 LOG_VARIABLE("v", &v);
+	 assert(v != NULL);
 	 // Nothing to do
 }
 
@@ -610,7 +628,6 @@ GUI_Array::~GUI_Array() {
 		delete it;
 	}
 }
-
 
 void GUI_Array::Update() {
 	LOG_METHOD_START("GUI_Array::Update");
@@ -648,6 +665,9 @@ GUI_HBar::GUI_HBar(vector<GUI_Element*>& v,uint width,const Vec2& pos): \
 	LOG_VARIABLE("v", &v);
 	LOG_VARIABLE("width", width);
 	LOG_VARIABLE("&pos", &pos);
+	assert(v != NULL);
+	assert(width != NULL);
+	assert(&pos != NULL);
 
 	if (width) {
 		box.w = width;
@@ -664,7 +684,7 @@ GUI_HBar::GUI_HBar(vector<GUI_Element*>& v,uint width,const Vec2& pos): \
 		}
 	}
 
-	int h;
+	int h = 0;
 
 	for (auto& it:array) {
 		if (it) {
@@ -728,6 +748,9 @@ GUI_VBar::GUI_VBar(vector<GUI_Element*>& v,uint height,const Vec2& pos):
   LOG_VARIABLE("v", &v);
 	LOG_VARIABLE("height", height);
 	LOG_VARIABLE("&pos", &pos);
+	assert(v != NULL);
+	assert(height != NULL);
+	assert(&pos != NULL);
 
 	if (height) {
 		box.h = height;
@@ -809,6 +832,9 @@ GUI_Window::GUI_Window(vector<GUI_Element*>& v,int i,const string& l, \
 	LOG_VARIABLE("v", &v);
 	LOG_VARIABLE("i", i);
 	LOG_VARIABLE("&l", &l);
+	assert(v != NULL);
+	assert(i != NULL);
+	assert(&l != NULL);
 
 	box.w = array.GetBox().w;
 	box.h = array.GetBox().h + DEFAULT_HEIGHT;
@@ -837,6 +863,7 @@ void GUI_Window::update() {
 	}
 
 	bool hover = box.contains(INPUT.get_mouse_position());
+
 	if (!hover) {
 		if (INPUT.mouse_button_pressed(MBUTTON_LEFT)) {
 			GUI.select_gui_window(nullptr);
