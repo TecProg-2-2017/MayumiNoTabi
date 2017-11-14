@@ -11,7 +11,7 @@ Sprite::Sprite():texture{nullptr}{
 }
 
 Sprite::Sprite(const string& file,int fCountX,int fCountY,float fTime,int fCount):texture{nullptr}{
-	if (fCount==-1) { 
+	if (fCount==-1) {
         fCount=fCountX*fCountY;
     }
     else {
@@ -64,13 +64,12 @@ void Sprite::SetClip(int x,int y,int w,int h) {
 }
 
 void Sprite::render(float x,float y,float angle, float extScale) {
-	SDL_Rect dest = NULL;
-	
+	SDL_Rect dest;
 	dest.x=(x);
 	dest.y=(y);
 	dest.w=ceil(clipRect.w * scaleX * extScale);
 	dest.h=ceil(clipRect.h * scaleY * extScale);
-	
+
 	SDL_RendererFlip flip = SDL_FLIP_NONE;
 
 	if (flipH && flipV) {
@@ -175,7 +174,7 @@ void Sprite::SetScaleToFit(float w, float h) {
 		scaleX = scaleY = (w/width);
     }
 	else {
-		scaleX = scaleY = (h/height); 
+		scaleX = scaleY = (h/height);
     }
 }
 
