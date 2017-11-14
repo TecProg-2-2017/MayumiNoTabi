@@ -70,20 +70,25 @@ GameObject::GameObject():uid{goCount++} {
 //! A constructor.
     /*!
     This is a constructor method of GameObject class
-		@param pos It's the object position into a referential
-		@param r It's the rotation indices of object
-		@param hs It's the hostspot of object,related to the boundaries
+		@param position It's the object position into a referential
+		@param rotation It's the rotation indices of object
+		@param hotspot It's the hostspot of object,related to the boundaries
 		of the object
 		@param a
 		@warning Method that requires review of comment
 		*/
 
-GameObject::GameObject (const Vec2 &pos_,float r,Hotspot hs,bool a):
-						uid{goCount++},
-						pos{pos_},
-						rotation{r},
-						hotspot{hs},
+GameObject::GameObject (const Vec2 &position_,float rotation, Hotspot hotspot, \
+  bool a):  uid{goCount++},
+						pos{position_},
+						rotation{rotation},
+						hotspot{hotspot},
 						anchored{a} {
+  assert(&position_ != NULL);
+  assert(rotation != NULL);
+  assert(hotspot != NULL);
+  assert(&a_ != NULL);
+
 	components.fill(nullptr);
 	entities[uid] = unique_ptr<GameObject>(this);
 }
@@ -99,13 +104,19 @@ GameObject::GameObject (const Vec2 &pos_,float r,Hotspot hs,bool a):
 		@warning Method that requires review of comment
 		*/
 
-GameObject::GameObject (const Rect &rect,float r,Hotspot hs,bool a):
+GameObject::GameObject (const Rect &rectangle,float rotation, \
+  Hotspot hotspots, bool a):
 						uid{goCount++},
 						pos{rect.x,rect.y},
 						size{rect.w,rect.h},
 						rotation{r},
 						hotspot{hs},
 						anchored{a} {
+  assert(&rectangle != NULL);
+  assert(rotation != NULL);
+  assert(hotspot != NULL);
+  assert(&a_ != NULL);
+
 	components.fill(nullptr);
 	entities[uid] = unique_ptr<GameObject>(this);
 }
@@ -152,6 +163,7 @@ GameObject::~GameObject() {
 void GameObject::update(float time) {
 	 LOG_METHOD_START("GameObject::update");
 	 LOG_VARIABLE("time: ", time);
+   assert(time != NULL);
 
 	 remove = false // Initializing the variabel remove
 
@@ -276,7 +288,7 @@ void GameObject::Render() {
 void GameObject::render() {
 	LOG_METHOD_START("GameObject::render()");
 
-	FOR(i,Component::type::t_count) {
+	FOR(i, Component::type::t_count) {
 		//! Render a component
 		if (HasComponent(i)) {
 			components[i]->render();
@@ -298,6 +310,7 @@ void GameObject::render() {
 void GameObject::AddComponent(Component* component) {
 	LOG_METHOD_START("GameObject::AddComponent");
 	LOG_VARIABLE("component: ", component);
+  assert(component != NULL);
 
 	auto t = component->GetType();
 	//! If the component is read, then it's add with the others components
@@ -324,6 +337,7 @@ void GameObject::AddComponent(Component* component) {
 void GameObject::ReplaceComponent(Component* component) {
 	LOG_METHOD_START("GameObject::ReplaceComponent");
 	LOG_VARIABLE("component: ", component);
+  assert(component != NULL);
 
 	auto t = component->GetType();
 	//! if the component doesn't have a type, then it is deleted.
@@ -350,6 +364,7 @@ void GameObject::ReplaceComponent(Component* component) {
 void GameObject::RemoveComponent(Component::type t) {
 	LOG_METHOD_START("GameObject::RemoveComponent");
 	LOG_VARIABLE("type t: ", t);
+  assert(t != NULL);
 
 	if (!HasComponent(t)) {
 		cerr << "Error, removing component " << t
@@ -374,6 +389,8 @@ void GameObject::SetComponent(Component::type t,Component* component) {
 	LOG_METHOD_START("GameObject::SetComponent");
 	LOG_VARIABLE("type t: ", t);
 	LOG_VARIABLE("component: ", component);
+  assert(t != NULL);
+  assert(component != NULL);
 
 	components[t] = component;
 	component->own(this);
@@ -390,6 +407,7 @@ void GameObject::SetComponent(Component::type t,Component* component) {
 bool GameObject::HasComponent(size_t t) const {
 	LOG_METHOD_START("GameObject::HasComponent");
 	LOG_VARIABLE("size t: ", t);
+  assert(t != NULL);
 	LOG_METHOD_CLOSE("GameObject::HasComponent", components[t]);
 
 	return (components[t] != nullptr);
@@ -404,8 +422,8 @@ bool GameObject::HasComponent(size_t t) const {
 */
 void GameObject::AttachObj(GameObject* obj) {
 	LOG_METHOD_START("GameObject::AttachObj");
-
-	LOG_VARIABLE("obj: ", obj);
+  LOG_VARIABLE("obj: ", obj);
+  assert(obj != NULL);
 
 	//! If the end of object was finded, then it's attach
 	if (find(attachedObjs.begin(),attachedObjs.end(),obj) == attachedObjs.end()) {
@@ -430,6 +448,7 @@ void GameObject::AttachTo(GameObject* obj) {
 	LOG_METHOD_START("GameObject::AttachTo");
 
 	LOG_VARIABLE("obj: ", obj);
+  assert(obj != NULL);
 
 	//! If the object is a null pointer
 	if (attachedTo == nullptr) {
@@ -455,6 +474,7 @@ void GameObject::UnAttachObj(GameObject* obj) {
 	LOG_METHOD_START("GameObject::UnAttachObj");
 
 	LOG_VARIABLE("obj: ", obj);
+  assert(obj != NULL);
 
 	//! "it" is the object's point.
 	auto it = find(attachedObjs.begin(), attachedObjs.end(),obj);
@@ -555,6 +575,8 @@ Rect GameObject::Box(const Vec2& p,const Vec2 &sz) const {
 
 	LOG_VARIABLE("p: ", p);
 	LOG_VARIABLE("sz: ", sz);
+  assert(p != NULL);
+  assert(sz != NULL);
 
 	Rect r{pos,size}; // Vector r(rotation) with parameters position pos and size
 
@@ -604,6 +626,8 @@ template<int atkDist,int seeDist,
 
 	LOG_VARIABLE("ai: ", ai);
 	LOG_VARIABLE("time: ", time);
+  assert(ai != NULL);
+  assert(time != NULL);
 
 	Sound music = null; // Initializing the variable music
 
@@ -804,8 +828,9 @@ template<int atkDist,int seeDist,
 */
 
 void PassiveAIfunc(CompAI* ai,float time) {
-	LOG_METHOD_START("GameObject::PassiveAIfunc");
-
+  LOG_METHOD_START("GameObject::PassiveAIfunc");
+  assert(ai != NULL);
+  assert(time != NULL);
 	LOG_VARIABLE("ai: ", ai);
 	LOG_VARIABLE("time: ", time);
 
@@ -868,7 +893,8 @@ void PassiveAIfunc(CompAI* ai,float time) {
 template<int atkDist,int seeDist,int stCD,int atkCount,int stompCount >
                                void PumbaAiFunc(CompAI* ai,float time) {
 	LOG_METHOD_START("GameObject::PumbaAiFunc");
-
+  assert(ai != NULL);
+  assert(time != NULL);
 	LOG_VARIABLE("ai: ", ai);
 	LOG_VARIABLE("time: ", time);
 
@@ -1294,8 +1320,10 @@ template<int atkDist,int seeDist,int stCD,int atkCount,int stompCount >
 
 void PlayerControlFunc(GameObject* go, float time) {
 	UNUSED(time);
-	LOG_METHOD_START("GameObject::PlayerControlFunc");
 
+	LOG_METHOD_START("GameObject::PlayerControlFunc");
+  assert(*go != NULL);
+  assert(time != NULL);
 	LOG_VARIABLE("go: ", go);
 	LOG_VARIABLE("time: ", time);
 
@@ -1379,7 +1407,8 @@ void PlayerControlFunc(GameObject* go, float time) {
 
 void PlayerMonsterCollision(const CompCollider::Coll &a,const CompCollider::Coll &b) {
 	LOG_METHOD_START("GameObject::PlayerMonsterCollision");
-
+  assert(&a != NULL);
+  assert(&b != NULL);
 	LOG_VARIABLE("Collider a: ", a);
 	LOG_VARIABLE("Collider b: ", b);
 
@@ -1405,7 +1434,8 @@ void PlayerMonsterCollision(const CompCollider::Coll &a,const CompCollider::Coll
 
 void PlayerBlockCollision(const CompCollider::Coll &a,const CompCollider::Coll &b) {
 	LOG_METHOD_START("GameObject::PlayerBlockCollision");
-
+  assert(&a != NULL);
+  assert(&b != NULL);
 	LOG_VARIABLE("Coll a: ", a);
 	LOG_VARIABLE("Coll b: ", b);
 
@@ -1456,7 +1486,8 @@ void PlayerBlockCollision(const CompCollider::Coll &a,const CompCollider::Coll &
 */
 void EmptyCollision(const CompCollider::Coll &a,const CompCollider::Coll &b) {
 	LOG_METHOD_START("GameObject::EmptyCollision");
-
+  assert(&a != NULL);
+  assert(&b != NULL);
 	LOG_VARIABLE("Coll a: ", a);
 	LOG_VARIABLE("Coll b ", b);
 
@@ -1474,7 +1505,7 @@ void EmptyCollision(const CompCollider::Coll &a,const CompCollider::Coll &b) {
 
 uint GameObject::MakePlayer(const Vec2 &pos) {
 	LOG_METHOD_START("GameObject::MakePlayer");
-
+  assert(&pos != NULL);
 	LOG_VARIABLE("pos: ", pos);
 
 	GameObject* player = new GameObject{pos,0.0f,Hotspot::BOTTOM};
@@ -1522,6 +1553,9 @@ uint GameObject::MakePlayer(const Vec2 &pos) {
 
 uint GameObject::Create(const string& blueprint, const Vec2& pos, const Vec2& aux) {
 	LOG_METHOD_START("GameObject::Create");
+  assert(&blueprint != NULL);
+  assert(&pos != NULL);
+  assert(&aux != NULL);
 
 	LOG_VARIABLE("blueprint: ", blueprint);
 	LOG_VARIABLE("pos: ", pos);
@@ -1581,6 +1615,7 @@ uint GameObject::Create(const string& blueprint, const Vec2& pos, const Vec2& au
 
 uint GameObject::MakeTarget(const Vec2 &pos) {
 	LOG_METHOD_START("GameObject::MakeTarget");
+  assert(&pos != NULL);
 
 	LOG_VARIABLE("pos", pos);
 
@@ -1610,7 +1645,7 @@ uint GameObject::MakeTarget(const Vec2 &pos) {
 
 uint GameObject::MakeMike(const Vec2 &pos) {
 	LOG_METHOD_START("GameObject::MakeMike");
-
+  assert(&pos != NULL);
 	LOG_VARIABLE("pos", pos);
 
 	GameObject* mike = new GameObject{pos, 0.0f, Hotspot::BOTTOM};
@@ -1652,7 +1687,8 @@ uint GameObject::MakeMike(const Vec2 &pos) {
 
 uint GameObject::MakeBanshee(const Vec2 &pos,const Vec2 &pos2) {
 	LOG_METHOD_START("GameObject::MakeBanshee");
-
+  assert(&pos != NULL);
+  assert(&pos2 != NULL);
 	LOG_VARIABLE("pos", pos);
 	LOG_VARIABLE("pos2", pos2);
 
@@ -1698,7 +1734,7 @@ uint GameObject::MakeBanshee(const Vec2 &pos,const Vec2 &pos2) {
 
 uint GameObject::MakeMask(const Vec2 &pos) {
 	LOG_METHOD_START("GameObject::MakeMask");
-
+  assert(&pos != NULL);
 	LOG_VARIABLE("pos", pos);
 
 	GameObject* mask = new GameObject{pos,0.0f,Hotspot::BOTTOM};
@@ -1736,7 +1772,7 @@ uint GameObject::MakeMask(const Vec2 &pos) {
 */
 uint GameObject::MakeBoar(const Vec2 &pos) {
 	LOG_METHOD_START("GameObject::MakeBoar");
-
+  assert(&pos != NULL);
 	LOG_VARIABLE("pos", pos);
 
 	GameObject* pumba = new GameObject{pos,0.0f,Hotspot::BOTTOM};
