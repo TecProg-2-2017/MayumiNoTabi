@@ -17,7 +17,7 @@ Sound::Sound():channel{-1},chunk{shared_ptr<Mix_Chunk>(nullptr)}{}
 */
 
 Sound::Sound(string file) {
-	Open(file);
+	open_music_file(file);
 }
 
 /*!
