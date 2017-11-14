@@ -125,6 +125,7 @@ Vec2::Vec2(const float &a,const float &b):x{a},y{b} {
 		*/
 
 Vec2::Vec2(const Vec2 &b):x{b.x},y{b.y} {
+	assert(&b != NULL);
 	// Nothing to do
 }
 
@@ -141,6 +142,8 @@ Vec2 Vec2::makeVec2(const float &object_lenght,const float &angle) {
 	LOG_METHOD_START("Vec2::makeVec2");
 	LOG_VARIABLE("&object_lenght", &object_lenght);
 	LOG_VARIABLE("&angle", &angle);
+	assert(&object_lenght != NULL);
+	assert(&angle != NULL);
 
 	Vec2 vector {object_lenght,0.0f};
 	LOG_METHOD_CLOSE("Vec2::makeVec2", vector.rotate(angle));
@@ -158,6 +161,7 @@ Vec2 Vec2::makeVec2(const float &object_lenght,const float &angle) {
 Vec2 Vec2::operator= (const Vec2& b) {
 	LOG_METHOD_START("Vec2::operator=");
 	LOG_VARIABLE("&b", &b);
+	assert(&b != NULL);
 
 	x_axis = b.x_axis; // x_axis is the axis x in cordinates.
 	y_axis = b.y_axis; // y_axis is the axis y in cordinates.
@@ -176,6 +180,7 @@ Vec2 Vec2::operator= (const Vec2& b) {
 Vec2 Vec2::operator+ (const Vec2& b)const {
 	LOG_METHOD_START("Vec2::operator+");
 	LOG_VARIABLE("&b", &b);
+	assert(&b != NULL);
 	LOG_METHOD_CLOSE("Vec2::operator+", {x_axis + b.x_axis, y_axis + b.y_axis});
 	return {x_axis + b.x_axis, y_axis + b.y_axis};
 }
@@ -191,6 +196,8 @@ Vec2 Vec2::operator+ (const Vec2& b)const {
 void Vec2::operator+= (const Vec2& b) {
 	LOG_METHOD_START("Vec2::operator+=");
 	LOG_VARIABLE("&b", &b);
+	assert(&b != NULL);
+
 	x_axis += b.x_axis; // x_axis is the axis x in cordinates.
 	y_axis += b.y_axis; // y_axis is the axis y in cordinates.
 }
@@ -206,6 +213,7 @@ void Vec2::operator+= (const Vec2& b) {
 Vec2 Vec2::operator- (const Vec2& b)const {
 	LOG_METHOD_START("Vec2::operator-");
 	LOG_VARIABLE("&b", &b);
+	assert(&b != NULL);
 	LOG_METHOD_CLOSE("Vec2::operator-", {x_axis - b.x_axis, y_axis - b.y_axis});
 	return {x_axis - b.x_axis, y_axis - b.y_axis};
 }
@@ -221,6 +229,7 @@ Vec2 Vec2::operator- (const Vec2& b)const {
 void Vec2::operator-= (const Vec2& b) {
 	LOG_METHOD_START("Vec2::operator-=");
 	LOG_VARIABLE("&b", &b);
+	assert(&b != NULL);
 	x_axis -= b.x_axis; // x_axis is the axis x in cordinates.
 	y_axis -= b.y_axis; // y_axis is the axis y in cordinates.
 }
@@ -236,6 +245,7 @@ void Vec2::operator-= (const Vec2& b) {
 Vec2 Vec2::operator* (const float& r)const{
 	LOG_METHOD_START("Vec2::operator*");
 	LOG_VARIABLE("&b", &b);
+	assert(&r != NULL);
 	LOG_METHOD_CLOSE("Vec2::operator*", {x_axis*r, y_axis*r});
 	return {x_axis*r, y_axis*r};
 }
@@ -251,6 +261,7 @@ Vec2 Vec2::operator* (const float& r)const{
 void Vec2::operator*= (const float& ratio) {
 	LOG_METHOD_START("Vec2::operator*=");
 	LOG_VARIABLE("&ratio", &ratio);
+	assert(&pos != NULL);
 	x_axis *= ratio; // x_axis is the axis x in cordinates. r is rotation from object
 	y_axis *= ratio; // y_axis is the axis y in cordinates. r is rotation from object
 }
@@ -266,6 +277,7 @@ void Vec2::operator*= (const float& ratio) {
 Vec2 Vec2::operator/ (const float& ratio)const {
 	LOG_METHOD_START("Vec2::operator/");
 	LOG_VARIABLE("&ratio", &ratio);
+	assert(&ratio != NULL);
 	LOG_METHOD_CLOSE("Vec2::operator/", {x_axis / ratio, y_axis / ratio});
 	return {x_axis / ratio, y_axis / ratio};
 }
@@ -281,6 +293,7 @@ Vec2 Vec2::operator/ (const float& ratio)const {
 void Vec2::operator/= (const float& r) {
 	LOG_METHOD_START("Vec2::operator/=");
 	LOG_VARIABLE("&r", &r);
+	assert(&r != NULL);
 	x_axis /= r; // x_axis is the axis x in cordinates. r is rotation from object
 	y_axis /= r; // y_axis is the axis y in cordinates. r is rotation from object
 }
@@ -296,6 +309,7 @@ void Vec2::operator/= (const float& r) {
 bool Vec2::operator== (const Vec2& b) const {
 	LOG_METHOD_START("Vec2::operator==");
 	LOG_VARIABLE("&b", &b);
+	assert(&b != NULL);
 	LOG_METHOD_CLOSE("Vec2::operator==", (equals(x_axis, b.x_axis) &&
 																	equals(y_axis, b.y_axis)));
 	return (equals(x_axis, b.x_axis) && equals(y_axis, b.y_axis));
@@ -312,6 +326,7 @@ bool Vec2::operator== (const Vec2& b) const {
 bool Vec2::operator!= (const Vec2& b) const {
 	LOG_METHOD_START("Vec2::operator!=");
 	LOG_VARIABLE("&b", &b);
+	assert(&b != NULL);
 	LOG_METHOD_CLOSE("Vec2::operator!=", !((*this) == b));
 
 	return !((*this) == b);
@@ -328,6 +343,7 @@ bool Vec2::operator!= (const Vec2& b) const {
 bool Vec2::operator< (const Vec2& b) const {
 	LOG_METHOD_START("Vec2::operator<");
 	LOG_VARIABLE("&b", &rb);
+	assert(&pos != NULL);
 
 	if (x_axis == b.x_axis) {
 		return (y_axis < b.y_axis);
@@ -398,6 +414,7 @@ float Vec2::angle() const {
 float Vec2::distance(const Vec2 &b) const {
 	LOG_METHOD_START("Vec2::distance");
 	LOG_VARIABLE("b", &b);
+	assert(&b != NULL);
 	LOG_METHOD_CLOSE("Vec2::distance", ((*this) - b).lenght());
 	return ((*this) - b).lenght();
 }
@@ -414,6 +431,7 @@ float Vec2::distance(const Vec2 &b) const {
 float Vec2::angle(const Vec2 &position) const {
 	LOG_METHOD_START("Vec2::angle");
 	LOG_VARIABLE("&position", &position);
+	assert(&positon != NULL);
 
 	if (*this == position) {
 		return 0.0f;
@@ -464,6 +482,7 @@ Vec2 Vec2::renderPosition() const {
 Vec2 Vec2::rotate(float angle) {
 	LOG_METHOD_START("Vec2::rotate");
 	LOG_VARIABLE("angle", &angle);
+	assert(angle != NULL);
 
 	Vec2 vector = null; // Initializing the variable vector
 	// Converts the angle to radianus. It's used by functions sin and cos
@@ -505,6 +524,8 @@ ConvexPolygon Vec2::polygon() {
 std::ostream& operator<< (std::ostream& os, const Vec2& obj) {
 	os << "(" << obj.x << "," << obj.y << ")";
 	LOG_METHOD_START("std::ostream& operator");
+	assert(&os != NULL);
+	assert(&obj != NULL);
 	LOG_METHOD_CLOSE("operator", os);
 	return os;
 }
@@ -526,6 +547,10 @@ Rect::Rect(const float &side_a,const float &side_b,const float &side_c,
   LOG_VARIABLE("&side_b", &side_b);
 	LOG_VARIABLE("&side_c", &side_c);
 	LOG_VARIABLE("&side_d", &side_d);
+	assert(&side_a != NULL);
+	assert(&side_b != NULL);
+	assert(&side_c != NULL);
+	assert(&side_d != NULL);
 	// Nothing to do
 }
 
@@ -547,12 +572,16 @@ Rect::Rect(const Vec2 &position, const Vec2 &object_size):x{pos.x}, \
 		 LOG_VARIABLE("y{pos.y}", y{pos.y});
 		 LOG_VARIABLE("w{sz.x}", w{sz.x});
 		 LOG_VARIABLE("h{sz.y}", h{sz.y});
+		 assert(&position != NULL);
+		 assert(&object_size != NULL);
+
 		 //Nothing to do
 }
 
 Rect::Rect(const Rect &b):x{b.x},y{b.y},w{b.w},h{b.h} {
 	LOG_METHOD_START("Rect::Rect");
 	LOG_VARIABLE("&b", &b);
+	assert(&b != NULL);
 	LOG_VARIABLE("x{b.x}", x{b.x});
 	LOG_VARIABLE("y{b.y}", y{b.y});
 	LOG_VARIABLE("w{b.w}", w{b.w});
@@ -571,6 +600,7 @@ Rect::Rect(const Rect &b):x{b.x},y{b.y},w{b.w},h{b.h} {
 Rect Rect::operator= (const Rect& b) {
 	LOG_METHOD_START("Rect::operator=");
 	LOG_VARIABLE("&b", &b);
+	assert(&b != NULL);
 	x_axis = b.x_axis;
 	y_axis = b.y_axis;
 	w_axis = b.w_axis;
@@ -591,6 +621,7 @@ Rect Rect::operator= (const Rect& b) {
 Rect Rect::operator+ (const Vec2& b) const {
 	LOG_METHOD_START("Rect::operator+");
 	LOG_VARIABLE("&b", &b);
+	assert(&b != NULL);
 	LOG_METHOD_CLOSE("Rect::operator+", {x_axis + b.x_axis, y_axis + b.y_axis, \
 		               w, h});
 
@@ -608,6 +639,7 @@ Rect Rect::operator+ (const Vec2& b) const {
 void Rect::operator+= (const Vec2& b) {
 	LOG_METHOD_START("Rect::operator+=");
 	LOG_VARIABLE("&b", &b);
+	assert(&b != NULL);
 
 	x_axis += b.x_axis;
 	y_axis += b.y_axis;
@@ -624,6 +656,7 @@ void Rect::operator+= (const Vec2& b) {
 Rect Rect::operator- (const Vec2& b) const {
 	LOG_METHOD_START("Rect::operator-");
 	LOG_VARIABLE("&b", &b);
+	assert(&b != NULL);
 	LOG_METHOD_CLOSE("Rect::operator-", \
 	                 Rect(x_axis - b.x_axis, y_axis - b.y_axis, w, h));
 
@@ -641,6 +674,7 @@ Rect Rect::operator- (const Vec2& b) const {
 void Rect::operator-= (const Vec2& b) {
 	LOG_METHOD_START("Rect::operator-=");
 	LOG_VARIABLE("&b", &b);
+	assert(&b != NULL);
 
 	x_axis -= b.x_axis;
 	y_axis-= b.y_axis;
@@ -657,6 +691,8 @@ void Rect::operator-= (const Vec2& b) {
 bool Rect::operator== (const Rect& b) {
 	LOG_METHOD_START("Rect::operator==");
 	LOG_VARIABLE("&b", &b);
+	assert(&b != NULL);
+
 	LOG_METHOD_CLOSE("Rect::operator==", (equals(x,b.x) && equals(y,b.y) &&
 	                                      equals(w,b.w) && equals(h,b.h)));
 
@@ -675,6 +711,7 @@ bool Rect::operator== (const Rect& b) {
 bool Rect::operator!= (const Rect& b) {
 	LOG_METHOD_START("Rect::operator!=");
   LOG_VARIABLE("b", &b);
+	assert(&b != NULL);
   LOG_METHOD_CLOSE("Rect::operator!=", !((*this) == b));
 
 	return !((*this) == b);
@@ -706,7 +743,7 @@ void Rect::floor() {
 
 void Rect::setPosition(const Vec2& b) {
 	LOG_METHOD_START("Rect::setPosition");
-
+	assert(&b != NULL);
 	x_axis = b.x_axis;
 	y_axis = b.y_axis;
 }
@@ -720,7 +757,7 @@ void Rect::setPosition(const Vec2& b) {
 
 void Rect::setCenter(const Vec2& b) {
 	LOG_METHOD_START("Rect::setCenter");
-
+	assert(&b != NULL);
 	x_axis = b.x_axis - (w/2);
 	y_axis = b.y_axis - (h/2);
 }
@@ -762,6 +799,7 @@ float Rect::y2() const {
 
 Vec2 Rect::distCenter(const Rect& b) const {
 	LOG_METHOD_START("Rect::distCenter");
+	assert(&b != NULL);
 	LOG_METHOD_CLOSE("Rect::distCenter", center() - b.center());
 	return center() - b.center();
 }
@@ -777,6 +815,7 @@ Vec2 Rect::distCenter(const Rect& b) const {
 Vec2 Rect::distEdge(const Rect& b) const {
 	LOG_METHOD_START("Rect::distEdge");
   LOG_VARIABLE("b", &b);
+	assert(&b != NULL);
 
 	Vec2 rectangle;
 
@@ -813,6 +852,7 @@ Vec2 Rect::distEdge(const Rect& b) const {
 Vec2 Rect::hotspot(Hotspot object_hotspot) {
 	LOG_METHOD_START("Rect::hotspot");
   LOG_VARIABLE("b", &b);
+	assert(&b != NULL);
 
 	Vec2 object_vector{x_axis, y_axis};
 	auto &add = HotspotPos[object_hotspot];
@@ -887,7 +927,7 @@ Vec2 Rect::corner4() const {
 
 Vec2 Rect::center() const {
 	LOG_METHOD_START("Rect::center");
-  LOG_METHOD_CLOSE("Rect::center", {x_axis + (weight/2), y_axis + (height/2));
+  LOG_METHOD_CLOSE("Rect::center", {x_axis + (weight/2), y_axis + (height/2)});
 
 	return {x_axis + (weight/2), y_axis + (height/2)};
 }
@@ -918,6 +958,8 @@ Vec2 Rect::relativePosition(const Vec2 &relative, bool inverted) const {
 	LOG_METHOD_START("Rect::relativePosition");
   LOG_VARIABLE("&relative", &relative);
 	LOG_VARIABLE("inverted", inverted);
+	assert(&relative != NULL);
+	assert(&inverted != NULL);
 
 	Vec2 positon {x_axis, y_axis};
 	if (inverted) {
@@ -947,6 +989,8 @@ Rect Rect::relativeBox(const Rect &relative, bool inverted) const {
 	LOG_METHOD_START("Rect::relativeBox");
   LOG_VARIABLE("&relative", &relative);
 	LOG_VARIABLE("inverted", inverted);
+	assert(&relative != NULL);
+	assert(&inverted != NULL);
 
 	Rect box{x_axis, y_axis, weight, height};
 	if (inverted) {
@@ -990,6 +1034,7 @@ Rect Rect::renderBox() const {
 Rect Rect::sum(const Rect &other) const {
 	LOG_METHOD_START("Rect::sum");
   LOG_VARIABLE("other", &other);
+	assert(&other != NULL);
 
 	float x_axis = min(min(x,x2()),min(other.x,other.x2()));
 	float y_axis = min(min(y,y2()),min(other.y,other.y2()));
@@ -1011,6 +1056,7 @@ Rect Rect::sum(const Rect &other) const {
 ConvexPolygon Rect::polygon(const float &r) const {
 	LOG_METHOD_START("Rect::polygon");
   LOG_VARIABLE("r", &r);
+	assert(&r != NULL);
 
 	ConvexPolygon polygon = new ConvexPolygon(); // Initializing a convex polygon
 	polygon.AddPoint(Vec2{});
@@ -1056,6 +1102,8 @@ bool Rect::contains(const float &i,const float &j) const {
 	LOG_METHOD_START("Rect::contains");
   LOG_VARIABLE("&i", &i);
   LOG_VARIABLE("&j", &j);
+	assert(&i != NULL);
+	assert(&j != NULL);
 
 		if (i < x) {
 		return false;
@@ -1100,6 +1148,7 @@ bool Rect::contains(const float &i,const float &j) const {
 bool Rect::contains(const Vec2& b) const {
 	LOG_METHOD_START("Rect::contains");
   LOG_VARIABLE("b", &b);
+	assert(&b != NULL);
 
 	if (b.x < x) {
 		return false;
@@ -1149,6 +1198,7 @@ bool Rect::collides(const Rect& b) const{
 	// return false;
 	LOG_METHOD_START("Rect::collides");
   LOG_VARIABLE("b", &b);
+	assert(&b != NULL);
 
 	if (x > (b.x2())) {
 		return false;
@@ -1184,6 +1234,8 @@ bool Rect::collides(const Rect& b) const{
 
 std::ostream& operator<<(std::ostream& os, const Rect& obj) {
 	os << "(" << obj.x << "," << obj.y << "," << obj.w << "," << obj.h << ")";
+	assert(&os != NULL);
+	assert(&obj != NULL);
 
 	return os;
 }
@@ -1202,6 +1254,9 @@ Circle::Circle(float xx,float yy,float rr):x{xx},y{yy},r{rr} {
 	LOG_VARIABLE("xx", xx);
 	LOG_VARIABLE("yy", yy);
 	LOG_VARIABLE("rr", rr);
+	assert(xx != NULL);
+	assert(yy != NULL);
+	assert(rr != NULL);
 	// Nothing to do
 }
 
@@ -1217,6 +1272,7 @@ Circle::Circle(float xx,float yy,float rr):x{xx},y{yy},r{rr} {
 bool Circle::contains(const Vec2 &p)const {
 	LOG_METHOD_START("Circle::contains");
   LOG_VARIABLE("&p", &p);
+	assert(&p != NULL);
 
 	Vec2 center(x,y) = new Vec2(); // Initializing the vector
 
@@ -1238,6 +1294,8 @@ bool Circle::contains(const float &px,const float &py)const {
 	LOG_METHOD_START("Circle::contains");
   LOG_VARIABLE("&px", &px);
 	LOG_VARIABLE("&py", &py);
+	assert(&px != NULL);
+	assert(&py != NULL);
 
 	Vec2 center(x,y);
 	Vec2 p(px,py);
@@ -1287,6 +1345,8 @@ ConvexPolygon::ConvexPolygon(vector<Vec2> v,bool all):count{0} {
 	LOG_METHOD_START("ConvexPolygon::ConvexPolygon");
 	LOG_VARIABLE("v", v);
 	LOG_VARIABLE("all", all);
+	assert(v != NULL);
+	assert(all != NULL);
 
 	AddPoints(v,all);
 }
@@ -1302,6 +1362,7 @@ ConvexPolygon::ConvexPolygon(vector<Vec2> v,bool all):count{0} {
 bool ConvexPolygon::AddPoint(Vec2 p) {
 	LOG_METHOD_START("ConvexPolygon::AddPoint");
   LOG_VARIABLE("p", p);
+	assert(p != NULL);
 
 	p -= GetSource();
 
@@ -1351,7 +1412,8 @@ bool ConvexPolygon::AddPoints(const vector<Vec2> &pts,bool all) {
 	LOG_METHOD_START("ConvexPolygon::AddPoints");
   LOG_VARIABLE("&pts", &pts);
 	LOG_VARIABLE("all", all);
-
+	assert(&pts != NULL);
+	assert(all != NULL);
 
 	if (all) {
 		ConvexPolygon polygon =* this;
@@ -1382,6 +1444,7 @@ bool ConvexPolygon::AddPoints(const vector<Vec2> &pts,bool all) {
 bool ConvexPolygon::RemovePoint(Vec2 p) {
 	LOG_METHOD_START("ConvexPolygon::RemovePoint");
   LOG_VARIABLE("p", p);
+	assert(p != NULL);
 
 	auto it = find(points.begin(), points.end(), p);
 
@@ -1401,6 +1464,8 @@ bool ConvexPolygon::RemovePoint(Vec2 p) {
 bool ConvexPolygon::RemovePoint(int ind) {
 	LOG_METHOD_START("ConvexPolygon::RemovePoint");
   LOG_VARIABLE("ind", ind);
+	assert(ind != NULL);
+
 	if (ind < 0 || ind >= count) {
 		return false;
 	}
@@ -1445,6 +1510,8 @@ bool ConvexPolygon::RemovePoint(int ind) {
 void ConvexPolygon::SetSource(const Vec2 &p) {
 	LOG_METHOD_START("ConvexPolygon::SetSource");
   LOG_VARIABLE("p", p);
+	assert(&p != NULL);
+
 	Vec2 move = GetSource()-p;
 	for (auto &i:points)i += move;
 	source = p;
@@ -1453,6 +1520,7 @@ void ConvexPolygon::SetSource(const Vec2 &p) {
 void ConvexPolygon::MoveSource(const Vec2 &p) {
 	LOG_METHOD_START("ConvexPolygon::MoveSource");
   LOG_VARIABLE("p", p);
+	assert(&p != NULL);
 	source = p;
 }
 
@@ -1467,11 +1535,13 @@ void ConvexPolygon::ReorderPoints(vector<Vec2> &pts, \
 		LOG_METHOD_START("ConvexPolygon::ReorderPoints");
 	  LOG_VARIABLE("pts", &pts);
 		LOG_VARIABLE("ptsAng", &ptsAng);
+		assert(&pts != NULL);
+		assert(&ptsAng != NULL);
 
 	const auto &it = min_element(pts.begin(), pts.end(), \
 	                    [](const Vec2& a,const Vec2& b) {
 		if (equals(a.y,b.y)) {
-			return a.x>b.x;
+			return a.x > b.x;
 		}
 		else {
 			// Nothing to do
@@ -1527,6 +1597,7 @@ int ConvexPolygon::GetCount()const {
 float ConvexPolygon::GetPointAng(const Vec2& p)const {
 	LOG_METHOD_START("ConvexPolygon::GetPointAng");
   LOG_VARIABLE("p", &p);
+	assert(&p != NULL);
 
 	if (pointsAng.count(p)) {
 		return pointsAng.at(p);
@@ -1541,6 +1612,7 @@ float ConvexPolygon::GetPointAng(const Vec2& p)const {
 float ConvexPolygon::GetPointAng(int ind)const {
 	LOG_METHOD_START("ConvexPolygon::GetPointAng");
   LOG_VARIABLE("ind", ind);
+	assert(ind != NULL);
 	LOG_METHOD_CLOSE("ConvexPolygon::GetPointAng", pointsAng.at(points[ind]));
 	return pointsAng.at(points[ind]);
 }
@@ -1548,6 +1620,7 @@ float ConvexPolygon::GetPointAng(int ind)const {
 bool ConvexPolygon::IsConvex(const Vec2 &p) const {
 	LOG_METHOD_START("ConvexPolygon::IsConvex");
   LOG_VARIABLE("&p", &p);
+	assert(&p != NULL);
 
 	if (count < 3) {
 		return true;
@@ -1580,6 +1653,7 @@ bool ConvexPolygon::IsConvex(const Vec2 &p) const {
 bool ConvexPolygon::IsConvex(const vector<Vec2> &pts) const {
 	LOG_METHOD_START("ConvexPolygon::IsConvex");
   LOG_VARIABLE("&pts", &pts);
+	assert(&pts != NULL);
 
 	vector<Vec2> v = points;
 	map<Vec2,float> vAng = pointsAng;
@@ -1608,6 +1682,8 @@ bool ConvexPolygon::IsConvex(const vector<Vec2> &pts) const {
 bool ConvexPolygon::Contains(Vec2 p) const {
 	LOG_METHOD_START("ConvexPolygon::Contains");
   LOG_VARIABLE("p", p);
+	assert(p != NULL);
+
 	if (count < 3) {
 		return false;
 	}
@@ -1629,6 +1705,8 @@ bool ConvexPolygon::Contains(Vec2 p) const {
 bool ConvexPolygon::Collides(const ConvexPolygon& other) const {
 	LOG_METHOD_START("ConvexPolygon::Collides");
   LOG_VARIABLE("other", other);
+	assert(&other != NULL);
+
 	if (count < 3 || other.GetCount() < 3) {
 		return false;//degenerated polygons dont collide
 	}
@@ -1660,6 +1738,7 @@ bool ConvexPolygon::Collides(const ConvexPolygon& other) const {
 ConvexPolygon ConvexPolygon::operator+(const Vec2& p) const {
 	LOG_METHOD_START("ConvexPolygon::operator+");
   LOG_VARIABLE("p", &p);
+	assert(&p != NULL);
 
 	ConvexPolygon polygon =* this;
 	polygon.AddPoint(p);
@@ -1671,6 +1750,7 @@ ConvexPolygon ConvexPolygon::operator+(const Vec2& p) const {
 ConvexPolygon ConvexPolygon::operator*(const float& f) const {
 	LOG_METHOD_START("ConvexPolygon::operator*");
   LOG_VARIABLE("&f", &f);
+	assert(&f != NULL);
 
 	ConvexPolygon polygon =  null;
 	for (auto p:points) {
@@ -1710,6 +1790,7 @@ ConvexPolygon ConvexPolygon::AtOrigin() const {
 ConvexPolygon ConvexPolygon::MinkowskySum(const ConvexPolygon& polygon) const {
 	LOG_METHOD_START("ConvexPolygon::MinkowskySum");
 	LOG_VARIABLE("polygon", polygon);
+	assert(&polygon != NULL);
 
 	if (count <= 0 || polygon.count <= 0) {
 		return ConvexPolygon();
@@ -1786,6 +1867,8 @@ std::ostream& operator<<(std::ostream& os, const ConvexPolygon& obj) {
 	LOG_METHOD_START("std::ostream& operator<<");
 	LOG_VARIABLE("os", os);
 	LOG_VARIABLE("obj", obj);
+	assert(&os != NULL);
+	assert(&obj != NULL);
 	// auto pts=obj.GetPoints();
 	// if (pts.size()==0)return os << "{}";
 	// os << "{(" << (int)pts[0].x << "," << (int)pts[0].y << ")";
