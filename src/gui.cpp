@@ -9,6 +9,7 @@
 #include <guiManager.hpp>
 #include <inputManager.hpp>
 #include <state.hpp>
+#include <assert.h>
 
 #define GUI GAMESTATE.gui
 

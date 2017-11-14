@@ -7,6 +7,7 @@
 #include <guiManager.hpp>
 #include <gui.hpp>
 #include <inputManager.hpp>
+#include <assert.h>
 
 /**
   Prototypes from guiManeger's methods.
