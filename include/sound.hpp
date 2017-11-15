@@ -10,9 +10,9 @@ public:
 	Sound();
 	Sound(string file);
 
-	void Play(int times);
+	void play_music(int times);
 	void Stop();
-	void Open(string file);
+	void open_music_file(string file);
 	bool IsOpen();
 };
 

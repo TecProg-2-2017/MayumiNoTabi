@@ -32,7 +32,7 @@ public:
 	void set_box_position(int position_x,int position_y);
 	void set_box_position(Vec2 position);
 
-	void SetText(string txt);
+	void set_text(string txt);
 	void set_line(int line, string text);
 
 	void set_color(SDL_Color color);

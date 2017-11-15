@@ -65,9 +65,9 @@ void Camera::follow(uint new_focus) { // Range: bigger than 0
 
 void Camera::unfollow() {
   LOG_METHOD_START('Camera::unfollow');
-  
+
   camera_is_following = false;
-  
+
   LOG_VARIABLE('camera_is_following', camera_is_following);
   LOG_METHOD_CLOSE('Camera::unfollow', 'void');
 }
@@ -86,11 +86,10 @@ void Camera::center_camera_to(const Vec2& vec2_vector) {
   LOG_VARIABLE('vec2_vector', vec2_vector);
 
   Vec2 half_winsize = WINSIZE / 2;
-  Vec2 target = vec2_vector - (half_winsize / camera_zoom);//!< Updates the camera 
+  Vec2 target = vec2_vector - (half_winsize / camera_zoom);//!< Updates the camera
                                                            //!< target
 
   LOG_VARIABLE('half_winsize', half_winsize);
-  LOG_VARIABLE('target', target.to_string);
 
   // Minimum values
   camera_position.x = min(camera_position.x, target.x + camera_size.x);
@@ -118,9 +117,6 @@ void Camera::update_camera(float time) {
   Vec2 half_winsize = WINSIZE / 2;
 
   Vec2 center = camera_position + (half_winsize / camera_zoom); //!< Newvalue for center
-
-  LOG_VARIABLE("center", center.to_string);
-  assert(center != NULL);
 
   // Updates zoom
   update_camera_zoom(time);
@@ -160,13 +156,9 @@ Vec2 Camera::render_camera_pos(const Vec2& vec2_vector) {
   LOG_METHOD_START("Camera::render_camera_pos");
   LOG_VARIABLE("vec2_vector", vec2_vector);
 
-  assert(vec2_vector != NULL);
 
   Vec2 rendered_camera_pos = (vec2_vector - CAMERA) * CAMERAZOOM;
-  
-  LOG_METHOD_CLOSE("Camera::render_camera_pos", rendered_camera_pos.to_string());
-  
-  assert(rendered_camera_pos != NULL);
+
   return rendered_camera_pos;
 }
 
@@ -183,7 +175,7 @@ void Camera::update_camera_zoom(float time) {
   LOG_VARIABLE("time", time);
 
   // Zooms in if z key is pressed
-  if (INPUT.IsKeyDown(KEY(z))) {
+  if (INPUT.key_is_down(KEY(z))) {
     LOG_MSG("if (INPUT.IsKeyDown(KEY(z)))");
 
     camera_zoom = camera_zoom + (0.5 * time);
@@ -243,7 +235,7 @@ void Camera::update_camera_speed(float time) {
 
     // defines camera speed according to the arrow key that has been pressed.
     // (right)
-    if (INPUT.IsKeyDown(KEY_RIGHT)) {
+    if (INPUT.key_is_down(KEY_RIGHT)) {
       LOG_MSG("if (INPUT.IsKeyDown(KEY_RIGHT)");
 
       camera_speed.x = camera_speed.x + CAMERA_SPEED;
@@ -292,12 +284,11 @@ void Camera::update_camera_speed(float time) {
 float Camera::render_camera_pos_x(const float& x_axis_pos) {
   LOG_METHOD_START("Camera::render_camera_pos_x");
   LOG_VARIABLE("x_axis_pos", x_axis_pos);
-  
+
   // Stores return value
   float rendered_x = (x_axis_pos - CAMERA.x) * CAMERAZOOM;
-  
+
   LOG_METHOD_CLOSE("Camera::render_camera_pos_y", rendered_x);
-  assert(rendered_x != NULL);
   return rendered_x;
 }
 
@@ -317,6 +308,5 @@ float Camera::render_camera_pos_y(const float& y_axis_pos) {
   float rendered_y = (y_axis_pos - CAMERA.y) * CAMERAZOOM;
 
   LOG_METHOD_CLOSE("Camera::render_camera_pos_y", rendered_y);
-  assert(rendered_y != NULL);
   return rendered_y;
 }

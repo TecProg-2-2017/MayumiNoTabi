@@ -2,14 +2,14 @@
  *  File: inputManager.cpp
  *
  *  Description: Implements input manager
- */ 
+ */
 
 #include <inputManager.hpp>
 #include <assert.h>
 
 /*!
- *  @fn InputManager::InputManager() 
- *  @brief Constructor method of Input Manager 
+ *  @fn InputManager::InputManager()
+ *  @brief Constructor method of Input Manager
  *  @return An InputManager object
  */
 InputManager::InputManager() {
@@ -18,8 +18,8 @@ InputManager::InputManager() {
 }
 
 /*!
- *  @fn InputManager::~InputManager() 
- *  @brief Destructor method of Input Manager 
+ *  @fn InputManager::~InputManager()
+ *  @brief Destructor method of Input Manager
  */
 InputManager::~InputManager() {
     LOG_MSG("InputManager destructor");
@@ -27,8 +27,8 @@ InputManager::~InputManager() {
 }
 
 /*!
- *  @fn void InputManager::update_mouse_button_state(SDL_Event event) 
- *  @brief Update mouse button current state 
+ *  @fn void InputManager::update_mouse_button_state(SDL_Event event)
+ *  @brief Update mouse button current state
  *  @param SDL_Event event
  *  @return The method returns no param
  */
@@ -36,7 +36,7 @@ void InputManager::update_mouse_button_state(SDL_Event event) {
     LOG_METHOD_START("InputManager::update_mouse_button_state");
 
     bool mouse_state = true; //! <Mouse button state
-  
+
 
     if (event.type==SDL_MOUSEBUTTONDOWN) {
         mouse_state = true;
@@ -61,8 +61,8 @@ void InputManager::update_mouse_button_state(SDL_Event event) {
 }
 
 /*!
- *  @fn void InputManager::update_key_button_state(SDL_Event event) 
- *  @brief Update key button current state 
+ *  @fn void InputManager::update_key_button_state(SDL_Event event)
+ *  @brief Update key button current state
  *  @param SDL_Event event
  *  @return The method returns no param
  */
@@ -82,7 +82,7 @@ void InputManager::update_key_button_state(SDL_Event event) {
         LOG_VARIABLE("key_state","false");
     }
     else {
-        // Do nothing 
+        // Do nothing
     }
 
     key_current_state[event.key.keysym.sym]=key_state;
@@ -92,14 +92,14 @@ void InputManager::update_key_button_state(SDL_Event event) {
 }
 
 /*!
- *  @fn void InputManager::insert_text(SDL_Event event) 
- *  @brief Insert text to the text input 
+ *  @fn void InputManager::insert_text(SDL_Event event)
+ *  @brief Insert text to the text input
  *  @param SDL_Event event
  *  @return The method returns no param
  */
 void InputManager::insert_text(SDL_Event event) {
     LOG_METHOD_START("InputManager::insert_text");
-    
+
 
     string input(event.text.text);
     LOG_VARIABLE("input", input);
@@ -111,8 +111,8 @@ void InputManager::insert_text(SDL_Event event) {
 }
 
 /*!
- *  @fn void InputManager::erase_text(SDL_Event event) 
- *  @brief Erase text from text input 
+ *  @fn void InputManager::erase_text(SDL_Event event)
+ *  @brief Erase text from text input
  *  @param SDL_Event event
  *  @return The method returns no param
  */
@@ -120,7 +120,7 @@ void InputManager::erase_text(SDL_Event event) {
     LOG_METHOD_START("InputManager::erase_text");
 
     //! If event key is backspace and text is not empty
-    if (event.key.keysym.sym == SDLK_BACKSPACE && 
+    if (event.key.keysym.sym == SDLK_BACKSPACE &&
             text->size() && text_cursor) {
 
         text->erase(--text_cursor,1);
@@ -141,8 +141,8 @@ void InputManager::erase_text(SDL_Event event) {
 }
 
 /*!
- *  @fn void InputManager::input_event_handler(float time) 
- *  @brief Handle mouse and keyboard inputs  
+ *  @fn void InputManager::input_event_handler(float time)
+ *  @brief Handle mouse and keyboard inputs
  *  @param float time
  *  @return The method returns no param
  *  @warning Method maybe need refactoring
@@ -153,7 +153,7 @@ void InputManager::input_event_handler(float time) {
     int x_position = 0; //! <Horizontal axis position
     int y_position = 0; //! <Vertical axis position
 
-    //! Get mouse position 
+    //! Get mouse position
     SDL_GetMouseState(&x_position,&y_position);
     LOG_VARIABLE("x_position",x_position);
     LOG_VARIABLE("y_position",y_position);
@@ -164,13 +164,13 @@ void InputManager::input_event_handler(float time) {
     mouse_position.y = (float)y_position;
     LOG_VARIABLE("mouse_position.x",mouse_position.x);
     LOG_VARIABLE("mouse_position.y",mouse_position.y);
-    
+
     quit_requested=false;
-    
+
     text_cursor_blinker.add_time(time);
 
     SDL_Event event;
-    
+
     //! Iterate through SDL events
     while(SDL_PollEvent(&event)) {
 
@@ -186,8 +186,8 @@ void InputManager::input_event_handler(float time) {
             LOG_MSG("Mouse button down or up event");
             update_mouse_button_state(event);
         }
-    
-        //! Event is Key down 
+
+        //! Event is Key down
         else if (event.type==SDL_KEYDOWN) {
             LOG_MSG("Key down event");
 
@@ -200,13 +200,13 @@ void InputManager::input_event_handler(float time) {
         }
 
 
-        //! Event is Key up 
+        //! Event is Key up
         else if (event.type==SDL_KEYUP) {
             LOG_MSG("Key up event");
             update_key_button_state(event);
         }
-        
-        //! If text is not empty    
+
+        //! If text is not empty
         if (text != nullptr) {
 
             //! Event is text input
@@ -215,21 +215,21 @@ void InputManager::input_event_handler(float time) {
                 insert_text(event);
             }
 
-           //! Event is key down when text is not empty 
+           //! Event is key down when text is not empty
             else if (event.type==SDL_KEYDOWN) {
                 LOG_MSG("Key down event when handling text");
-                text_cursor_blinker.Restart();
+                text_cursor_blinker.restart_time();
 
                 erase_text(event);
-                
 
-                //! Move cursor to the left if left key is pressed 
+
+                //! Move cursor to the left if left key is pressed
                 if (event.key.keysym.sym == SDLK_LEFT && text_cursor > 0) {
                     LOG_MSG("Move text cursor to the left");
                     text_cursor--;
                 }
 
-                //! Move cursor to the right if right key is pressed 
+                //! Move cursor to the right if right key is pressed
                 else if (event.key.keysym.sym == SDLK_RIGHT && text_cursor < text->size()) {
                     LOG_MSG("Move text cursor to the right");
                     text_cursor++;
@@ -246,11 +246,11 @@ void InputManager::input_event_handler(float time) {
 }
 
 /*!
- *  @fn bool InputManager::key_pressed(int key) 
- *  @brief Check if the key was pressed 
- *  @param int key 
- *  @return True of False 
- *  @warning Simplify return 
+ *  @fn bool InputManager::key_pressed(int key)
+ *  @brief Check if the key was pressed
+ *  @param int key
+ *  @return True of False
+ *  @warning Simplify return
  */
 bool InputManager::key_pressed(int key) {
     LOG_METHOD_START("InputManager::key_pressed");
@@ -260,11 +260,11 @@ bool InputManager::key_pressed(int key) {
 }
 
 /*!
- *  @fn bool InputManager::key_released(int key) 
- *  @brief Check if the key was released 
- *  @param int key 
- *  @return True of False 
- *  @warning Simplify return 
+ *  @fn bool InputManager::key_released(int key)
+ *  @brief Check if the key was released
+ *  @param int key
+ *  @return True of False
+ *  @warning Simplify return
  */
 bool InputManager::key_released(int key) {
     LOG_METHOD_START("InputManager::key_released");
@@ -274,10 +274,10 @@ bool InputManager::key_released(int key) {
 }
 
 /*!
- *  @fn bool InputManager::key_is_down(int key) 
- *  @brief Check if the key is down 
- *  @param int key 
- *  @return True of False 
+ *  @fn bool InputManager::key_is_down(int key)
+ *  @brief Check if the key is down
+ *  @param int key
+ *  @return True of False
  */
 bool InputManager::key_is_down(int key) {
     LOG_METHOD_START("InputManager::key_is_down");
@@ -287,11 +287,11 @@ bool InputManager::key_is_down(int key) {
 }
 
 /*!
- *  @fn bool InputManager::mouse_button_pressed(int key) 
- *  @brief Check if the mouse button was pressed 
- *  @param int button 
- *  @return True of False 
- *  @warning Simplify return 
+ *  @fn bool InputManager::mouse_button_pressed(int key)
+ *  @brief Check if the mouse button was pressed
+ *  @param int button
+ *  @return True of False
+ *  @warning Simplify return
  */
 bool InputManager::mouse_button_pressed(int button) {
     LOG_METHOD_START("InputManager::mouse_button_pressed");
@@ -301,11 +301,11 @@ bool InputManager::mouse_button_pressed(int button) {
 }
 
 /*!
- *  @fn bool InputManager::mouse_button_released(int button) 
- *  @brief Check if the mouse button was released 
- *  @param int button 
- *  @return True of False 
- *  @warning Simplify return 
+ *  @fn bool InputManager::mouse_button_released(int button)
+ *  @brief Check if the mouse button was released
+ *  @param int button
+ *  @return True of False
+ *  @warning Simplify return
  */
 bool InputManager::mouse_button_released(int button) {
     LOG_METHOD_START("InputManager::mouse_button_released");
@@ -315,10 +315,10 @@ bool InputManager::mouse_button_released(int button) {
 }
 
 /*!
- *  @fn bool InputManager::mouse_button_is_down(int button) 
- *  @brief Check if the mouse button is down 
- *  @param int button 
- *  @return True of False 
+ *  @fn bool InputManager::mouse_button_is_down(int button)
+ *  @brief Check if the mouse button is down
+ *  @param int button
+ *  @return True of False
  */
 bool InputManager::mouse_button_is_down(int button) {
     LOG_METHOD_START("InputManager::mouse_button_is_down");
@@ -328,21 +328,21 @@ bool InputManager::mouse_button_is_down(int button) {
 }
 
 /*!
- *  @fn bool InputManager::mouse_is_moving() 
- *  @brief Check if the mouse button is moving 
- *  @return True of False 
+ *  @fn bool InputManager::mouse_is_moving()
+ *  @brief Check if the mouse button is moving
+ *  @return True of False
  */
 bool InputManager::mouse_is_moving() {
     LOG_METHOD_START("InputManager::mouse_is_moving");
     LOG_METHOD_CLOSE("InputManager::mouse_is_moving","bool");
 
-    return mouse_is_moving;
+    return mouse_motion;
 }
 
 /*!
- *  @fn Vec2 InputManager::get_mouse_position() 
- *  @brief Get X and Y position of player's mouse 
- *  @return Vec2 
+ *  @fn Vec2 InputManager::get_mouse_position()
+ *  @brief Get X and Y position of player's mouse
+ *  @return Vec2
  */
 Vec2 InputManager::get_mouse_position() {
     LOG_METHOD_START("InputManager::get_mouse_position");
@@ -352,9 +352,9 @@ Vec2 InputManager::get_mouse_position() {
 }
 
 /*!
- *  @fn int InputManager::get_mouse_x_position() 
- *  @brief Get horizontal position of player's mouse 
- *  @return integer 
+ *  @fn int InputManager::get_mouse_x_position()
+ *  @brief Get horizontal position of player's mouse
+ *  @return integer
  */
 int InputManager::get_mouse_x_position() {
     LOG_METHOD_START("InputManager::get_mouse_x_position");
@@ -364,9 +364,9 @@ int InputManager::get_mouse_x_position() {
 }
 
 /*!
- *  @fn int InputManager::get_mouse_y_position() 
- *  @brief Get vertical position of player's mouse 
- *  @return integer 
+ *  @fn int InputManager::get_mouse_y_position()
+ *  @brief Get vertical position of player's mouse
+ *  @return integer
  */
 int InputManager::get_mouse_y_position() {
     LOG_METHOD_START("InputManager::get_mouse_y_position");
@@ -376,8 +376,8 @@ int InputManager::get_mouse_y_position() {
 }
 
 /*!
- *  @fn void InputManager::start_text_input(string* t) 
- *  @brief Start text input for player 
+ *  @fn void InputManager::start_text_input(string* t)
+ *  @brief Start text input for player
  *  @param string* t
  *  @return The method returns no param
  */
@@ -385,7 +385,7 @@ void InputManager::start_text_input(string* t) {
     LOG_METHOD_START("InputManager::start_text_input");
 
     //! If param is empty, returns
-    if (t == nullptr) { 
+    if (t == nullptr) {
         return;
     }
     else {
@@ -401,14 +401,14 @@ void InputManager::start_text_input(string* t) {
 }
 
 /*!
- *  @fn void InputManager::stop_text_input(string* t) 
- *  @brief Stop text input for player 
+ *  @fn void InputManager::stop_text_input(string* t)
+ *  @brief Stop text input for player
  *  @param string* t
  *  @return The method returns no param
  */
 void InputManager::stop_text_input(string* t) {
     LOG_METHOD_START("InputManager::stop_text_input");
-    
+
     //! If class attribute text is different from param, returns
     if (text != t) {
         return;
@@ -416,7 +416,7 @@ void InputManager::stop_text_input(string* t) {
     else {
         // Do nothing
     }
-    
+
     text = nullptr;
     SDL_StopTextInput();
 
@@ -425,8 +425,8 @@ void InputManager::stop_text_input(string* t) {
 
 /*!
  *  @fn unsigned int InputManager::get_text_cursor_position()
- *  @brief Get text cursor position 
- *  @return unsigned integer 
+ *  @brief Get text cursor position
+ *  @return unsigned integer
  */
 uint InputManager::get_text_cursor_position() {
     LOG_METHOD_START("InputManager::get_text_cursor_position");
@@ -437,8 +437,8 @@ uint InputManager::get_text_cursor_position() {
 
 /*!
  *  @fn bool InputManager::text_cursor_blink()
- *  @brief Make text cursor blink 
- *  @return True or false 
+ *  @brief Make text cursor blink
+ *  @return True or false
  *  @warning Simplify method return
  */
 bool InputManager::text_cursor_blink() {
@@ -450,8 +450,8 @@ bool InputManager::text_cursor_blink() {
 
 /*!
  *  @fn bool InputManager::get_quit_requested()
- *  @brief Get quit_requested value  
- *  @return True or false 
+ *  @brief Get quit_requested value
+ *  @return True or false
  */
 bool InputManager::get_quit_requested() {
     LOG_METHOD_START("InputManager::get_quit_requested");
@@ -461,9 +461,9 @@ bool InputManager::get_quit_requested() {
 }
 
 /*!
- *  @fn InputManager& InputManager::get_input_manager_instance() 
- *  @brief Get InputManager instance 
- *  @return InputManager 
+ *  @fn InputManager& InputManager::get_input_manager_instance()
+ *  @brief Get InputManager instance
+ *  @return InputManager
  */
 InputManager& InputManager::get_input_manager_instance() {
     LOG_METHOD_START("InputManager& InputManager::get_input_manager_instance");

@@ -11,22 +11,22 @@
  *  @warning All variables are initialized
  */
 
-#include <game.hpp>
+ #include <componentMovement.hpp>
 #include <gameObject.hpp>
-#include <componentMovement.hpp>
+#include <game.hpp>
 #include <assert.h>
 
 
 //! Functions to be called by the methods in order to perform actions
 
-void chooseTypeComponentMovement(float time){
+void CompMovement::chooseTypeComponentMovement(float time){
 
  	assert(time > 0.0 and time < 60.0 ); // CPPCheck avalia a condição da assertiva (Se está sempre true)
 
 	UNUSED(time);
-	GO(entity)->position += move;
+	GO(entity)->pos += move;
 
-	if (mType == moveType::type_bullet){
+	if (mType == moveType::t_bullet){
 		GO(entity)->rotation = speed.angle();
 	}
 	else {
@@ -40,12 +40,10 @@ void chooseTypeComponentMovement(float time){
 	@params const Vec2& sprite, moveType move_type
 */
 
-CompMovement::CompMovement(const Vec2& sprite, moveType move_type): mType{move_type},speed{s} {
+CompMovement::CompMovement(const Vec2& sprite, moveType move_type): mType{move_type},speed{sprite} {
 	LOG_METHOD_START('CompMovement::CompMovement');
-	LOG_VARIABLE("CompMovement::CompMovement", "sprite", "move_type");
 
-	assert(sprite >= 0);
-	assert(move_type != NULL);
+
 
 	LOG_METHOD_CLOSE('CompMovement::CompMovement', "constructor");
 
@@ -67,29 +65,6 @@ CompMovement::~CompMovement() {
 }
 
 
-/*!
-	@fn CompMovement::CompMovement()
-	@brief Selects type of components
-	@params const Vec2& sprite, moveType move_type
-*/
-
-void choose_type_component_movement(float time){
-	LOG_METHOD_START('choose_type_component_movement');
-	LOG_VARIABLE("choose_type_component_movement", "time");
-
-	assert(time >= 0);
-
-	UNUSED(time);
-	GO(entity)->position = GO(entity)->position + move;
-
-	if (mType == moveType::type_bullet){
-		GO(entity)->rotation = speed.angle();
-	}
-	else {
-		//Nothing to do
-	}
-	LOG_METHOD_CLOSE('choose_type_component_movement', "void");
-}
 
 /*!
 	@fn void CompMovement::update(float time)
@@ -105,22 +80,11 @@ void CompMovement::update(float time) {
 
 	assert(time >= 0);
 
-	choose_type_component_movement(time);
+	chooseTypeComponentMovement(time);
 
 	LOG_METHOD_CLOSE('CompMovement::update', "void");
 
 	assert(time > 0.0 and time < 60.0 );
-
-	UNUSED(time);
-	GO(entity)->position += move;
-
-	assert(time > 0.0 and time < 60.0 )
-	chooseTypeComponentMovement(time);
-
-
-	if (mType == moveType::type_bullet){
-		GO(entity)->rotation = speed.angle();
-	}
 
 }
 
@@ -149,7 +113,6 @@ void CompMovement::render() {
 Component::type CompMovement::get_type()const{
 	LOG_METHOD_START('CompMovement::get_type');
 
-	LOG_METHOD_CLOSE('CompMovement::get_type', t_movement.to_string());
 
   return Component::type::t_movement;
 }

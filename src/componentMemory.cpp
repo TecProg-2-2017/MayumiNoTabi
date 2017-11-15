@@ -5,6 +5,7 @@
 */
 
 #include <componentMemory.hpp>
+#include <assert.h>
 
 /*!
   * @fn CompMemory::CompMemory()
@@ -73,6 +74,5 @@ void CompMemory::render() {
 Component::type CompMemory::get_type() const {
 	LOG_METHOD_START('CompMemory::get_type');
 
-	LOG_METHOD_CLOSE('CompMemory::get_type', t_memory.to_string());
 	return Component::type::t_memory;
 }

@@ -38,15 +38,13 @@ CompAnim::CompAnim() {
 CompAnim::CompAnim(string filename, CompCollider* temporary_collider) {
   LOG_METHOD_START("CompAnim::CompAnim");
   LOG_VARIABLE("filename", filename);
-  LOG_VARIABLE("temporary_collider", temporary_collider.to_string);
 
   assert(filename != "");
-  assert(temporary_collider != NULL);
 
-  ifstream in(ANIMATION_PATH + filename + ".txt");
+	ifstream in(ANIMATION_PATH + filename + ".txt");
 
-  // Treats possible file opening error
-  if (!in.is_open()) {
+	// Treats possible file opening error
+	if (!in.is_open()) {
     cerr << "Erro ao abrir arquivo de animação '" << filename << "'" << endl;
   }
   else {
@@ -60,11 +58,12 @@ CompAnim::CompAnim(string filename, CompCollider* temporary_collider) {
     int f_counter_y = 0;
     int collider_counter = 0;
 
-    float f_timex_axis = 0f;
-    float y_axis = 0f;
-    float width = 0f;
-    float height = 0f;
-    float r = 0f;
+    float f_time = 0;
+    float x_axis = 0;
+    float y_axis = 0;
+    float width = 0;
+    float height = 0;
+    float r = 0;
 
     in >> img_file;
     in >> f_count;
@@ -72,18 +71,18 @@ CompAnim::CompAnim(string filename, CompCollider* temporary_collider) {
     in >> f_counter_y;
     in >> f_time;
 
-    sp.Open(img_file, f_counter_x, f_counter_y, f_time, f_count);
+		sp.Open(img_file, f_counter_x, f_counter_y, f_time, f_count);
 
-    colliders.resize(f_count, nullptr);
+		colliders.resize(f_count, nullptr);
 
-    FOR(i, f_count) {
+		FOR(i, f_count) {
       in >> collider_counter;
 
-      if (collider_counter) {
+			if (collider_counter) {
         colliders[i] = new CompCollider{};
-        colliders[i]->entity = entity;
+				colliders[i]->entity = entity;
 
-        FOR(j, collider_counter) {
+				FOR(j, collider_counter) {
 
           in >> x_axis;
           in >> y_axis;
@@ -108,7 +107,7 @@ CompAnim::CompAnim(string filename, CompCollider* temporary_collider) {
 
         string function_name = "";
 
-        FOR(funcI, funcCount) {
+        FOR(funcI, function_counter) {
           in >> function_name;
 
           if (txtFuncsF.count(function_name)) {
@@ -142,13 +141,12 @@ CompAnim::CompAnim(string filename, CompCollider* temporary_collider) {
 CompAnim::~CompAnim() {
   LOG_METHOD_START("CompAnim::~CompAnim");
   // Iterates through coliders
-  assert(colliders != NULL);
 
   FOR(i, colliders.size()) {
 
-    // Ignores deletion if current collider equals current frame
-    if (i == GetCurFrame()) {
-      continue;
+		// Ignores deletion if current collider equals current frame
+		if (i == get_current_frame()) {
+			continue;
     }
     else {
       // Do nothing
@@ -168,11 +166,10 @@ CompAnim::~CompAnim() {
   @warning  none
 */
 
-bool CompAnim::Looped()const {
+bool CompAnim::is_looped()const {
   LOG_METHOD_START("CompAnim::Looped");
-  assert(sp != NULL);
 
-  bool is_animation_looped = sp.Looped();
+  bool is_animation_looped = sp.is_looped();
 
   LOG_METHOD_CLOSE("CompAnim::Looped", is_animation_looped);
   assert(is_animation_looped == true || is_animation_looped == false);
@@ -180,17 +177,16 @@ bool CompAnim::Looped()const {
 }
 
 /*!
-  @fn       void CompAnim::Update(float time)
-  @brief    Updates the animation
-  @param    float time
-  @return   void
-  @warning  none
+	@fn       void CompAnim::update(float time)
+	@brief    updates the animation
+	@param    float time
+	@return   void
+	@warning  none
 */
 
-void CompAnim::Update(float time) {
-  LOG_METHOD_START("CompAnim::Update");
+void CompAnim::update(float time) {
+  LOG_METHOD_START("CompAnim::update");
   LOG_VARIABLE("time", time);
-  assert(sp != NULL);
 
   int frame1 = get_current_frame(); //!< Used later for comparrison with next frame
   int frame2 = get_current_frame(); //!< Assigns the new frame to this variable for
@@ -202,11 +198,11 @@ void CompAnim::Update(float time) {
   // Checks if the animation has not been called && calls it
   checks_animation_call(frame1);
 
-  sp.Update(time);
+	sp.update(time);
 
   set_new_frame(frame1, frame2);
 
-  LOG_METHOD_CLOSE("CompAnim::Update", "void");
+  LOG_METHOD_CLOSE("CompAnim::update", "void");
 }
 
 /*!
@@ -222,7 +218,6 @@ void CompAnim::checks_animation_call(int frame) {
   LOG_VARIABLE("frame", frame);
   LOG_VARIABLE("called", called);
 
-  assert(sp != NULL);
   assert(frame > 0);
 
   if (!called) {
@@ -240,30 +235,25 @@ void CompAnim::checks_animation_call(int frame) {
 }
 
 /*!
-  @fn       void CompAnim::Render()
-  @brief    Renders current animation
-  @param    none
-  @return   void
-  @warning  none
+	@fn       void CompAnim::render()
+	@brief    renders current animation
+	@param    none
+	@return   void
+	@warning  none
 */
 
-void CompAnim::Render() {
-  LOG_METHOD_START("CompAnim::Render");
-  assert(sp != NULL);
+void CompAnim::render() {
+  LOG_METHOD_START("CompAnim::render");
 
-  Vec2 full_box = GO(entity)->FullBox(); //!< Used to save the
+  Rect full_box = GO(entity)->FullBox(); //!< Used to save the
   //!< position to render
   Vec2 corner = full_box.corner();
   Vec2 render_pos = corner.renderPos();
 
-  LOG_VARIABLE("pos", pos.to_string());
-
-  assert(pos != NULL);
-
   sp.SetFlipH(GO(entity)->flipped);
-  sp.Render(pos, GO(entity)->rotation, Camera::zoom);
+	sp.render(render_pos, GO(entity)->rotation, Camera::camera_zoom);
 
-  LOG_METHOD_CLOSE("CompAnim::Render", "void");
+  LOG_METHOD_CLOSE("CompAnim::render", "void");
 }
 
 /*!
@@ -276,14 +266,11 @@ void CompAnim::Render() {
 
 void CompAnim::own(GameObject* go) {
   LOG_METHOD_START("CompAnim::own");
-  LOG_VARIABLE("go", go.to_string());
 
-  assert(go != NULL);
+	entity = go->uid;
 
-  entity = go->uid;
-
-  // Iterates through the colliders && defines its ownage if they're not null
-  for (CompCollider *coll:colliders) {
+	// Iterates through the colliders and defines its ownage if they're not null
+	for (CompCollider *coll:colliders) {
     if (coll != nullptr) {
       coll->own(go);
     }
@@ -336,7 +323,6 @@ bool CompAnim::compare_frames(int frame1, int frame2) {
 
 int CompAnim::get_frame_count() const {
   LOG_METHOD_START("CompAnim::get_frame_count");
-  assert(sp != NULL);
 
   int qtd_frame = sp.get_frame_count();
 
@@ -354,7 +340,6 @@ int CompAnim::get_frame_count() const {
 
 int CompAnim::get_current_frame() const {
   LOG_METHOD_START("CompAnim::get_current_frame");
-  assert(sp != NULL);
 
   int current_frame = sp.get_current_frame();
 
@@ -378,11 +363,10 @@ void CompAnim::set_current_frame(int frame, // range: unknown
   LOG_VARIABLE("frame", frame);
   LOG_VARIABLE("force", force);
 
-  assert(sp != NULL);
 
   // Set frame as current if it isn't already
   if (frame != get_current_frame()) {
-    sp.SetFrame(frame);
+    sp.set_frame(frame);
 
     for (auto &foo : frameFunc[frame]) {
       foo(GO(entity));
@@ -397,7 +381,6 @@ void CompAnim::set_current_frame(int frame, // range: unknown
 
   // Sets current frame by force
   set_current_frame_by_force(frame, force);
-  LOG_METHOD_CLOSE("CompAnim::set_current_frame", sp.set_current_frame());
 }
 
 /*!
@@ -408,7 +391,7 @@ void CompAnim::set_current_frame(int frame, // range: unknown
   @warning  none
 */
 
-void set_new_frame(int frame1, int frame2) {
+void CompAnim::set_new_frame(int frame1, int frame2) {
   LOG_METHOD_START("CompAnim::set_new_frame");
   LOG_VARIABLE("frame1", frame1);
   LOG_VARIABLE("frame2", frame2);
@@ -442,7 +425,6 @@ void CompAnim::set_current_frame_by_force(int frame,
   LOG_VARIABLE("frame", frame);
   LOG_VARIABLE("force", force);
 
-  assert(sp != NULL);
 
   // Sets current frame by force
   if (force == true) {
@@ -465,16 +447,15 @@ void CompAnim::set_current_frame_by_force(int frame,
 }
 
 /*!
-  @fn       Component::type CompAnim::GetType()const
-  @brief    Returns type of the animation as a constant value
-  @param    none
-  @return   Component::type type of the animation
-  @warning  none
+	@fn       Component::type CompAnim::get_type()const
+	@brief    Returns type of the animation as a constant value
+	@param    none
+	@return   Component::type type of the animation
+	@warning  none
 */
 
-Component::type CompAnim::GetType()const {
-  LOG_METHOD_START("CompAnim::GetType");
-  LOG_METHOD_CLOSE("CompAnim::GetType", Component::type::t_animation);
-  assert(Component::type::t_animation != NULL);
+Component::type CompAnim::get_type()const {
+  LOG_METHOD_START("CompAnim::get_type");
+  LOG_METHOD_CLOSE("CompAnim::get_type", Component::type::t_animation);
   return Component::type::t_animation;
 }

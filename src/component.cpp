@@ -27,7 +27,6 @@ bool Component::kills_component(float time) {
   UNUSED(time);
 
   LOG_METHOD_CLOSE("Component::kills_component", "true (hardcoded)");
-  
   // How can I possibly check this??
   return true;
 }
@@ -42,12 +41,10 @@ bool Component::kills_component(float time) {
 
 void Component::own(GameObject *go) {
   LOG_METHOD_START("Component::own");
-  LOG_VARIABLE("go", go.to_string);
+  // LOG_VARIABLE("go", go.to_string);
 
-  assert(go != NULL);
-  
+
   entity = go->uid;
-  
+
   LOG_METHOD_CLOSE('Componet::own', 'void');
 }
-

@@ -38,10 +38,10 @@ public:
 
 	void floor();
 
-	float len() const;//magnitude do vetor
+	float vector_lenght() const;//magnitude do vetor
 	float angle() const;//angulo entre this e o eixo x
 
-	float dist(const Vec2& b) const;//distancia entre this e b
+	float distance(const Vec2& b) const;//distancia entre this e b
 	float angle(const Vec2& b) const;//inclinacao da reta definida por this e b
 
 	Vec2 unit() const;//vetor unitario
@@ -74,7 +74,7 @@ public:
 
 	void floor();
 	void setPos(const Vec2& b);
-	void setCenter(const Vec2& b); 
+	void setCenter(const Vec2& b);
 
 	float x2() const;
 	float y2() const;

@@ -122,7 +122,7 @@ template<class T> txtFuncType1 ChangeVar(T& in) {
 	if (type=="timer") {
 		return [name](GameObject* self) {
 			if (!self->HasComponent(Component::type::t_memory))self->AddComponent(new CompMemory{});
-			COMPMEMORYp(self)->timers[name].Restart();
+			COMPMEMORYp(self)->timers[name].restart_time();
 		};
 	}
 
@@ -135,7 +135,7 @@ template<class T> txtFuncType1 Damage(T& in) {
 	dmgHigh=max(dmgHigh,dmgLow+1);
 	return [dmgLow,dmgHigh](GameObject* self) {
 		int dmg = dmgLow + (rand()%(dmgHigh-dmgLow));
-		if (self->HasComponent(Component::type::t_hp))COMPHPp(self)->Damage(dmg);
+		if (self->HasComponent(Component::type::t_hp))COMPHPp(self)->damage(dmg);
 	};
 }
 template<class T> txtFuncType1 DamageArea(T& in) {
@@ -162,7 +162,7 @@ template<class T> txtFuncType1 DamageArea(T& in) {
 			if (dmgSelf || GO(go)->team != self->team) {
 				//TODO: change collision to work with rotation
 				if (GO(go)->HasComponent(Component::type::t_hp) && area.collides(GO(go)->Box())) {
-					COMPHPp(GO(go))->Damage(dmgLow+(rand()%(dmgHigh-dmgLow)));
+					COMPHPp(GO(go))->damage(dmgLow+(rand()%(dmgHigh-dmgLow)));
 				}
 			}
 		}
@@ -193,7 +193,7 @@ template<class T> txtFuncType1 DamageAreaFixed(T& in) {
 			if (dmgSelf || GO(go)->team != self->team) {
 				//TODO: change collision to work with rotation
 				if (GO(go)->HasComponent(Component::type::t_hp) && area.collides(GO(go)->Box())) {
-					COMPHPp(GO(go))->Damage(dmgLow+(rand()%(dmgHigh-dmgLow)));
+					COMPHPp(GO(go))->damage(dmgLow+(rand()%(dmgHigh-dmgLow)));
 				}
 			}
 		}
@@ -263,7 +263,7 @@ template<class T> txtFuncType1 FireProjectile(T& in) {
 			Vec2 &totMove=COMPMOVEp(GO(a.entity))->move;
 			if (totMove==Vec2{})return;
 
-			Vec2 move=a.Collides(b,totMove);
+			Vec2 move=a.collides(b,totMove);
 
 			if (move!=totMove) {
 				if (isAlly) {
@@ -296,7 +296,7 @@ template<class T> txtFuncType1 FireProjectile(T& in) {
 			Vec2 &totMove=COMPMOVEp(GO(a.entity))->move;
 			if (totMove==Vec2{})return;
 
-			Vec2 move=a.Collides(b,totMove);
+			Vec2 move=a.collides(b,totMove);
 
 			if (move!=totMove) {
 				for (auto &pfunc:hitBlock) {

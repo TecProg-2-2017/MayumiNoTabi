@@ -24,9 +24,7 @@
 CompAnimControl::CompAnimControl(string filename, CompCollider* collider) {
   LOG_METHOD_START("CompAnimControl::CompAnimControl");
   LOG_VARIABLE("filename", filename);
-  LOG_VARIABLE("collider", collider.to_string());
 
-  assert(collider != NULL);
   assert(filename != "");
 
   ifstream in(ANIMATION_PATH + filename + ".txt");
@@ -232,17 +230,15 @@ void CompAnimControl::render() {
 
 void CompAnimControl::own(GameObject *game_object) {
   LOG_METHOD_START("CompAnimControl::own");
-  LOG_VARIABLE("game_object", game_object.to_string());
 
-  assert(game_object != NULL);
 
-  entity = go->uid;
+  entity = game_object->uid;
 
   for (auto &anim:animations) {
-    anim.second->own(go);
+    anim.second->own(game_object);
   }
 
-  get_current().own(go);
+  get_current().own(game_object);
   LOG_METHOD_CLOSE("CompAnimControl::own", "void");
 }
 
@@ -258,7 +254,6 @@ CompAnim &CompAnimControl::get_current() {
   LOG_METHOD_START("CompAnimControl::get_current");
   LOG_METHOD_CLOSE("CompAnimControl::get_current", "pointer to current animation");
 
-  assert(*animations[cur] != NULL);
   return *animations[cur];
 }
 
@@ -272,9 +267,9 @@ CompAnim &CompAnimControl::get_current() {
 
 const string &CompAnimControl::get_current_name() const {
   LOG_METHOD_START("CompAnimControl::get_current_name");
-  LOG_METHOD_CLOSE("CompAnimControl::get_current_name", current);
-  assert(current != '');
-  return current;
+  LOG_METHOD_CLOSE("CompAnimControl::get_current_name", cur);
+  assert(cur != "");
+  return cur;
 }
 
 /*!
@@ -287,9 +282,9 @@ const string &CompAnimControl::get_current_name() const {
 
 string &CompAnimControl::get_current_name() {
   LOG_METHOD_START("CompAnimControl::get_current_name");
-  LOG_METHOD_CLOSE("CompAnimControl::get_current_name", current);
-  assert(current != "");
-  return current;
+  LOG_METHOD_CLOSE("CompAnimControl::get_current_name", cur);
+  assert(cur != "");
+  return cur;
 }
 
 /*!
@@ -302,7 +297,5 @@ string &CompAnimControl::get_current_name() {
 
 Component::type CompAnimControl::get_type()const {
   LOG_METHOD_START("CompAnimControl::get_type");
-  LOG_METHOD_CLOSE("CompAnimControl::get_type", Component::type::t_animation_control.to_string());
-  assert(Component::type::t_animation_control != NULL);
   return Component::type::t_animation_control;
 }

@@ -22,7 +22,7 @@ public:
 
 	CompMovement(const Vec2& s=Vec2{},moveType t=t_horizontal);
 	~CompMovement();
-
+	void chooseTypeComponentMovement(float time);
 	void update(float time);
 	void render();
 	Component::type get_type()const;
