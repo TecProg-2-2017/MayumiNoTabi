@@ -47,11 +47,10 @@ SDL_Color generate_color(int red,		// red value, 	range: 0 -> 255
 	color.b = blue;
 	color.a = alpha;
 
-  LOG_METHOD_CLOSE("Common::generate_color", color.to_string());
-  assert(color.red >= 0 && color.red <= 255);
-  assert(color.green >= 0 && color.green <= 255);
-  assert(color.blue >= 0 && color.blue <= 255);
-  assert(color.alpha >= 0 && color.alpha <= 255);
+  assert(color.r >= 0 and color.r <= 255);
+  assert(color.g >= 0 and color.g <= 255);
+  assert(color.b >= 0 and color.b <= 255);
+  assert(color.a >= 0 and color.a <= 255);
   return color;
 }
 
@@ -129,7 +128,6 @@ bool equals(const float &a, const float &b) {
 
   float fabs_on_params = std::fabs((a - b));
 
-  LOG_METHOD_CLOSE("Common::equals", fabs_on_params <= PRECISION));
   return (fabs_on_params <= PRECISION);
 }
 
