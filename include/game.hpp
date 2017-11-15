@@ -32,6 +32,9 @@ public:
 
 	Game(string title,int width,int height);
 	~Game();
+	void checkStackState();
+	void checkStoredState();
+	void pauseOrEndGame();
 
 	static Game& GetInstance();
 	SDL_Renderer* GetRenderer();
@@ -42,7 +45,7 @@ public:
 	void Run();
 
 	float GetDeltaTime();
-	
+
 	void SwitchWindowMode();
 };
 
