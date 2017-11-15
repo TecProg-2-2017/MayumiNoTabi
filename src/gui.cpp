@@ -141,7 +141,7 @@ GUI_Button::GUI_Button(uint a,const Vec2& pos):GUI_Element(pos),action{a} {
 
 void GUI_Button::Update() {
 	LOG_METHOD_START("GUI_Button::Update");
-
+	//! TODO Error Handling
 	if (gui.gui_button_is_selected(this)) {
 		return;
 	}
@@ -152,7 +152,7 @@ void GUI_Button::Update() {
 	Rect button = box;
 	CLIP_RECT(button, DEFAULT_MARGIN);
 	hover = button.contains(INPUT.get_mouse_position());
-
+	//! TODO Error Handling
 	if (hover) {
 		gui.select_gui_button(this);
 		if (INPUT.mouse_button_pressed(MBUTTON_LEFT)) {
@@ -166,6 +166,7 @@ void GUI_Button::Update() {
 	else {
 		// Nothing to do
 	}
+	//! TODO Error Handling
 	if (press && INPUT.mouse_button_released(MBUTTON_LEFT)) {
 		press = false;
 	}
@@ -181,12 +182,12 @@ void GUI_Button::render() {
 
 	SET_COLOR(BASE_COLOR);
 	FILL_RECT(&rect);
-
+	//! TODO Error Handling
 	if (hover) {
 		SET_COLOR(HIGHLIGHT_COLOR);
 		CLIP_RECT(rect, DEFAULT_MARGIN);
 		DRAW_RECT(&rect);
-
+		//! TODO Error Handling
 		if (press) {
 			SET_COLOR(PRESS_COLOR);
 			CLIP_RECT(rect, 1);
@@ -245,7 +246,7 @@ void GUI_CheckButton::Update() {
 	Rect button = box;
 	CLIP_RECT(button, DEFAULT_MARGIN*2);
 	hover = button.contains(INPUT.get_mouse_position());
-
+	//! TODO Error Handling
 	if (hover) {
 		gui.select_gui_button(this);
 		if (INPUT.mouse_button_pressed(MBUTTON_LEFT)) {
@@ -258,6 +259,7 @@ void GUI_CheckButton::Update() {
 	else {
 		// Nothing to do
 	}
+	//! TODO Error Handling
 	if (press && INPUT.mouse_button_released(MBUTTON_LEFT)) {
 		if (hover) {
 			value = !value;
@@ -379,12 +381,15 @@ void GUI_InputBox::Update() {
 	CLIP_RECT(button, DEFAULT_MARGIN);
 	hover = button.contains(INPUT.get_mouse_position());
 	bool closed = false;
+
+	//! TODO Error Handling
 	if (hover) {
 		gui.select_gui_button(this);
 	}
 	else {
 		// Nothing to do
 	}
+	//! TODO Error Handling
 	if (INPUT.mouse_button_pressed(MBUTTON_LEFT)) {
 		if (!press) {
 			if (hover) {
@@ -411,7 +416,7 @@ void GUI_InputBox::Update() {
 	else {
 		// Nothing to do
 	}
-
+	//! TODO Error Handling
 	if (closed || INPUT.key_pressed(KEY_ENTER)) {
 		press = false;
 		INPUT.stop_text_input(&input);
@@ -453,6 +458,7 @@ void GUI_InputBox::render() {
 	rect.w -= DEFAULT_MARGIN*2;
 
 	text.set_box_position({box.x+DEFAULT_MARGIN*2,box.y+box.h/2});
+	//! TODO Error Handling
 	if (press) {
 		Rect textRect = text.get_box();
 		int textEnd = (textRect.x + textRect.w) - 1 - offset;
@@ -467,6 +473,8 @@ void GUI_InputBox::render() {
 
 		Vec2 cursor(rect.x - offset, rect.y + 2);
 		int c = INPUT.get_text_cursor_position();
+
+		//! TODO Error Handling
 		if (c > 0) {
 			text.set_text(input.substr(0,c));
 			cursor.x += (text.get_box().w - 1);
@@ -474,7 +482,7 @@ void GUI_InputBox::render() {
 		else {
 			// Nothing to do
 		}
-
+		//! TODO Error Handling
 		if (cursor.x >= (rect.x+rect.w)) {
 			offset += cursor.x-(rect.x+rect.w-1);
 			cursor.x = (rect.x+rect.w-1);
@@ -483,7 +491,7 @@ void GUI_InputBox::render() {
 			offset -= rect.x-cursor.x;
 			cursor.x = rect.x;
 		}
-
+		//! TODO Error Handling
 		if (INPUT.text_cursor_blink()) {
 			DRAW_LINE(cursor.x,cursor.y,cursor.x,cursor.y+DEFAULT_FONT_SIZE);
 		}
@@ -543,6 +551,7 @@ void GUI_IntBox::SetValue() {
 
 	while (!input.empty() && (input[0] < '0' || input[0] >'9'))
 		input.erase(0,1);
+	//! TODO Error Handling
 	if (input.empty()) {
 		return;
 	}
@@ -571,7 +580,7 @@ GUI_Label::GUI_Label(const string& t,Snap s,const Vec2& pos):GUI_Element(pos), \
 
 	text.set_hotspot();
 	box.w = text.get_box().w;
-
+	//! TODO Error Handling
 	if (snap == SNAP_LEFT || snap == SNAP_RIGHT) {
 		box.w += DEFAULT_MARGIN;
 	}
@@ -598,6 +607,7 @@ void GUI_Label::render() {
 	else if (snap == SNAP_RIGHT) {
 		text.set_box_position(box.center() + Vec2(DEFAULT_MARGIN,0));
 	}
+	//! TODO Error Handling
 	else {
 		text.set_box_position(box.center());
 	}
@@ -670,12 +680,14 @@ GUI_HBar::GUI_HBar(vector<GUI_Element*>& v,uint width,const Vec2& pos): \
 	assert(width != NULL);
 	assert(&pos != NULL);
 
+	//! TODO Error Handling
 	if (width) {
 		box.w = width;
 	}
 	else {
 		box.w = 0;
 		for (auto& it:array) {
+			//! TODO Error Handling
 			if (it) {
 				box.w += it->GetBox().w;
 			}
@@ -688,6 +700,7 @@ GUI_HBar::GUI_HBar(vector<GUI_Element*>& v,uint width,const Vec2& pos): \
 	int h = 0;
 
 	for (auto& it:array) {
+		//! TODO Error Handling
 		if (it) {
 			h = it->GetBox().h;
 			if (h > box.h) {
@@ -716,6 +729,7 @@ void GUI_HBar::render() {
 	SET_COLOR(BASE_COLOR);
 	FILL_RECT(&bg);
 	for (auto& it:array) {
+		//! TODO Error Handling
 		if (it) {
 			if (it->IsVisible()) {
 				it->SetPos(pos);
@@ -728,6 +742,7 @@ void GUI_HBar::render() {
 			}
 		}
 		else if (!empty) {
+			//! TODO Error Handling
 			divX = pos.x + (DIVISOR_WIDTH / 2);
 
 			SET_COLOR(HIGHLIGHT_COLOR);
@@ -754,6 +769,7 @@ GUI_VBar::GUI_VBar(vector<GUI_Element*>& v,uint height,const Vec2& pos):
 	assert(&pos != NULL);
 
 	if (height) {
+		//! TODO Error Handling
 		box.h = height;
 	}
 	else {
@@ -761,6 +777,7 @@ GUI_VBar::GUI_VBar(vector<GUI_Element*>& v,uint height,const Vec2& pos):
 		box.h = 0;
 
 		for (auto& it:array) {
+			//! TODO Error Handling
 			if (it) {
 				box.h += it->GetBox().h;
 			}
@@ -775,6 +792,7 @@ GUI_VBar::GUI_VBar(vector<GUI_Element*>& v,uint height,const Vec2& pos):
 	for (auto& it:array) {
 		if (it) {
 			w = it->GetBox().w;
+			//! TODO Error Handling
 			if (w > box.w) {
 				box.w = w;
 			}
@@ -800,6 +818,7 @@ void GUI_VBar::render() {
 
 	for (auto& it:array) {
 		if (it) {
+			//! TODO Error Handling
 			if (it->IsVisible()) {
 				it->SetPos(pos);
 				it->render();
@@ -840,6 +859,7 @@ GUI_Window::GUI_Window(vector<GUI_Element*>& v,int i,const string& l, \
 	box.w = array.GetBox().w;
 	box.h = array.GetBox().h + DEFAULT_HEIGHT;
 
+	//! TODO Error Handling
 	if (pos == Vec2(-1,-1)) {
 		box.x = (WINSIZE.x-box.w) / 2;
 		box.y = (WINSIZE.y-box.h) / 2;
@@ -855,6 +875,7 @@ GUI_Window::GUI_Window(vector<GUI_Element*>& v,int i,const string& l, \
 void GUI_Window::update() {
 	LOG_METHOD_START("GUI_Window::update");
 
+	//! TODO Error Handling
 	if (pop) {
 		GUI.request_gui_element_pop(this);
 		return;
@@ -865,6 +886,7 @@ void GUI_Window::update() {
 
 	bool hover = box.contains(INPUT.get_mouse_position());
 
+	//! TODO Error Handling
 	if (!hover) {
 		if (INPUT.mouse_button_pressed(MBUTTON_LEFT)) {
 			GUI.select_gui_window(nullptr);
