@@ -62,7 +62,7 @@ void CompAI::update(float time) {
   @warning  Empty
 */
 
-void CompAI::render_component_ai() {
+void CompAI::render() {
   LOG_METHOD_START("CompAI::render_component_ai");
   LOG_MSG("no code in this method...")
   LOG_METHOD_CLOSE("CompAI::render_component_ai", "void");

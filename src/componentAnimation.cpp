@@ -144,15 +144,9 @@ CompAnim::~CompAnim() {
 
   FOR(i, colliders.size()) {
 
-<<<<<<< 4bed274d618a2f4dd72762ab7e3009739ebd59d5
-    // Ignores deletion if current collider equals current frame
-    if (i == GetCurFrame()) {
-      continue;
-=======
 		// Ignores deletion if current collider equals current frame
 		if (i == get_current_frame()) {
 			continue;
->>>>>>> fixing camera and componentAnimation
     }
     else {
       // Do nothing

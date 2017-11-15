@@ -231,6 +231,11 @@ void Text::set_line(int line, string txt) {
 	}
 }
 
+void Text::set_alignment(Align al){
+	alignment = al;
+	remake_texture();
+}
+
 /*!
 	@fn void Text::SetColor(SDL_Color c))
 	@brief A setter for the text color

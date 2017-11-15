@@ -20,15 +20,15 @@
 
 //! Functions to be called by the methods in order to perform actions
 
-void textPosition(){
+void CompText::textPosition(){
 	Vec2 p = pos + GO(entity)->Box().corner();
-	txt.SetPos(p);
+	txt.set_box_position(p);
 
 	if (GO(entity)->anchored) {
-		txt.Render();
+		txt.render();
 	}
 	else {
-		txt.Render(CAMERA);
+		txt.render(CAMERA);
 	}
 }
 
@@ -79,7 +79,7 @@ void CompText::update(float time) { //Time range 0.0 - 60.0
 */
 
 void CompText::render() {
-	textPosition()
+	textPosition();
 }
 
 /*!
