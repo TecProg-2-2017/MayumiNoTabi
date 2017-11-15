@@ -85,24 +85,16 @@ void StateTitle::Begin() {
 void StateTitle::update(float time) {
 
 	//! Checks if the user tried to quit
-	if (INPUT.QuitRequested() || INPUT.KeyPress(KEY_ESC)){
-		quitRequested = true;
+	if (INPUT.get_quit_requested() || INPUT.key_pressed(KEY_ESC)){
+		quit_requested = true;
 	}
 
 	//! Checks if the user pressed the space key
-	if (INPUT.KeyPress(KEY_SPACE)) {
-		bt2.set_frame(1);
-		GAMEINST.Push(new StateStage{"level_0"});
-	}
-	//! Checks if the user pressed the 'e' key
-	if (INPUT.KeyPress(KEY(e))) {
-
-	if (INPUT.get_quit_requested() || INPUT.key_pressed(KEY_ESC)) quit_requested=true;
-
 	if (INPUT.key_pressed(KEY_SPACE)) {
 		bt2.set_frame(1);
 		GAMEINST.Push(new StateStage{"level_0"});
 	}
+	//! Checks if the user pressed the 'e' key
 	if (INPUT.key_pressed(KEY(e))) {
 
 		bt1.set_frame(1);
