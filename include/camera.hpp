@@ -10,7 +10,7 @@ class GameObject;
 
 #define CAMERA Camera::camera_position
 #define CAMERAZOOM Camera::camera_zoom
-#define CAMERALOCK Camera::camera_lock
+#define CAMERALOCK Camera::camera_is_locked
 #define RENDERPOS Camera::render_camera_pos
 #define RENDERPOSX Camera::render_camera_pos_x
 #define RENDERPOSY Camera::render_camera_pos_y

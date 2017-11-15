@@ -61,7 +61,7 @@ void StateEditor::LoadAssets() {}
 
 void StateEditor::Begin() {
 	LoadGUI();
-  
+
 	level.load_level_from_file(fileName);
 	level.load_level_objects(false);
 
@@ -77,7 +77,7 @@ void StateEditor::Begin() {
 }
 
 void StateEditor::update(float time) {
-	Camera::update(time);
+	Camera::update_camera(time);
 	gui.update_gui_elements();
 	if (INPUT.get_quit_requested() || gui.gui_button_was_clicked(EXIT_GAME)) {
 		quit_requested = true;
@@ -92,8 +92,8 @@ void StateEditor::update(float time) {
 			Exit();
 		}
 
-		int tileCount = level.level_tile_set.GetTileCount();
-    
+		int tileCount = level.level_tile_set.get_tile_count();
+
 		//Select next tile
 		if (INPUT.key_pressed(KEY(a))) tileIndex = (tileIndex + tileCount-1)%tileCount;
 		//Select previous tile
@@ -102,26 +102,26 @@ void StateEditor::update(float time) {
 		//Place a tile
 		if (INPUT.mouse_button_is_down(MBUTTON_LEFT)) {
 			Vec2 cursor = GetCurrentTile();
-			Rect canvas(0, 0, level.level_tile_map.GetWidth()-1, level.level_tile_map.GetHeight()-1);
+			Rect canvas(0, 0, level.level_tile_map.get_width()-1, level.level_tile_map.get_height()-1);
 			if (canvas.contains(cursor)) {
 				if (showCollision) {
-					level.collisionLayer[(cursor.y*level.level_tile_map.GetWidth())+cursor.x] = COLLISION_BLOCK;
+					level.level_collision_layer[(cursor.y*level.level_tile_map.get_width())+cursor.x] = COLLISION_BLOCK;
 				}
 				else{
-					level.level_tile_map.At(cursor.x, cursor.y, 0) = tileIndex;
+					level.level_tile_map.at(cursor.x, cursor.y, 0) = tileIndex;
 				}
 			}
 		}
 		//Erase a tile
 		if (INPUT.mouse_button_is_down(MBUTTON_RIGHT)) {
 			Vec2 cursor = GetCurrentTile();
-			Rect canvas(0, 0, level.level_tile_map.GetWidth()-1, level.level_tile_map.GetHeight()-1);
+			Rect canvas(0, 0, level.level_tile_map.get_width()-1, level.level_tile_map.get_height()-1);
 			if (canvas.contains(cursor)) {
 				if (showCollision) {
-					level.collisionLayer[(cursor.y*level.level_tile_map.GetWidth())+cursor.x] = EMPTY_TILE;
+					level.level_collision_layer[(cursor.y*level.level_tile_map.get_width())+cursor.x] = EMPTY_TILE;
 				}
 				else{
-					level.level_tile_map.At(cursor.x, cursor.y, 0) = -1;
+					level.level_tile_map.at(cursor.x, cursor.y, 0) = -1;
 				}
 			}
 		}
@@ -133,14 +133,14 @@ void StateEditor::update(float time) {
 		if (INPUT.key_pressed(KEY(h))) {
 			showHelp = (!showHelp);
 			if (showHelp) helpText.set_text(HELP_TEXT);
-			else helpText.Set_text(HELP_TEXT_OPEN);
+			else helpText.set_text(HELP_TEXT_OPEN);
 		}
 		//Toggle collision boxes
 		if (INPUT.key_pressed(KEY(c)) || gui.gui_button_was_clicked(SHOW_COLLISION)) showCollision = (!showCollision);
 
 		//Save level
 		if (INPUT.key_pressed(KEY(s)) || gui.gui_button_was_clicked(SAVE_LEVEL)) SaveLevel();
-    
+
 		//Resize level
 		if (gui.gui_button_was_clicked(Action::RESIZE_LEVEL)) {
 			CreateWindow(RESIZE_LEVEL);
@@ -178,7 +178,7 @@ void StateEditor::update(float time) {
 	}
 
 	//UpdateArray(time);
-	statusText.Set_text("Mouse:("+to_string(INPUT.get_mouse_positionX())+","+to_string(INPUT.get_mouse_positionY())+")  Zoom:"+convert_float_to_str(100*CAMERAZOOM)+"%");
+	statusText.set_text("Mouse:("+to_string(INPUT.get_mouse_x_position())+","+to_string(INPUT.get_mouse_y_position())+")  Zoom:"+convert_float_to_str(100*CAMERAZOOM)+"%");
 }
 void StateEditor::render() {
 	RenderBackground();
@@ -186,7 +186,7 @@ void StateEditor::render() {
 	//Tirei background daqui
 	//level.background.render(RENDERPOSX(0), RENDERPOSY(0), 0, CAMERAZOOM);
 	level.level_tile_map.render();
-  
+
 	RenderArray();
 	if (showGrid) RenderGrid(gridWidth, gridHeight);
 	RenderBorder();
@@ -240,19 +240,19 @@ void StateEditor::RenderBorder() {
 	SDL_Rect rect;
 	rect.x = RENDERPOSX(0);
 	rect.y = RENDERPOSY(0);
-  
-	rect.w = (level.level_tile_map.GetWidth()*level.level_tile_set.GetWidth()*CAMERAZOOM);
-	rect.h = (level.level_tile_map.GetHeight()*level.level_tile_set.GetHeight()*CAMERAZOOM);
+
+	rect.w = (level.level_tile_map.get_width()*level.level_tile_set.get_width()*CAMERAZOOM);
+	rect.h = (level.level_tile_map.get_height()*level.level_tile_set.get_height()*CAMERAZOOM);
 	DRAW_RECT(&rect);
 }
 
 void StateEditor::RenderCursor() {
 	Vec2 cursor = GetCurrentTile();
 
-	int tileWidth = level.level_tile_set.GetWidth();
-	int tileHeight = level.level_tile_set.GetHeight();
-	int mapWidth = level.level_tile_map.GetWidth();
-	int mapHeight = level.level_tile_map.GetHeight();
+	int tileWidth = level.level_tile_set.get_width();
+	int tileHeight = level.level_tile_set.get_height();
+	int mapWidth = level.level_tile_map.get_width();
+	int mapHeight = level.level_tile_map.get_height();
 
 	Rect canvas(0, 0, mapWidth-1, mapHeight-1);
 	if (canvas.contains(cursor)) {
@@ -273,17 +273,17 @@ void StateEditor::RenderCursor() {
 void StateEditor::RenderCollision() {
 	SET_COLOR(COLLISION_COLOR);
 
-	int mapWidth = level.level_tile_map.GetWidth();
-	int mapHeight = level.level_tile_map.GetHeight();
-	int tileWidth = level.level_tile_set.GetWidth();
-	int tileHeight = level.level_tile_set.GetHeight();
-  
+	int mapWidth = level.level_tile_map.get_width();
+	int mapHeight = level.level_tile_map.get_height();
+	int tileWidth = level.level_tile_set.get_width();
+	int tileHeight = level.level_tile_set.get_height();
+
 	SDL_Rect rect;
 	rect.w = (tileWidth*CAMERAZOOM)+1;
 	rect.h = (tileHeight*CAMERAZOOM)+1;
 	FOR(y,mapHeight) {
 		FOR(x,mapWidth) {
-			if (level.collisionLayer[(y*mapWidth)+x] == COLLISION_BLOCK) {
+			if (level.level_collision_layer[(y*mapWidth)+x] == COLLISION_BLOCK) {
 				rect.x = RENDERPOSX(x*tileWidth);
 				rect.y = RENDERPOSY(y*tileWidth);
 				DRAW_RECT(&rect);
@@ -306,8 +306,8 @@ void StateEditor::Exit() {
 
 Vec2 StateEditor::GetCurrentTile() {
 	Vec2 pos = CAMERA+(INPUT.get_mouse_position()/CAMERAZOOM);
-	int tileWidth = level.level_tile_set.GetWidth();
-	int tileHeight = level.level_tile_set.GetHeight();
+	int tileWidth = level.level_tile_set.get_width();
+	int tileHeight = level.level_tile_set.get_height();
 
 	//if (pos.x<0) pos.x-=tileWidth;
 	pos.x/=tileWidth;
@@ -326,10 +326,10 @@ void StateEditor::SaveLevel() {
 }
 
 void StateEditor::ResizeLevel() {
-	int mapWidth = level.level_tile_map.GetWidth();
-	int mapHeight = level.level_tile_map.GetHeight();
+	int mapWidth = level.level_tile_map.get_width();
+	int mapHeight = level.level_tile_map.get_height();
 
-	level.level_tile_map.SetSize(levelWidth, levelHeight);
+	level.level_tile_map.change_size(levelWidth, levelHeight);
 
 	vector<int> newCollisionLayer(levelWidth*levelHeight, EMPTY_TILE);
 	int maxX = min(levelWidth, mapWidth);
@@ -337,17 +337,17 @@ void StateEditor::ResizeLevel() {
 
 	FOR(y,maxY)
 		FOR(x,maxX)
-			newCollisionLayer[x+(y*levelWidth)] = level.collisionLayer[x+(y*mapWidth)];
-	level.collisionLayer.clear();
-	level.collisionLayer = newCollisionLayer;
+			newCollisionLayer[x+(y*levelWidth)] = level.level_collision_layer[x+(y*mapWidth)];
+	level.level_collision_layer.clear();
+	level.level_collision_layer = newCollisionLayer;
 }
 
 
 void StateEditor::RecomputeCollisionRectangles() {
 	TileMap &tm = level.level_tile_map;
-	vector<int> &coll=level.collisionLayer;
-	int mapWidth=tm.GetWidth();
-	int mapHeight=tm.GetHeight();
+	vector<int> &coll=level.level_collision_layer;
+	int mapWidth=tm.get_width();
+	int mapHeight=tm.get_height();
 
 	grouped.clear();
 	grouped.resize(mapWidth*mapHeight);
@@ -417,8 +417,8 @@ void StateEditor::LoadGUI() {
 void StateEditor::CreateWindow(uint type) {
 	GUI_NEW;
 	if (type==RESIZE_LEVEL) {
-		levelWidth = level.level_tile_map.GetWidth();
-		levelHeight = level.level_tile_map.GetHeight();
+		levelWidth = level.level_tile_map.get_width();
+		levelHeight = level.level_tile_map.get_height();
 
 		GUI_SET(labels);
 		GUI_ADD(Label("Width: "));
