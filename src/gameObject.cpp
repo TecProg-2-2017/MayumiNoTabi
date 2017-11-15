@@ -12,6 +12,7 @@
 #include <stateStage.hpp>
 #include <txtFuncs.hpp>
 #include <music.hpp>
+#include <assert.h>
 
 GameObject::GameObject():uid{goCount++};
 GameObject::GameObject (const Vec2 &pos_,float r,Hotspot hs,bool a);

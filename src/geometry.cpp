@@ -6,6 +6,7 @@
 
 #include <geometry.hpp>
 #include <camera.hpp>
+#include <assert.h>
 
 /**
 	Prototypes from geometry methods.
