@@ -29,6 +29,7 @@ public:
 		Rect Box() const;
 
 		void collision_check(const Coll &other_component);
+		void collides_axis(const CompCollider::Coll &other_component);
 		Vec2 collides(const Coll &other_component,const Vec2& move,const Vec2& moved=Vec2{}) const;
 	};
 	vector<Coll> colls;
@@ -39,11 +40,13 @@ public:
 	CompCollider(collType type,const Vec2 &position,const Vec2 &sz=Vec2{1.0f,1.0f});
 	//functions
 	void collision_check(CompCollider *other_component);
+	void equal_size(GameObject *object);
 
 	void update(float time);
 	void render();
 	void own(GameObject *object);
 	bool kills_component(float time);//return true to remove this component
+	void checks_dead(CompCollider *other_component);
 	Component::type get_type() const;
 };
 

@@ -10,6 +10,7 @@
 #include <gameObject.hpp>
 #include <game.hpp>
 #include <camera.hpp>
+#include <assert.h>
 
 
 /*!
@@ -21,11 +22,10 @@
 CompHP::CompHP(int total, bool show_HP, bool show_damage, float damage_CD)
    :total{total}, current{total}, show_HP{show_HP}, show_damage{show_damage}, cooldown{damage_CD} {
     LOG_METHOD_START('CompHP::CompHP');
-   	LOG_VARIABLE("CompHP::CompHP", total, show_HP, show_damage, damage_CD);
 
    	assert(total >= 0);
     assert(show_HP >= 0);
-    assert(show_damage) >= 0);
+    assert(show_damage >= 0);
     assert(damage_CD >= 0);
 
 
@@ -40,12 +40,11 @@ CompHP::CompHP(int total, bool show_HP, bool show_damage, float damage_CD)
 CompHP::CompHP(int total, int current, bool show_HP,bool show_damage,float damage_CD)
    :total{total},current{current},show_HP{show_HP},show_damage{show_damage}, cooldown{damage_CD} {
      LOG_METHOD_START('CompHP::CompHP');
-     LOG_VARIABLE("CompHP::CompHP", total, current, show_HP, show_damage, damage_CD);
 
      assert(total >= 0);
      assert(current >= 0);
      assert(show_HP >= 0);
-     assert(show_damage) >= 0);
+     assert(show_damage >= 0);
      assert(damage_CD >= 0);
 
      LOG_METHOD_CLOSE('CompHP::CompHP', "constructor");
@@ -76,8 +75,8 @@ void CompHP::damage(int damage) {
   assert(damage >= 0);
 
 	//! Verifies if current damage value bigger than the current value
-	if(damageCoolDown.Get() > cooldown){
-		damageCoolDown.Restart();
+	if(damage_cooldown.get_time() > cooldown){
+		damage_cooldown.restart_time();
 		current = current - damage; //!< Decrements the value of the current life value according to the damage inflicted
 		//! TODO: Renderizes damage value
 		if(show_damage){
@@ -119,7 +118,7 @@ void CompHP::update(float time) {
   else {
     // Nothing to Do
   }
-	dmgCoolDown.add_time(time);
+	damage_cooldown.add_time(time);
   LOG_METHOD_CLOSE('CompHP::update', "void");
 }
 
@@ -133,7 +132,7 @@ void CompHP::render() {
   LOG_METHOD_START('CompHP::render');
 
 	//! Shows HP on screen if it's set player and bigget than zero
-	if(SETTINGS.showHP && showHP && current>0) {
+	if(SETTINGS.showHP && show_HP && current>0) {
 		Rect box{0,-GO(entity)->Box().w/5.0f - GO(entity)->Box().w/10.0f,GO(entity)->Box().w,GO(entity)->Box().w/5.0f};
 		box = box + GO(entity)->Box().corner();
 
@@ -167,6 +166,5 @@ void CompHP::render() {
 Component::type CompHP::get_type() const {
   LOG_METHOD_START('CompHP::get_type');
 
-  LOG_METHOD_CLOSE('CompHP::get_type', t_hp.to_string());
 	return Component::type::t_hp;
 }
