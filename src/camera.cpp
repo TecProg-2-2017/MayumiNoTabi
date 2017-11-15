@@ -90,7 +90,6 @@ void Camera::center_camera_to(const Vec2& vec2_vector) {
                                                            //!< target
 
   LOG_VARIABLE('half_winsize', half_winsize);
-  LOG_VARIABLE('target', target.to_string);
 
   // Minimum values
   camera_position.x = min(camera_position.x, target.x + camera_size.x);
@@ -118,8 +117,6 @@ void Camera::update_camera(float time) {
   Vec2 half_winsize = WINSIZE / 2;
 
   Vec2 center = camera_position + (half_winsize / camera_zoom); //!< Newvalue for center
-
-  LOG_VARIABLE("center", center.to_string);
 
   // Updates zoom
   update_camera_zoom(time);
@@ -162,8 +159,6 @@ Vec2 Camera::render_camera_pos(const Vec2& vec2_vector) {
 
   Vec2 rendered_camera_pos = (vec2_vector - CAMERA) * CAMERAZOOM;
 
-  LOG_METHOD_CLOSE("Camera::render_camera_pos", rendered_camera_pos.to_string());
-
   return rendered_camera_pos;
 }
 
@@ -180,7 +175,7 @@ void Camera::update_camera_zoom(float time) {
   LOG_VARIABLE("time", time);
 
   // Zooms in if z key is pressed
-  if (INPUT.IsKeyDown(KEY(z))) {
+  if (INPUT.key_is_down(KEY(z))) {
     LOG_MSG("if (INPUT.IsKeyDown(KEY(z)))");
 
     camera_zoom = camera_zoom + (0.5 * time);
@@ -240,7 +235,7 @@ void Camera::update_camera_speed(float time) {
 
     // defines camera speed according to the arrow key that has been pressed.
     // (right)
-    if (INPUT.IsKeyDown(KEY_RIGHT)) {
+    if (INPUT.key_is_down(KEY_RIGHT)) {
       LOG_MSG("if (INPUT.IsKeyDown(KEY_RIGHT)");
 
       camera_speed.x = camera_speed.x + CAMERA_SPEED;

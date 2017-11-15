@@ -38,7 +38,6 @@ CompAnim::CompAnim() {
 CompAnim::CompAnim(string filename, CompCollider* temporary_collider) {
   LOG_METHOD_START("CompAnim::CompAnim");
   LOG_VARIABLE("filename", filename);
-  LOG_VARIABLE("temporary_collider", temporary_collider.to_string);
 
   assert(filename != "");
 
@@ -59,11 +58,12 @@ CompAnim::CompAnim(string filename, CompCollider* temporary_collider) {
     int f_counter_y = 0;
     int collider_counter = 0;
 
-    float f_timex_axis = 0f;
-    float y_axis = 0f;
-    float width = 0f;
-    float height = 0f;
-    float r = 0f;
+    float f_time = 0;
+    float x_axis = 0;
+    float y_axis = 0;
+    float width = 0;
+    float height = 0;
+    float r = 0;
 
     in >> img_file;
     in >> f_count;
@@ -107,7 +107,7 @@ CompAnim::CompAnim(string filename, CompCollider* temporary_collider) {
 
         string function_name = "";
 
-        FOR(funcI, funcCount) {
+        FOR(funcI, function_counter) {
           in >> function_name;
 
           if (txtFuncsF.count(function_name)) {
@@ -144,9 +144,15 @@ CompAnim::~CompAnim() {
 
   FOR(i, colliders.size()) {
 
+<<<<<<< 4bed274d618a2f4dd72762ab7e3009739ebd59d5
     // Ignores deletion if current collider equals current frame
     if (i == GetCurFrame()) {
       continue;
+=======
+		// Ignores deletion if current collider equals current frame
+		if (i == get_current_frame()) {
+			continue;
+>>>>>>> fixing camera and componentAnimation
     }
     else {
       // Do nothing
@@ -166,10 +172,10 @@ CompAnim::~CompAnim() {
   @warning  none
 */
 
-bool CompAnim::Looped()const {
+bool CompAnim::is_looped()const {
   LOG_METHOD_START("CompAnim::Looped");
 
-  bool is_animation_looped = sp.Looped();
+  bool is_animation_looped = sp.is_looped();
 
   LOG_METHOD_CLOSE("CompAnim::Looped", is_animation_looped);
   assert(is_animation_looped == true || is_animation_looped == false);
@@ -245,16 +251,13 @@ void CompAnim::checks_animation_call(int frame) {
 void CompAnim::render() {
   LOG_METHOD_START("CompAnim::render");
 
-  Vec2 full_box = GO(entity)->FullBox(); //!< Used to save the
+  Rect full_box = GO(entity)->FullBox(); //!< Used to save the
   //!< position to render
   Vec2 corner = full_box.corner();
   Vec2 render_pos = corner.renderPos();
 
-  LOG_VARIABLE("pos", pos.to_string());
-
-
   sp.SetFlipH(GO(entity)->flipped);
-	sp.render(pos, GO(entity)->rotation, Camera::zoom);
+	sp.render(render_pos, GO(entity)->rotation, Camera::camera_zoom);
 
   LOG_METHOD_CLOSE("CompAnim::render", "void");
 }
@@ -269,8 +272,6 @@ void CompAnim::render() {
 
 void CompAnim::own(GameObject* go) {
   LOG_METHOD_START("CompAnim::own");
-  LOG_VARIABLE("go", go.to_string());
-
 
 	entity = go->uid;
 
@@ -371,7 +372,7 @@ void CompAnim::set_current_frame(int frame, // range: unknown
 
   // Set frame as current if it isn't already
   if (frame != get_current_frame()) {
-    sp.SetFrame(frame);
+    sp.set_frame(frame);
 
     for (auto &foo : frameFunc[frame]) {
       foo(GO(entity));
@@ -386,7 +387,6 @@ void CompAnim::set_current_frame(int frame, // range: unknown
 
   // Sets current frame by force
   set_current_frame_by_force(frame, force);
-  LOG_METHOD_CLOSE("CompAnim::set_current_frame", sp.set_current_frame());
 }
 
 /*!
@@ -397,7 +397,7 @@ void CompAnim::set_current_frame(int frame, // range: unknown
   @warning  none
 */
 
-void set_new_frame(int frame1, int frame2) {
+void CompAnim::set_new_frame(int frame1, int frame2) {
   LOG_METHOD_START("CompAnim::set_new_frame");
   LOG_VARIABLE("frame1", frame1);
   LOG_VARIABLE("frame2", frame2);
