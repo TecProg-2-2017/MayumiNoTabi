@@ -18,24 +18,6 @@
 #include <assert.h>
 //#include <inputManager.hpp>
 
-//! Functions to be called by the methods in order to perform actions
-
-void camScaling(Vec2 position){
-
-	position = GO(entity)->Box().corner() + position.rotate(GO(entity)->rotation);
-	sprite.SetFlipH(GO(entity)->flipped);
-
-	if (camScaling) {
-			sprite.Render((position-CAMERA)*CAMERAZOOM,GO(entity)->rotation, CAMERAZOOM);
-	}
-	else {
-			sprite.Render(position,GO(entity)->rotation, 1);
-	}
-}
-
-
-
-
 //! A constructor.
     /*!
     This is a constructor method of componentStaticRender class
@@ -43,8 +25,8 @@ void camScaling(Vec2 position){
 
 CompStaticRender::CompStaticRender(const Sprite &sprite,
 	                                 const Vec2 &position,
-																	 const bool camerascaling):sprite{sprite},position{position},
-																	 cameraScaling{camerascalin}{
+																	 const bool camerascaling):sp{sprite},pos{position},
+																	 camScaling{camerascaling}{
 
 		// Method body its empty
 }
@@ -57,6 +39,21 @@ CompStaticRender::~CompStaticRender() {
 	// Method body its empty
 }
 
+//! Functions to be called by the methods in order to perform actions
+
+void CompStaticRender::cam_scaling(Vec2 position){
+
+	position = GO(entity)->Box().corner() + position.rotate(GO(entity)->rotation);
+	sp.SetFlipH(GO(entity)->flipped);
+
+	if (camScaling) {
+			sp.render((position-CAMERA)*CAMERAZOOM,GO(entity)->rotation, CAMERAZOOM);
+	}
+	else {
+			sp.render(position,GO(entity)->rotation, 1);
+	}
+}
+
 /*!
 	@fn CompStaticRender::Update(float time)
 	@brief Method that update the current time of Sprite apparition
@@ -66,7 +63,7 @@ CompStaticRender::~CompStaticRender() {
 */
 void CompStaticRender::update(float time) { // Time range 0.0 - 60.0
 
-	assert(time > 0.0 and time < 60.0)
+	assert(time > 0.0 and time < 60.0);
 	sp.update(time);
 }
 
@@ -80,7 +77,7 @@ void CompStaticRender::update(float time) { // Time range 0.0 - 60.0
 void CompStaticRender::render() {
 
 	Vec2 position = position;
-	camScaling(position);
+	cam_scaling(position);
 
 }
 

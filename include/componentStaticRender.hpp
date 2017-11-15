@@ -21,6 +21,7 @@ public:
 	CompStaticRender(const Sprite &sp,const Vec2 &p=Vec2{}, const bool cs = true);
 	~CompStaticRender();
 
+	void cam_scaling(Vec2 position);
 	void update(float time);
 	void render();
 	Component::type get_type()const;
