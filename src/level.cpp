@@ -238,8 +238,9 @@ void Level::map_collision_layer_and_groups(map<int,pair<Rect,int>>& mp,
     //! TODO: Understand this paragraph
     FOR(y,level_map_height) {
         FOR(x,level_map_width) {
-            int t = level_collision_layer[(y*level_map_width)+x]+1;
-            int g = level_collision_groups[(y*level_map_width)+x];
+            int width_y_x = (y*level_map_width)+x;
+            int t = level_collision_layer[width_y_x]+1;
+            int g = level_collision_groups[width_y_x];
 
             if (t) {
                 if (!mp.count(g)) {
@@ -350,7 +351,7 @@ void Level::save_level_objects(const vector<pair<ii,ii>>& grouped) {
             }
             else{
                 auto &group = grouped[with_y_x];
-                if (group.first.first == x && group.first.second == y)ids[group.first]=id++;
+                if (group.first.first == x and group.first.second == y)ids[group.first]=id++;
                 level_collision_groups[width_y_x] = ids[group.first];
             }
         }

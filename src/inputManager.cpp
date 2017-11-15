@@ -63,7 +63,7 @@ void InputManager::input_event_handler(float time) {
     bool mouse_postion_x_is_different = mouse_position.x != x_position;
     bool mouse_postion_y_is_different = mouse_position.y != y_position;
 
-    mouse_motion = (mouse_position_x_is_different || mouse_position_y_is_different);
+    mouse_motion = (mouse_position_x_is_different or mouse_position_y_is_different);
 
     mouse_position.x = (float)x_position;
     mouse_position.y = (float)y_position;
@@ -87,7 +87,7 @@ void InputManager::input_event_handler(float time) {
         }
 
         //! Event is Mouse button down
-        else if (event.type==SDL_MOUSEBUTTONDOWN || event.type==SDL_MOUSEBUTTONUP) {
+        else if (event.type==SDL_MOUSEBUTTONDOWN or event.type==SDL_MOUSEBUTTONUP) {
             LOG_MSG("Mouse button down or up event");
             update_mouse_button_state(event);
         }
@@ -129,13 +129,13 @@ void InputManager::input_event_handler(float time) {
                 
 
                 //! Move cursor to the left if left key is pressed 
-                if (event.key.keysym.sym == SDLK_LEFT && text_cursor > 0) {
+                if (event.key.keysym.sym == SDLK_LEFT and text_cursor > 0) {
                     LOG_MSG("Move text cursor to the left");
                     text_cursor--;
                 }
 
                 //! Move cursor to the right if right key is pressed 
-                else if (event.key.keysym.sym == SDLK_RIGHT && text_cursor < text->size()) {
+                else if (event.key.keysym.sym == SDLK_RIGHT and text_cursor < text->size()) {
                     LOG_MSG("Move text cursor to the right");
                     text_cursor++;
                 }
@@ -179,8 +179,8 @@ void InputManager::erase_text(SDL_Event event) {
     LOG_METHOD_START("InputManager::erase_text");
 
     //! If event key is backspace and text is not empty
-    if (event.key.keysym.sym == SDLK_BACKSPACE && 
-            text->size() && text_cursor) {
+    if (event.key.keysym.sym == SDLK_BACKSPACE and 
+            text->size() and text_cursor) {
 
         text->erase(--text_cursor,1);
         LOG_MSG("Text erased");
@@ -273,7 +273,7 @@ void InputManager::update_mouse_button_state(SDL_Event event) {
     bool event_button_is_less_than_six = event.button.button < 6;
     bool mouse_current_state_is_different = mouse_current_state[event.button.button]!=mouse_state
 
-    if (/*event.button.button>=0 && */event_button_is_less_than_six && mouse_current_state_is_different) {
+    if (/*event.button.button>=0 and */event_button_is_less_than_six and mouse_current_state_is_different) {
         mouse_updated_state[event.button.button]=update_counter;
         mouse_current_state[event.button.button]=mouse_state;
     }
@@ -328,9 +328,9 @@ bool InputManager::key_pressed(int key) {
     bool key_press;
     bool key_is_updated = (key_updated_state[key]==update_counter-1);
 
-    key_press = (key_current_state[key] && key_is_updated);
+    key_press = (key_current_state[key] and key_is_updated);
 
-    assert(key_press == true || key_press == false);
+    assert(key_press == true or key_press == false);
     LOG_METHOD_CLOSE("InputManager::key_pressed","bool");
 
     return key_press; 
@@ -348,9 +348,9 @@ bool InputManager::key_released(int key) {
     bool key_release;
     bool key_is_updated = (key_updated_state[key]==update_counter-1);
 
-    key_release = ((!key_current_state[key]) && key_is_updated);
+    key_release = ((!key_current_state[key]) and key_is_updated);
     
-    assert(key_release == true || key_release == false); 
+    assert(key_release == true or key_release == false); 
     LOG_METHOD_CLOSE("InputManager::key_released","bool");
 
     return key_release;
@@ -368,7 +368,7 @@ bool InputManager::key_is_down(int key) {
 
     key_down = (key_current_state[key]);
 
-    assert(key_down == true || key_down == false);
+    assert(key_down == true or key_down == false);
     LOG_METHOD_CLOSE("InputManager::key_is_down","bool");
 
     return key_down;
@@ -386,9 +386,9 @@ bool InputManager::mouse_button_pressed(int button) {
     bool button_pressed;
     bool mouse_is_updated = (mouse_updated_state[button]==update_counter-1);
 
-    button_pressed = (mouse_current_state[button] && mouse_is_updated);
+    button_pressed = (mouse_current_state[button] and mouse_is_updated);
 
-    assert(button_pressed == true || button_pressed == false);
+    assert(button_pressed == true or button_pressed == false);
     LOG_METHOD_CLOSE("InputManager::mouse_button_pressed","bool");
 
     return button_pressed; 
@@ -406,9 +406,9 @@ bool InputManager::mouse_button_released(int button) {
     bool button_released;
     bool mouse_is_updated = (mouse_updated_state[button]==update_counter-1);
 
-    button_released = ((!mouse_current_state[button]) && mouse_is_updated);
+    button_released = ((!mouse_current_state[button]) and mouse_is_updated);
 
-    assert(button_released == true || button_released == false);
+    assert(button_released == true or button_released == false);
     LOG_METHOD_CLOSE("InputManager::mouse_button_released","bool");
 
     return button_released; 
@@ -426,7 +426,7 @@ bool InputManager::mouse_button_is_down(int button) {
     
     mouse_down = (mouse_current_state[button]);
     
-    assert(mouse_down == true || mouse_down == false);
+    assert(mouse_down == true or mouse_down == false);
     LOG_METHOD_CLOSE("InputManager::mouse_button_is_down","bool");
 
     return mouse_down; 
@@ -443,7 +443,7 @@ bool InputManager::mouse_is_moving() {
 
     mouse_move = mouse_motion;
 
-    assert(mouse_move== true || mouse_move == false);
+    assert(mouse_move== true or mouse_move == false);
     LOG_METHOD_CLOSE("InputManager::mouse_is_moving","bool");
 
     return mouse_move;
@@ -513,7 +513,7 @@ bool InputManager::text_cursor_blink() {
     
     cursor_blink = !((int)(two_times_cursor_blinker)%2);
 
-    assert(cursor_blink == true || cursor_blink == false);
+    assert(cursor_blink == true or cursor_blink == false);
     LOG_METHOD_CLOSE("InputManager::text_cursor_blink","bool");
 
     return cursor_blink; 
@@ -527,7 +527,7 @@ bool InputManager::text_cursor_blink() {
 bool InputManager::get_quit_requested() {
     LOG_METHOD_START("InputManager::get_quit_requested");
 
-    assert(quit_requested == true || quit_requested == false);
+    assert(quit_requested == true or quit_requested == false);
     LOG_METHOD_CLOSE("InputManager::get_quit_requested","bool");
 
     return quit_requested;
