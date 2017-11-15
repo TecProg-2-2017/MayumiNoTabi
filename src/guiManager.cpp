@@ -58,6 +58,7 @@ void GUIManager::update_gui_elements() {
     LOG_METHOD_START("GUIManager::update_gui_elements");
 
     //! Remove last element if requested
+    //! TODO Error Handling
     if (element_pop_requested) {
         selected_gui_window = nullptr;
         selected_gui_button = nullptr;
@@ -75,6 +76,7 @@ void GUIManager::update_gui_elements() {
 
 
         //! Reset the button if it is selected
+        //! TODO Error Handling
         if (selected_gui_button) {
             selected_gui_button->Reset();
             selected_gui_button = nullptr;
@@ -92,6 +94,7 @@ void GUIManager::update_gui_elements() {
 
 
     //! If there's no elements in the gui, returns
+    //! TODO Error Handling
     if (gui_elements.empty()) {
          return;
     }
@@ -104,6 +107,7 @@ void GUIManager::update_gui_elements() {
     previous_button_state = current_button_state;
 
     //! Check if current button is pressed and assings it to current_button_state
+    //! TODO Error Handling
     if (selected_gui_button) {
         GUI_Button* selected_gui_buttonCopy = selected_gui_button;
 
@@ -130,6 +134,7 @@ void GUIManager::render_gui_elements() {
     for (auto& it:gui_elements){
 
         //! If elements is visible renders it
+        //! TODO Error Handling
         if (it->IsVisible()){
             it->Render();
         }
@@ -151,6 +156,7 @@ void GUIManager::push_gui_element(GUI_Element* element) {
     assert(*element != NULL);
 
     //! Checks if there's an element alredy stored, and deletes it
+    //! TODO Error Handling
     if (stored_gui_element) {
         delete stored_gui_element;
     }
@@ -173,6 +179,7 @@ void GUIManager::request_gui_element_pop(GUI_Element* element) {
     assert(*element != NULL);
     //! If last object of elements vector is equal to the param
     //! Change element_pop_requested value
+    //! TODO Error Handling
     if (element == gui_elements.back().get()) {
         element_pop_requested = true;
     }
@@ -272,6 +279,7 @@ bool GUIManager::gui_button_was_pressed(uint action)const{
     LOG_VARIABLE("action", &action);
     assert(&action != NULL);
     //! Return false for empty selected_gui_button
+    //! TODO Error Handling
     if (!selected_gui_button) {
         return false;
     }
@@ -303,13 +311,14 @@ bool GUIManager::gui_button_was_released(uint action)const {
     LOG_VARIABLE("action", action);
     assert(action != NULL);
 
+    //! TODO Error Handling
     if (!selected_gui_button) {
         return false;
     }
     else {
       // Nothing to do
     }
-
+    //! TODO Error Handling
     if (action && selected_gui_button->action != action) {
         return false;
     }
@@ -334,13 +343,14 @@ bool GUIManager::gui_button_was_clicked(uint action)const {
     LOG_VARIABLE("action", action);
     assert(action != NULL);
 
+    //! TODO Error Handling
     if (!selected_gui_button) {
         return false;
     }
     else {
       // Nothing to do
     }
-
+    //! TODO Error Handling
     if (action && selected_gui_button->action != action) {
         return false;
     }
@@ -365,13 +375,14 @@ bool GUIManager::gui_button_is_down(uint action) const {
   LOG_VARIABLE("action", action);
   assert(action != NULL);
 
+    //! TODO Error Handling
     if (!selected_gui_button) {
         return false;
     }
     else {
       // Nothing to do
     }
-
+    //! TODO Error Handling
     if (action && selected_gui_button->action != action) {
         return false;
     }
