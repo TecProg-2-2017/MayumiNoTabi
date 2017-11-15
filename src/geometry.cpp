@@ -49,8 +49,8 @@ Vec2 Vec2::makeVec2(const float &object_lenght,const float &angle) {
 */
 
 Vec2 Vec2::operator= (const Vec2& b) {
-	x_axis = b.x_axis; // x_axis is the axis x in cordinates.
-	y_axis = b.y_axis; // y_axis is the axis y in cordinates.
+	x = b.x; // x is the axis x in cordinates.
+	y = b.y; // y is the axis y in cordinates.
 	return *this;
 }
 
@@ -63,7 +63,7 @@ Vec2 Vec2::operator= (const Vec2& b) {
 */
 
 Vec2 Vec2::operator+ (const Vec2& b)const{
-	return {x_axis + b.x_axis, y_axis + b.y_axis};
+	return {x + b.x, y + b.y};
 }
 
 /*!
@@ -75,8 +75,8 @@ Vec2 Vec2::operator+ (const Vec2& b)const{
 */
 
 void Vec2::operator+= (const Vec2& b) {
-	x_axis += b.x_axis; // x_axis is the axis x in cordinates.
-	y_axis += b.y_axis; // y_axis is the axis y in cordinates.
+	x += b.x; // x is the axis x in cordinates.
+	y += b.y; // y is the axis y in cordinates.
 }
 
 /*!
@@ -88,7 +88,7 @@ void Vec2::operator+= (const Vec2& b) {
 */
 
 Vec2 Vec2::operator- (const Vec2& b)const{
-	return {x_axis - b.x_axis, y_axis - b.y_axis};
+	return {x - b.x, y - b.y};
 }
 
 /*!
@@ -100,8 +100,8 @@ Vec2 Vec2::operator- (const Vec2& b)const{
 */
 
 void Vec2::operator-= (const Vec2& b) {
-	x_axis-=b.x_axis; // x_axis is the axis x in cordinates.
-	y_axis-=b.y_axis; // y_axis is the axis y in cordinates.
+	x-=b.x; // x is the axis x in cordinates.
+	y-=b.y; // y is the axis y in cordinates.
 }
 
 /*!
@@ -113,7 +113,7 @@ void Vec2::operator-= (const Vec2& b) {
 */
 
 Vec2 Vec2::operator* (const float& r)const{
-	return {x_axis*r, y_axis*r};
+	return {x*r, y*r};
 }
 
 /*!
@@ -125,8 +125,8 @@ Vec2 Vec2::operator* (const float& r)const{
 */
 
 void Vec2::operator*= (const float& ratio) {
-	x_axis *= ratio; // x_axis is the axis x in cordinates. r is rotation from object
-	y_axis *= ratio; // y_axis is the axis y in cordinates. r is rotation from object
+	x *= ratio; // x is the axis x in cordinates. r is rotation from object
+	y *= ratio; // y is the axis y in cordinates. r is rotation from object
 }
 
 /*!
@@ -138,7 +138,7 @@ void Vec2::operator*= (const float& ratio) {
 */
 
 Vec2 Vec2::operator/ (const float& ratio)const {
-	return {x_axis/ratio, y_axis/ratio};
+	return {x/ratio, y/ratio};
 }
 
 /*!
@@ -150,8 +150,8 @@ Vec2 Vec2::operator/ (const float& ratio)const {
 */
 
 void Vec2::operator/= (const float& r) {
-	x_axis /= r; // x_axis is the axis x in cordinates. r is rotation from object
-	y_axis /= r; // y_axis is the axis y in cordinates. r is rotation from object
+	x /= r; // x is the axis x in cordinates. r is rotation from object
+	y /= r; // y is the axis y in cordinates. r is rotation from object
 }
 
 /*!
@@ -163,7 +163,7 @@ void Vec2::operator/= (const float& r) {
 */
 
 bool Vec2::operator== (const Vec2& b) const {
-	return (equals(x_axis, b.x_axis) && equals(y_axis, b.y_axis));
+	return (equals(x, b.x) && equals(y, b.y));
 }
 
 /*!
@@ -187,8 +187,8 @@ bool Vec2::operator!= (const Vec2& b) const {
 */
 
 bool Vec2::operator< (const Vec2& b) const {
-	if (x_axis == b.x_axis)return (y_axis < b.y_axis);
-	return x_axis < b.x_axis;
+	if (x == b.x)return (y < b.y);
+	return x < b.x;
 }
 
 /*!
@@ -200,8 +200,8 @@ bool Vec2::operator< (const Vec2& b) const {
 */
 
 void Vec2::floor() {
-	x_axis = std::floor(x_axis); // x_axis is axis x in cartesian plan
-	y_axis = std::floor(y_axis); // y_axis is axis y in cartesian plan
+	x = std::floor(x); // x is axis x in cartesian plan
+	y = std::floor(y); // y is axis y in cartesian plan
 }
 
 /*!
@@ -212,7 +212,7 @@ void Vec2::floor() {
 	@warning Method that requires review of comment
 */
 
-float Vec2::std::vector_lenght() const {
+float Vec2::vector_lenght() const {
 	return hypot(x,y); // x and y are two points in vector
 }
 
@@ -239,7 +239,7 @@ float Vec2::angle() const {
 */
 
 float Vec2::distance(const Vec2 &b) const{
-	return ((*this) - b).lenght();
+	return ((*this) - b).vector_lenght();
 }
 
 /*!
@@ -264,7 +264,7 @@ float Vec2::angle(const Vec2 &position) const{
 */
 
 Vec2 Vec2::unit() const{
-	return (*this)/lenght(); // lenght of vector
+	return (*this)/vector_lenght(); // lenght of vector
 }
 
 /*!
@@ -274,7 +274,7 @@ Vec2 Vec2::unit() const{
 	@warning Method that requires review of comment
 */
 
-Vec2 Vec2::renderPosition() const{
+Vec2 Vec2::renderPos() const{
 	return RENDERPOS(*this);
 }
 
@@ -291,9 +291,9 @@ Vec2 Vec2::rotate(float angle) {
 	// Converts the angle to radianus. It's used by functions sin and cos
 	angle = RAD(angle);
 
-	vector.x_axis = x_axis*cos(angle) - y_axis*sin(angle);
-	vector.y_axis = y_axis*cos(angle) + x_axis*sin(angle);
-z	return vector;
+	vector.x = x*cos(angle) - y*sin(angle);
+	vector.y = y*cos(angle) + x*sin(angle);
+	return vector;
 }
 
 /*!
@@ -335,7 +335,7 @@ std::ostream& operator<< (std::ostream& os, const Vec2& obj) {
 		*/
 
 Rect::Rect(const float &side_a,const float &side_b,const float &side_c,
-	         const float &side_d):x{a},y{b},w{c},h{d}{}
+	         const float &side_d):x{side_a},y{side_b},w{side_c},h{side_d}{}
 
 //! A constructor.
      /*!
@@ -345,7 +345,7 @@ Rect::Rect(const float &side_a,const float &side_b,const float &side_c,
 				@warning Method that requires review of comment
 			*/
 
-Rect::Rect(const Vec2 &position,const Vec2 &object_size):x{pos.x},y{pos.y},w{sz.x},h{sz.y}{}
+Rect::Rect(const Vec2 &position,const Vec2 &object_size):x{position.x},y{position.y},w{object_size.x},h{object_size.y}{}
 Rect::Rect(const Rect &b):x{b.x},y{b.y},w{b.w},h{b.h}{}
 
 /*!
@@ -357,10 +357,10 @@ Rect::Rect(const Rect &b):x{b.x},y{b.y},w{b.w},h{b.h}{}
 */
 
 Rect Rect::operator= (const Rect& b) {
-	x_axis = b.x_axis;
-	y_axis = b.y_axis;
-	w_axis = b.w_axis;
-	h_axis = b.h_axis;
+	x = b.x;
+	y = b.y;
+	w = b.w;
+	h = b.h;
 	return *this;
 }
 
@@ -373,7 +373,7 @@ Rect Rect::operator= (const Rect& b) {
 */
 
 Rect Rect::operator+ (const Vec2& b) const{
-	return {x_axis + b.x_axis, y_axis + b.y_axis, w, h};
+	return {x + b.x, y + b.y, w, h};
 }
 
 /*!
@@ -385,8 +385,8 @@ Rect Rect::operator+ (const Vec2& b) const{
 */
 
 void Rect::operator+= (const Vec2& b) {
-	x_axis += b.x_axis;
-	y_axis += b.y_axis;
+	x += b.x;
+	y += b.y;
 }
 
 /*!
@@ -398,7 +398,7 @@ void Rect::operator+= (const Vec2& b) {
 */
 
 Rect Rect::operator- (const Vec2& b) const{
-	return Rect(x_axis - b.x_axis, y_axis - b.y_axis, w, h);
+	return Rect(x - b.x, y - b.y, w, h);
 }
 
 /*!
@@ -410,8 +410,8 @@ Rect Rect::operator- (const Vec2& b) const{
 */
 
 void Rect::operator-= (const Vec2& b) {
-	x_axis -= b.x_axis;
-	y_axis-= b.y_axis;
+	x -= b.x;
+	y-= b.y;
 }
 
 /*!
@@ -440,17 +440,17 @@ bool Rect::operator!= (const Rect& b) {
 
 /*!
 	@fn bool Rect::operator== (const Rect& b)
-	@brief Method that take the less value from x_axis, y_axis and weight and
+	@brief Method that take the less value from x, y and weight and
 	height
 	@return The execution of this method returns no value
 	@warning Method that requires review of comment
 */
 
 void Rect::floor() {
-	x_axis = std::floor(x_axis);
-	y_axis = std::floor(y_axis);
-	w_axis = std::floor(w_axis);
-	h_axis = std::floor(h_axis);
+	x = std::floor(x);
+	y = std::floor(y);
+	w = std::floor(w);
+	h = std::floor(h);
 }
 
 /*!
@@ -460,9 +460,9 @@ void Rect::floor() {
 	@warning Method that requires review of comment
 */
 
-void Rect::setPosition(const Vec2& b) {
-	x_axis = b.x_axis;
-	y_axis = b.y_axis;
+void Rect::setPos(const Vec2& b) {
+	x = b.x;
+	y = b.y;
 }
 
 /*!
@@ -473,31 +473,31 @@ void Rect::setPosition(const Vec2& b) {
 */
 
 void Rect::setCenter(const Vec2& b) {
-	x_axis = b.x_axis - (w/2);
-	y_axis = b.y_axis - (h/2);
+	x = b.x - (w/2);
+	y = b.y - (h/2);
 }
 
 /*!
 	@fn float Rect::x2()
-	@brief Method that calculate a second x_axis position in plan
-	@return The execution of this method returns a second x_axis position in float
+	@brief Method that calculate a second x position in plan
+	@return The execution of this method returns a second x position in float
 	@warning Method that requires review of comment
 */
 
 float Rect::x2() const{
-	return x_axis + weight;
+	return x + w;
 }
 
 /*!
 	@fn float Rect::y2()
-	@brief Method that calculate a second y_axis position in plan
+	@brief Method that calculate a second y position in plan
 	@param b
-	@return The execution of this method returns a second y_axis position in float
+	@return The execution of this method returns a second y position in float
 	@warning Method that requires review of comment
 */
 
 float Rect::y2() const{
-	return y_axis + height;
+	return y + h;
 }
 
 /*!
@@ -523,14 +523,14 @@ Vec2 Rect::distCenter(const Rect& b) const{
 Vec2 Rect::distEdge(const Rect& b) const{
 	Vec2 rectangle;
 	if (!collides(b)) {
-		if (!BETWEEN(x_axis,b.x_axis,b.x2()) && !BETWEEN(b.x_axis,x_axis,x2())) {
-					rectangle.x_axis = min(abs(x_axis-(b.x2())),abs((x2())-b.x_axis));
+		if (!BETWEEN(x,b.x,b.x2()) && !BETWEEN(b.x,x,x2())) {
+					rectangle.x = min(abs(x-(b.x2())),abs((x2())-b.x));
 		}
 		else {
 			// Nothing to do
 		}
-		if (!BETWEEN(y_axis,b.y_axis,b.y2()) && !BETWEEN(b.y_axis,y_axis,y2())) {
-			rectangle.y_axis = min(abs(y_axis-(b.y2())),abs((y2())-b.y_axis));
+		if (!BETWEEN(y,b.y,b.y2()) && !BETWEEN(b.y,y,y2())) {
+			rectangle.y = min(abs(y-(b.y2())),abs((y2())-b.y));
 		}
 		else {
 			// Nothing to do
@@ -551,10 +551,10 @@ Vec2 Rect::distEdge(const Rect& b) const{
 */
 
 Vec2 Rect::hotspot(Hotspot object_hotspot) {
-	Vec2 object_vector{x_axis, y_axis};
-	auto &add = HotspotPos[object_hotspot];
-	object_vector.x_axis -= weight * add.first;
-	object_vector.y_axis -= height * add.second;
+	Vec2 object_vector{x, y};
+	auto &add = hotspot_positions[object_hotspot];
+	object_vector.x -= w * add.first;
+	object_vector.y -= h * add.second;
 	return object_vector;
 }
 
@@ -566,7 +566,7 @@ Vec2 Rect::hotspot(Hotspot object_hotspot) {
 */
 
 Vec2 Rect::corner() const{
-	return {x_axis, y_axis};
+	return {x, y};
 }
 
 /*!
@@ -577,7 +577,7 @@ Vec2 Rect::corner() const{
 */
 
 Vec2 Rect::corner2() const{
-	return {x2(),y_axis};
+	return {x2(),y};
 }
 
 /*!
@@ -588,7 +588,7 @@ Vec2 Rect::corner2() const{
 */
 
 Vec2 Rect::corner3() const{
-	return {x_axis,y2()};
+	return {x,y2()};
 }
 
 /*!
@@ -610,7 +610,7 @@ Vec2 Rect::corner4() const{
 */
 
 Vec2 Rect::center() const{
-	return {x_axis + (weight/2), y_axis + (height/2)};
+	return {x + (w/2), y + (h/2)};
 }
 
 /*!
@@ -621,7 +621,7 @@ Vec2 Rect::center() const{
 */
 
 Vec2 Rect::size() const{
-	return {weight, height};
+	return {w, h};
 }
 
 /*!
@@ -633,15 +633,15 @@ Vec2 Rect::size() const{
 	@warning Method that requires review of comment
 */
 
-Vec2 Rect::relativePosition(const Vec2 &relative, bool inverted) const{
-	Vec2 positon {x_axis, y_axis};
+Vec2 Rect::relativePos(const Vec2 &relative, bool inverted) const{
+	Vec2 position {x, y};
 	if (inverted) {
-		position.x_axis +=  relative.x_axis  * weight;
+		position.x +=  relative.x  * w;
 	}
 	else {
-		 position.x_axis += (1-relative.x_axis) * weight;
+		 position.x += (1-relative.x) * w;
 	}
-	position.y_axis += relative.y_axis * height;
+	position.y += relative.y * h;
 	return position;
 }
 
@@ -656,16 +656,16 @@ Vec2 Rect::relativePosition(const Vec2 &relative, bool inverted) const{
 */
 
 Rect Rect::relativeBox(const Rect &relative,bool inverted) const{
-	Rect box{x_axis, y_axis, weight, height};
+	Rect box{x, y, w, h};
 	if (inverted) {
-		box.x_axis +=    relative.x_axis  * weight;
+		box.x +=    relative.x  * w;
 	}
 	else {
-		box.x_axis += (1-relative.x_axis) * weight;
+		box.x += (1-relative.x) * w;
 	}
-	box.y_axis += relative.y_axis * height;
-	box.weight *= relative.weight;
-	box.height *= relative.height;
+	box.y += relative.y * h;
+	box.w *= relative.w;
+	box.h *= relative.h;
 	return box;
 }
 
@@ -690,8 +690,8 @@ Rect Rect::renderBox() const{
 */
 
 Rect Rect::sum(const Rect &other) const{
-	float x_axis = min(min(x,x2()),min(other.x,other.x2()));
-	float y_axis = min(min(y,y2()),min(other.y,other.y2()));
+	float x = min(min(x,x2()),min(other.x,other.x2()));
+	float y = min(min(y,y2()),min(other.y,other.y2()));
 	float xx = max(max(x,x2()),max(other.x,other.x2()));
 	float yy = max(max(y,y2()),max(other.y,other.y2()));
 	return Rect{x,y,xx - x,yy - y};
@@ -755,12 +755,12 @@ Circle::Circle(float xx,float yy,float rr):x{xx},y{yy},r{rr}{}
 
 bool Circle::contains(const Vec2 &p)const{
 	Vec2 center(x,y);
-	return (center-p).len()<=r;
+	return (center-p).vector_lenght()<=r;
 }
 bool Circle::contains(const float &px,const float &py)const{
 	Vec2 center(x,y);
 	Vec2 p(px,py);
-	return (center-p).len()<=r;
+	return (center-p).vector_lenght()<=r;
 }
 
 void Circle::floor() {

@@ -6,6 +6,7 @@
 
 #include <componentInputControl.hpp>
 #include <game.hpp>
+#include <assert.h>
 
 /*!
   * @fn CompInputControl::CompInputControl()
@@ -70,6 +71,5 @@ void CompInputControl::render() {
 Component::type CompInputControl::get_type() const {
 	LOG_METHOD_START('CompInputControl::get_type');
 
-	LOG_METHOD_CLOSE('CompInputControl::get_type', t_input_control.to_string());
 	return Component::type::t_input_control;
 }

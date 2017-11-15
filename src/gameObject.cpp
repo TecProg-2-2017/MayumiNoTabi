@@ -1062,7 +1062,7 @@ void PassiveAIfunc(CompAI* ai,float time) {
 		CompMovement *movement = COMPMOVEp(GO(ai->entity));
 
 		//! If there is time and space to walkie
-		if (dist.len() < movement->speed.len() * time) {
+		if (dist.vector_lenght() < movement->speed.vector_lenght() * time) {
 			movement->speed = Vec2{};
 			movement->move = dist;
 
