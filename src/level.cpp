@@ -10,6 +10,7 @@
 #include <game.hpp>
 #include <gameObject.hpp>
 #include <state.hpp>
+#include <assert.h>
 
 #define DEFAULT_BACKGROUND "img/mountain_bg.jpg"
 #define DEFAULT_TILE_SIZE 64
@@ -43,7 +44,8 @@ Level::Level() : background_sprite{Sprite(DEFAULT_BACKGROUND)},
  *  @param string file
  *  @return A Level object
  */
-Level::Level(string file) : level_tile_set{TileSet()}, level_tile_map{TileMap(DEFAULT_MAP_WIDTH, DEFAULT_MAP_HEIGHT, &level_tile_set)} { 
+Level::Level(string file) : level_tile_set{TileSet()}, 
+    level_tile_map{TileMap(DEFAULT_MAP_WIDTH, DEFAULT_MAP_HEIGHT, &level_tile_set)} { 
     Load(file);
 }
 
@@ -57,64 +59,6 @@ Level::~Level() {
 }
 
 /*!
- *  @fn void Level::void Level::load_read_file(ifstream& file_input, string& file_parameters) 
- *  @brief Open a file to be read 
- *  @param ifstream& file_input, const string& file
- *  @return The method returns no param
- */
-void Level::load_read_file(ifstream& file_input, const string& file) {
-    file_input.open(LEVEL_PATH + file + ".txt");
-
-    //! Get an error while opening the file
-    if (!file_input.is_open()) {
-        cerr << "Erro ao abrir o arquivo \"" << file << "\", o programa ira encerrar agora" << endl;
-        exit(EXIT_FAILURE);
-    }
-    else {
-        // Do nothing
-    }
-
-}  
-
-/*!
- *  @fn void Level::void Level::load_write_file(ifstream& file_input, string& file_parameters) 
- *  @brief Open a file to be written 
- *  @param ifstream& file_input, const string& file
- *  @return The method returns no param
- */
-void Level::load_write_file(ofstream& file_output, const string& file) {
-    file_output.open(LEVEL_PATH + file + ".txt");
-
-    //! Get an error while opening the file
-    if (!file_output.is_open()) {
-        cerr << "Erro ao abrir o arquivo \"" << file << "\", o programa ira encerrar agora" << endl;
-        exit(EXIT_FAILURE);
-    }
-    else {
-        // Do nothing
-    }
-
-}
-
-/*!
- *  @fn void Level::void Level::load_tile_set(ifstream& file_input, string& file_parameters) 
- *  @brief Load level tile set 
- *  @param ifstream& file_input, const string& file
- *  @return The method returns no param
- */
-void Level::load_tile_set(ifstream& file_input, string& file_parameters) {
-    int level_tile_width = 0;//! <Tile level width 
-    int level_tile_height = 0; //! <Tile level height
-
-    //! Loading the tileset
-    getline(file_input, level_tile_set_filename);
-    getline(file_input, file_parameters);
-    sscanf(file_parameters.c_str(), " %d,%d", &level_tile_width, &level_tile_height);
-    level_tile_set.Load(level_tile_width, level_tile_height, level_tile_set_filename);
-    file_input.ignore(1);
-}
-
-/*!
  *  @fn void Level::load_level_from_file(const string& file) 
  *  @brief Load level from the level file 
  *  @param const string& file
@@ -122,12 +66,10 @@ void Level::load_tile_set(ifstream& file_input, string& file_parameters) {
  *  @warning FOR function
  */
 void Level::load_level_from_file(const string& file) {
-    ifstream file_input = NULL;//! <Receive input from level file
-   
+    ifstream file_input;//! <Receive input from level file
+
     //! Load Level file 
     load_read_file(file_input, file);
-    
-    string file_parameters = ""; //! <Store parameters readed from level file
 
     //! Loading the background
     getline(file_input,background_file_name);
@@ -143,38 +85,44 @@ void Level::load_level_from_file(const string& file) {
     file_input.ignore(1);
     background_sprite.StretchToFit(WINSIZE);
 
+    string file_parameters = ""; //! <Store parameters readed from level file
+
     //! Loading the tile set
     load_tile_set(file_input, file_parameters);
    
     //! Loading the tilemap
-    level_tile_map.Load(file_input);
+    level_tile_map.load(file_input);
     
     //! Loading the collision layer
     int level_map_width = level_tile_map.get_width();
     int level_map_height = level_tile_map.get_height();
+    int level_area = level_map_width*level_map_height;
 
     level_collision_layer.clear();
-    level_collision_layer.resize(level_map_width*level_map_height);
+    level_collision_layer.resize(level_area);
     
-    int t = 0;
-    int g = 0;
 
     level_collision_groups.clear();
-    level_collision_groups.reserve(level_map_width*level_map_height);
+    level_collision_groups.reserve(level_area);
+
+    int t = 0;
+    int g = 0;
 
     FOR(y,level_map_height) {
         FOR(x,level_map_width) {
             file_input >> t;
             file_input.ignore(1);
-            level_collision_layer[(y*level_map_width)+x] = t-1;
+            int map_width_y_x = (y*level_map_width)+x;
+            
+            level_collision_layer[map_width_y_x] = t-1;
 
             if (t == EMPTY_TILE) {
-                level_collision_groups[(y*level_map_width)+x] = 0;
+                level_collision_groups[map_width_y_x] = 0;
             }
             else {
                 file_input >> g;
                 file_input.ignore(1);
-                level_collision_groups[(y*level_map_width)+x] = g;
+                level_collision_groups[map_width_y_x] = g;
             }
         }
     }
@@ -201,37 +149,12 @@ void Level::load_level_from_file(const string& file) {
 }
 
 /*!
- *  @fn void Level::save_collision_layer(stringstream& level_stream_out)
- *  @brief Save level collision layer 
- *  @param stringstream& level_stream_out
- *  @return The method returns no param
- */
-void Level::save_collision_layer(stringstream& level_stream_out) {
-    int level_map_width = level_tile_map.get_width();
-    int level_map_height = level_tile_map.get_height();
-
-    FOR(y,level_map_height) {
-        FOR(x,level_map_width) {
-            char s[200] = {0};
-
-            sprintf(s,"%02d-%03d, ",level_collision_layer[(y*level_map_width)+x]+1,level_collision_groups[(y*level_map_width)+x]);
-            string str(s);
-
-            level_stream_out << str;
-        }
-        level_stream_out << endl;
-    }
-    level_stream_out << endl;
-}
-
-/*!
  *  @fn string Level::save_level_to_file(const string& file) 
  *  @brief Save the level on a file 
  *  @param const string& file
  *  @return string 
  */
 string Level::save_level_to_file(const string& file) {
-    stringstream level_stream_out = NULL;//! <To get the level output
     ofstream file_output = NULL;//! <To write level output on a file
 
     //! Open file with a valid name
@@ -241,6 +164,7 @@ string Level::save_level_to_file(const string& file) {
     else {
         // Do nothing
     }
+    stringstream level_stream_out = NULL;//! <To get the level output
     
     //! Saving the background:
     level_stream_out<<background_file_name<<endl<<endl;
@@ -249,6 +173,8 @@ string Level::save_level_to_file(const string& file) {
     level_stream_out<<level_tile_set_filename<<endl;
     level_stream_out<<level_tile_set.get_width()<<","<<level_tile_set.get_height()<<endl<<endl;
     
+    assert(level_stream_out != NULL);
+
     //! Saving the tilemap:
     level_tile_map.Save(level_stream_out);
     
@@ -262,7 +188,7 @@ string Level::save_level_to_file(const string& file) {
         // Do nothing
     }
 
-    file_output << out.str();
+    file_output << level_stream_out.str();
     file_output.close();
 
     return "";
@@ -276,7 +202,7 @@ string Level::save_level_to_file(const string& file) {
  */
 void Level::create_level_objects(uint& uid) {
     char object_type[50] = {0}; //! <Object type
-    Vec2 object_position() :x(0), y(0) {}; //! <Object position
+    Vec2 object_position; //! <Object position
     int layer = 0; //! <Level layer
     
     //! Creating the objects
@@ -290,7 +216,7 @@ void Level::create_level_objects(uint& uid) {
             // Do nothing
         }
 
-        sscanf(i.c_str(), " %s %f %f %d", object_type, &object_position.x, &objPos.y, &layer);
+        sscanf(i.c_str(), " %s %f %f %d", object_type, &object_position.x, &object_position.y, &layer);
         uid = GameObject::Create(object_type, object_position);
         GAMESTATE.AddObject(uid,layer);
     }
@@ -342,20 +268,24 @@ void Level::map_level_area(uint& uid, map<int,pair<Rect,int>>& mp,
         int& level_tile_width, int& level_tile_height) {
 
     for(auto &it:mp) {
-        Rect r = it.second.first;
-        int t=it.second.second;
+        Rect rectangle = it.second.first;
 
-        r.w-=r.x-1;
-        r.h-=r.y-1;
-        r.x*=level_tile_width;
-        r.w*=level_tile_width;
-        r.y*=level_tile_height;
-        r.h*=level_tile_height;
+        rectangle.w = rectangle.w - rectangle.x - 1;
+        rectangle.h = rectangle.h - rectangle.y - 1;
+        rectangle.x = rectangle.x * level_tile_width;
+        rectangle.w = rectangle.w * level_tile_width;
+        rectangle.y = rectangle.y * level_tile_height;
+        rectangle.h = rectangle.h * level_tile_height;
+
+        int t = it.second.second;
 
         //! Instantiate a new game object 
         if (t) {
             GameObject *tile = new GameObject{r};
             tile->AddComponent(new CompCollider{CompCollider::collType::t_ground});
+
+            assert(tile != NULL);
+
             GAMESTATE.AddObject(tile->uid);
         }
         else {
@@ -386,6 +316,7 @@ void Level::load_level_objects(bool collisors) {
 
     int level_tile_width = level_tile_set.get_width(); //! <Tile level width
     int level_tile_height = level_tile_set.get_height(); //! <Tile level Height
+
     map<int,pair<Rect,int>> mp;
 
     map_collision_layer_and_groups(mp, level_tile_width, level_tile_height);
@@ -401,26 +332,117 @@ void Level::load_level_objects(bool collisors) {
  *  @warning Understand better this method
  */
 void Level::save_level_objects(const vector<pair<ii,ii>>& grouped) {
+    assert(grouped != NULL); 
     
+    int id=1;
+    map<ii,int> ids;
+
     //! Saving the collision groups:
     int level_map_width = level_tile_map.get_width(); //! <Level map width
     int level_map_height = level_tile_map.get_height(); //! <Level map height 
 
-    int id=1;
-    map<ii,int> ids;
-
     FOR(y,level_map_height) {
         FOR(x,level_map_width) {
-            if (level_collision_layer[(y*level_map_width)+x]==EMPTY_TILE) {
-                level_collision_groups[(y*level_map_width)+x] = 0;
+            int width_y_x = (y*level_map_width)+x;
+
+            if (level_collision_layer[width_y_x] == EMPTY_TILE) {
+                level_collision_groups[width_y_x] = 0;
             }
             else{
-                auto &group = grouped[(level_map_width*y)+x];
-                if (group.first.first==x && group.first.second==y)ids[group.first]=id++;
-                level_collision_groups[(y*level_map_width)+x] = ids[group.first];
+                auto &group = grouped[with_y_x];
+                if (group.first.first == x && group.first.second == y)ids[group.first]=id++;
+                level_collision_groups[width_y_x] = ids[group.first];
             }
         }
     }
+}
+
+
+/*!
+ *  @fn void Level::void Level::load_read_file(ifstream& file_input, string& file_parameters) 
+ *  @brief Open a file to be read 
+ *  @param ifstream& file_input, const string& file
+ *  @return The method returns no param
+ */
+void Level::load_read_file(ifstream& file_input, const string& file) {
+    file_input.open(LEVEL_PATH + file + ".txt");
+
+    //! Get an error while opening the file
+    if (!file_input.is_open()) {
+        cerr << "Erro ao abrir o arquivo \"" << file << "\", o programa ira encerrar agora" << endl;
+        exit(EXIT_FAILURE);
+    }
+    else {
+        // Do nothing
+    }
+
+}  
+
+/*!
+ *  @fn void Level::void Level::load_write_file(ifstream& file_input, string& file_parameters) 
+ *  @brief Open a file to be written 
+ *  @param ifstream& file_input, const string& file
+ *  @return The method returns no param
+ */
+void Level::load_write_file(ofstream& file_output, const string& file) {
+    file_output.open(LEVEL_PATH + file + ".txt");
+
+    //! Get an error while opening the file
+    if (!file_output.is_open()) {
+        cerr << "Erro ao abrir o arquivo \"" << file << "\", o programa ira encerrar agora" << endl;
+        exit(EXIT_FAILURE);
+    }
+    else {
+        // Do nothing
+    }
+}
+
+/*!
+ *  @fn void Level::void Level::load_tile_set(ifstream& file_input, string& file_parameters) 
+ *  @brief Load level tile set 
+ *  @param ifstream& file_input, const string& file
+ *  @return The method returns no param
+ */
+void Level::load_tile_set(ifstream& file_input, string& file_parameters) {
+
+    //! Loading the tileset
+    getline(file_input, level_tile_set_filename);
+    getline(file_input, file_parameters);
+
+    int level_tile_width = 0;//! <Tile level width 
+    int level_tile_height = 0; //! <Tile level height
+
+    sscanf(file_parameters.c_str(), " %d,%d", &level_tile_width, &level_tile_height);
+    level_tile_set.load(level_tile_width, level_tile_height, level_tile_set_filename);
+    file_input.ignore(1);
+}
+
+/*!
+ *  @fn void Level::save_collision_layer(stringstream& level_stream_out)
+ *  @brief Save level collision layer 
+ *  @param stringstream& level_stream_out
+ *  @return The method returns no param
+ */
+void Level::save_collision_layer(stringstream& level_stream_out) {
+
+    assert(level_stream_out != NULL);
+
+    int level_map_width = level_tile_map.get_width();
+    int level_map_height = level_tile_map.get_height();
+    int width_y_x = (y*level_map_width)+x;
+
+    FOR(y,level_map_height) {
+        FOR(x,level_map_width) {
+            char s[200] = {0};
+
+            sprintf(s,"%02d-%03d, ",level_collision_layer[width_y_x]+1,level_collision_groups[width_y_x]);
+            string str(s);
+
+            level_stream_out << str;
+        }
+        level_stream_out << endl;
+    }
+    level_stream_out << endl;
 }
 
 /*!
