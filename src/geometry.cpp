@@ -1098,7 +1098,7 @@ SDL_Rect Rect::sdlRect()const {
 	@return The execution of this method returns a bool
 	@warning Method that requires review of comment
 */
-
+//! TODO Error Handling
 bool Rect::contains(const float &i,const float &j) const {
 	LOG_METHOD_START("Rect::contains");
   LOG_VARIABLE("&i", &i);
@@ -1145,7 +1145,7 @@ bool Rect::contains(const float &i,const float &j) const {
 	@return The execution of this method returns a bool
 	@warning Method that requires review of comment
 */
-
+//! TODO Error Handling
 bool Rect::contains(const Vec2& b) const {
 	LOG_METHOD_START("Rect::contains");
   LOG_VARIABLE("b", &b);
@@ -1190,7 +1190,7 @@ bool Rect::contains(const Vec2& b) const {
 	@return The execution of this method returns a bool
 	@warning Method that requires review of comment
 */
-
+//! TODO Error Handling
 bool Rect::collides(const Rect& b) const{
 	// if (BETWEEN(x,b.x,b.x2()))return true;
 	// if (BETWEEN(b.x,x,x2()))return true;
@@ -1359,7 +1359,7 @@ ConvexPolygon::ConvexPolygon(vector<Vec2> v,bool all):count{0} {
 	@return The execution of this method returns a bool
 	@warning Method that requires review of comment
 */
-
+//! TODO Error Handling
 bool ConvexPolygon::AddPoint(Vec2 p) {
 	LOG_METHOD_START("ConvexPolygon::AddPoint");
   LOG_VARIABLE("p", p);
@@ -1408,7 +1408,7 @@ bool ConvexPolygon::AddPoint(Vec2 p) {
 	@return The execution of this method returns a bool, false if no added points.
 	@warning Method that requires review of comment
 */
-
+//! TODO Error Handling
 bool ConvexPolygon::AddPoints(const vector<Vec2> &pts,bool all) {
 	LOG_METHOD_START("ConvexPolygon::AddPoints");
   LOG_VARIABLE("&pts", &pts);
@@ -1467,6 +1467,7 @@ bool ConvexPolygon::RemovePoint(int ind) {
   LOG_VARIABLE("ind", ind);
 	assert(ind != NULL);
 
+  //! TODO Error Handling
 	if (ind < 0 || ind >= count) {
 		return false;
 	}
@@ -1541,6 +1542,8 @@ void ConvexPolygon::ReorderPoints(vector<Vec2> &pts, \
 
 	const auto &it = min_element(pts.begin(), pts.end(), \
 	                    [](const Vec2& a,const Vec2& b) {
+
+		//! TODO Error Handling
 		if (equals(a.y,b.y)) {
 			return a.x > b.x;
 		}
@@ -1623,6 +1626,7 @@ bool ConvexPolygon::IsConvex(const Vec2 &p) const {
   LOG_VARIABLE("&p", &p);
 	assert(&p != NULL);
 
+	//! TODO Error Handling
 	if (count < 3) {
 		return true;
 	}
@@ -1668,6 +1672,8 @@ bool ConvexPolygon::IsConvex(const vector<Vec2> &pts) const {
 	float prevAng=v[1].angle(v[0]),ang;
 	for (int i = 1; i <= count; i++) {
 		ang = v[i+1].angle(v[i]);
+
+		//! TODO Error Handling
 		if (ang < prevAng) {
 			return false;
 		}
@@ -1685,6 +1691,7 @@ bool ConvexPolygon::Contains(Vec2 p) const {
   LOG_VARIABLE("p", p);
 	assert(p != NULL);
 
+	//! TODO Error Handling
 	if (count < 3) {
 		return false;
 	}
@@ -1708,6 +1715,7 @@ bool ConvexPolygon::Collides(const ConvexPolygon& other) const {
   LOG_VARIABLE("other", other);
 	assert(&other != NULL);
 
+	//! TODO Error Handling
 	if (count < 3 || other.GetCount() < 3) {
 		return false;//degenerated polygons dont collide
 	}
@@ -1716,12 +1724,15 @@ bool ConvexPolygon::Collides(const ConvexPolygon& other) const {
 	}
 	Rect a = BoundingRect();
 	Rect b = other.BoundingRect();
+
+	//! TODO Error Handling
 	if ((a.x2() <= b.x) || (b.x2()<=a.x)) {
 		return false;//if bounding boxes dont collide, no need
 	}
 	else {
 		// Nothing to do
 	}
+	//! TODO Error Handling
 	if ((a.y2() <= b.y) || (b.y2()<=a.y)) {
 		return false;// to do more complex collision check
 	}
@@ -1793,18 +1804,21 @@ ConvexPolygon ConvexPolygon::MinkowskySum(const ConvexPolygon& polygon) const {
 	LOG_VARIABLE("polygon", polygon);
 	assert(&polygon != NULL);
 
+	//! TODO Error Handling
 	if (count <= 0 || polygon.count <= 0) {
 		return ConvexPolygon();
 	}
 	else {
 		// Nothing to do
 	}
+	//! TODO Error Handling
 	if (count == 1) {
 		return polygon + GetPoints()[0];
 	}
 	else {
 		// Nothing to do
 	}
+	//! TODO Error Handling
 	if (pol.GetCount() == 1) {
 		return (*this) + polygon.GetPoints()[0];
 	}
@@ -1838,6 +1852,7 @@ ConvexPolygon ConvexPolygon::MinkowskySum(const ConvexPolygon& polygon) const {
 			vPol3.push_back(vPol3.back() + v);
 			it1++;
 		}
+		//! TODO Error Handling
 		else {
 			Vec2 v = (*next(it2)) - (*it2);
 			vPol3.push_back(vPol3.back() + v);
@@ -1878,6 +1893,7 @@ std::ostream& operator<<(std::ostream& os, const ConvexPolygon& obj) {
 	// return os;
 
 	auto pts = obj.GetPoints();
+	//! TODO Error Handling
 	if (pts.size() == 0) {
 		return os << "{}";
 	}
