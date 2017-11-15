@@ -135,6 +135,7 @@ GameObject::~GameObject() {
 	}
 
 	FOR(i,Component::type::t_count) {
+    //! TODO Error Handling
 		if (HasComponent(i)) {
 			delete components[i];
 		}
@@ -142,7 +143,7 @@ GameObject::~GameObject() {
 			// Nothing to do
 		}
 	}
-
+    //! TODO Error Handling
 		if (Camera::GetFocus() == uid) {
 			Camera::Unfollow();
 		}
@@ -168,6 +169,7 @@ void GameObject::update(float time) {
 
 	 remove = false // Initializing the variabel remove
 
+  //! TODO Error Handling
 	if (IsDead()) {
 		remove = true;
 		// for (auto i=Component::type::t_first+1;i!=Component::type::t_count;i++) {
@@ -187,6 +189,7 @@ void GameObject::update(float time) {
 		}
 	}
 
+  //! TODO Error Handling
 	//! Reset move
 	if (HasComponent(Component::type::t_movement)) {
 		COMPMOVEp(this)->move = 0.0f;
@@ -196,6 +199,7 @@ void GameObject::update(float time) {
 	}
 
 	//! Process input control and ai first
+  //! TODO Error Handling
 	if (HasComponent(Component::type::t_input_control)) {
 		COMPINPUTCONTp(this)->Update(time);
 	}
@@ -204,6 +208,7 @@ void GameObject::update(float time) {
 	}
 
 	//! Move update
+  //! TODO Error Handling
 	if (HasComponent(Component::type::t_ai)) {
 		COMPAIp(this)->Update(time);
 	}
@@ -212,6 +217,7 @@ void GameObject::update(float time) {
 	}
 
 	//! Then set move
+  //! TODO Error Handling
 	if (HasComponent(Component::type::t_movement)) {
 	    COMPMOVEp(this)->move += COMPMOVEp(this)->speed*time;
 	}
@@ -222,6 +228,7 @@ void GameObject::update(float time) {
 	//! And then do the rest
 	FOR2(i, Component::type::t__+1, Component::type::t_count) {
 		if (HasComponent(i)) {
+      //! TODO Error Handling
 			components[i]->Update(time);
 		}
 		else {
@@ -240,6 +247,7 @@ void GameObject::update(float time) {
 void GameObject::Render() {
 	LOG_METHOD_START("GameObject::Render");
 
+  //! TODO Error Handling
 	if (components[i]->kills_component(time)) {
 		RemoveComponent((Component::type)i);
 	}
@@ -248,6 +256,7 @@ void GameObject::Render() {
 	}
 
 	// Reset move
+  //! TODO Error Handling
 	if (HasComponent(Component::type::t_movement)) {
 		COMPMOVEp(this)->move = 0.0f;
 	}
@@ -255,13 +264,14 @@ void GameObject::Render() {
 		// Nothing to do
 	}
 	// Process input control and ai first
+  //! TODO Error Handling
 	if (HasComponent(Component::type::t_input_control)) {
 		COMPINPUTCONTp(this)->update(time);
 	}
 	else {
 		// Nothing to do
 	}
-
+  //! TODO Error Handling
 	if (HasComponent(Component::type::t_ai)) {
 		COMPAIp(this)->update(time);
   }
@@ -269,6 +279,7 @@ void GameObject::Render() {
 		// Nothing to do
 	}
 	// Then set move
+  //! TODO Error Handling
 	if (HasComponent(Component::type::t_movement)) {
 		COMPMOVEp(this)->move += COMPMOVEp(this)->speed*time;
 	}
@@ -277,6 +288,7 @@ void GameObject::Render() {
 	}
 	// And then do the rest
 	FOR2(i,Component::type::t__+1,Component::type::t_count) {
+    //! TODO Error Handling
 		if (HasComponent(i)) {
 			components[i]->update(time);
 		}
@@ -291,6 +303,7 @@ void GameObject::render() {
 
 	FOR(i, Component::type::t_count) {
 		//! Render a component
+    //! TODO Error Handling
 		if (HasComponent(i)) {
 			components[i]->render();
 		}
@@ -315,6 +328,7 @@ void GameObject::AddComponent(Component* component) {
 
 	auto t = component->GetType();
 	//! If the component is read, then it's add with the others components
+  //! TODO Error Handling
 	if (HasComponent(t)) {
 		cerr << "Error, adding component " << t
 		cerr << " to a GameObject that already has it" << endl;
@@ -342,6 +356,7 @@ void GameObject::ReplaceComponent(Component* component) {
 
 	auto t = component->GetType();
 	//! if the component doesn't have a type, then it is deleted.
+  //! TODO Error Handling
 	if (!HasComponent(t)) {
 		cerr << "Error, replacing component " << t
 		cerr << " on a GameObject that doesnt have it" << endl;
@@ -427,6 +442,7 @@ void GameObject::AttachObj(GameObject* obj) {
   assert(obj != NULL);
 
 	//! If the end of object was finded, then it's attach
+  //! TODO Error Handling
 	if (find(attachedObjs.begin(),attachedObjs.end(),obj) == attachedObjs.end()) {
 		attachedObjs.push_back(obj);
 		obj->AttachTo(this);
@@ -453,6 +469,7 @@ void GameObject::AttachTo(GameObject* obj) {
 
 	//! If the object is a null pointer
 	if (attachedTo == nullptr) {
+    //! TODO Error Handling
 		attachedTo = obj;
 		obj->AttachObj(this);
 	} //! if the object attach a object, then the object is attached.
@@ -480,6 +497,7 @@ void GameObject::UnAttachObj(GameObject* obj) {
 	//! "it" is the object's point.
 	auto it = find(attachedObjs.begin(), attachedObjs.end(),obj);
 	//! If it is the object's end then it is erased, then the object isn't attach.
+  //! TODO Error Handling
   if (it != attachedObjs.end()) {
 		attachedObjs.erase(it);
 		obj->UnAttach();
@@ -498,6 +516,7 @@ void GameObject::UnAttach() {
 	LOG_METHOD_START("GameObject::UnAttach");
 
 	//! If the attach exists, then the object is UnAttach
+  //! TODO Error Handling
 	if (attachedTo != nullptr) {
 		auto temp = attachedTo;
 		attachedTo = nullptr;
@@ -643,6 +662,7 @@ template<int atkDist,int seeDist,
 	Timer &al = mem->timers["alerted"]; // time is ending
 
   //! If there is a hit, then the ai is restart.
+  //! TODO Error Handling
 	if (mem->ints["hit"]) {
 		mem->ints["hit"] = 0;
 		al.Restart();
@@ -654,8 +674,10 @@ template<int atkDist,int seeDist,
 	bool alerted = (al.Get() < 5);  // Alert state of object,when alert less then 5
 
 	//! If state of object is idling
+  //! TODO Error Handling
 	if (state == CompAI::state::idling) { // State of velocity object
     //! If the object is touched
+    //! TODO Error Handling
 		if ((alerted || cd.Get() > 3) && target != nullptr) {
 			state = CompAI::state::looking;
 			cd.Restart();
@@ -679,6 +701,7 @@ template<int atkDist,int seeDist,
 			cd.Restart();
 			return;
 		}
+    //! TODO Error Handling
 		else {
 			//! Nothing to do
 		}
@@ -686,9 +709,12 @@ template<int atkDist,int seeDist,
 		//! Distance of the object
 		float dist = GO(ai->entity)->Box().distEdge(target->Box()).x;
 
+    //! TODO Error Handling
 		if ((alerted && dist < (seeDist*2)) || dist < seeDist) {
+      //! TODO Error Handling
 			if (dist < atkDist) {
                 state = CompAI::state::attacking;
+                //! TODO Error Handling
                 if (id == 1) { // Mike
                     music.open_music_file("audio/mike-hit-chao.wav");
                     music.play_music(1);
@@ -699,6 +725,7 @@ template<int atkDist,int seeDist,
 			} else {
                 state = CompAI::state::walking;
                 ac->change_current("walk");
+                //! TODO Error Handling
                 if (id == 1) { // Mike
                     music.open_music_file("audio/mike-arrastando-clava.wav");
                     music.play_music(1);
@@ -715,12 +742,14 @@ template<int atkDist,int seeDist,
 	}
 	else if (state == CompAI::state::walking) {
 		CompMovement *movement = COMPMOVEp(GO(ai->entity));
+    //! TODO Error Handling
 		if (id == 1) {// Mike
 			music.open_music_file("audio/mike-arrastando-clava.wav");
 		}
 		else {
 			// Nothing to do
 		}
+    //! TODO Error Handling
 		if (al.Get() > 10 && cd.Get() > 5) {
 			state = CompAI::state::looking;
 			movement->speed.x = 0;
@@ -734,6 +763,7 @@ template<int atkDist,int seeDist,
 			float dist = GO(ai->entity)->Box().distEdge(target->Box()).x;
 
 			//TODO: make line of sight component
+      //! TODO Error Handling
 			if (dist > (seeDist*2) || (!alerted && dist > seeDist)) {
 
 				state = CompAI::state::looking;
@@ -744,8 +774,10 @@ template<int atkDist,int seeDist,
 				return;
 			}
 			//!
+      //! TODO Error Handling
 			else if (dist < atkDist+abs(movement->speed.x)*time) {
 				//!
+        //! TODO Error Handling
 				if (GO(ai->entity)->Box().x < target->Box().x) {
 					movement->move = dist-atkDist;
 				}
@@ -754,6 +786,7 @@ template<int atkDist,int seeDist,
 				}
 
 				state = CompAI::state::attacking; // State of attack
+        //! TODO Error Handling
 				if (id == 1) { // Mike
                     music.open_music_file("audio/mike-hit-chao.wav");
                     music.play_music(1);
@@ -771,6 +804,7 @@ template<int atkDist,int seeDist,
 				GO(ai->entity)->flipped = true;
 				movement->speed.x = 100.0f;
 			}
+      //! TODO Error Handling
 			else {
 				GO(ai->entity)->flipped = false;
 				movement->speed.x = -100.0f;
@@ -779,6 +813,7 @@ template<int atkDist,int seeDist,
 	}
 	//! State of object in attack
 	else if (state == CompAI::state::attacking) {
+    //! TODO Error Handling
 		if (!alerted && attacked > 3) {
 			state = CompAI::state::idling;
 			attacked = 0;
@@ -803,12 +838,14 @@ template<int atkDist,int seeDist,
 			else ac->change_current("attack",false);
 		}
 		else{
+      //! TODO Error Handling
 			if (target->Box().x > GO(ai->entity)->Box().x && !GO(ai->entity)->flipped) {
 				GO(ai->entity)->flipped = true;
 			}
 			else {
 				//! Nothing to do
 			}
+      //! TODO Error Handling
 			if (target->Box().x < GO(ai->entity)->Box().x &&  GO(ai->entity)->flipped) {
 				GO(ai->entity)->flipped = false;
 		}
@@ -846,7 +883,9 @@ void PassiveAIfunc(CompAI* ai,float time) {
 	Timer &cd = mem->timers["cooldown"]; // Timer cooldown
 
 	//! If the object is idle.
+  //! TODO Error Handling
 	if (state == CompAI::state::idling) {
+    //! TODO Error Handling
 		if (cd.Get() > 0.5f) {
 			state = CompAI::state::walking;  // The object is in movie
 			music.open_music_file("audio/banshee-vozes-1.wav");
@@ -865,6 +904,7 @@ void PassiveAIfunc(CompAI* ai,float time) {
 		CompMovement *movement = COMPMOVEp(GO(ai->entity));
 
 		//! If there is time and space to walkie
+    //! TODO Error Handling
 		if (dist.len() < movement->speed.len() * time) {
 			movement->speed = Vec2{};
 			movement->move = dist;
@@ -924,8 +964,10 @@ template<int atkDist,int seeDist,int stCD,int atkCount,int stompCount >
 	string &curAnim = ac->GetCurName(); // Current animation
 	//! If the name of animation starts with _r
 
+  //! TODO Error Handling
 	if (curAnim.substr(curAnim.size()-2) == "_r") {
 		//! If the entity cant't flipped
+    //! TODO Error Handling
 		if (!GO(ai->entity)->flipped) {
 
 			int frame = ac->GetCur().GetCurFrame();
@@ -937,6 +979,7 @@ template<int atkDist,int seeDist,int stCD,int atkCount,int stompCount >
 		}
 	}
 	//! If the entity cans flipped
+  //! TODO Error Handling
 	else if (GO(ai->entity)->flipped) {
 		int frame = ac->get_current().get_current_frame();
 		curAnim = curAnim+"_r";
@@ -946,6 +989,7 @@ template<int atkDist,int seeDist,int stCD,int atkCount,int stompCount >
 		// Nothing to do
 	}
 
+  //! TODO Error Handling
 	if (mem->ints["hit"]) {
 		mem->ints["hit"] = 0;
 		al.Restart();
@@ -957,8 +1001,10 @@ template<int atkDist,int seeDist,int stCD,int atkCount,int stompCount >
 	bool alerted = (al.Get() < 5);
 
 	//! If the state of character is idle
+  //! TODO Error Handling
 	if (state == CompAI::state::idling) {
 		//! If is time of game
+    //! TODO Error Handling
 		if ((alerted || cd.Get() > 3) && target != nullptr) {
 			state = CompAI::state::looking;
 			music.open_music_file("audio/porco-grunhido-3.wav");
@@ -973,6 +1019,7 @@ template<int atkDist,int seeDist,int stCD,int atkCount,int stompCount >
 	}
 
 	//! If the game ends
+  //! TODO Error Handling
 	else if (target == nullptr) {
 		state = CompAI::state::idling;
 		ac->change_current("idle");
@@ -991,8 +1038,10 @@ template<int atkDist,int seeDist,int stCD,int atkCount,int stompCount >
 		//TODO: make line of sight component
 		float dist = GO(ai->entity)->Box().distEdge(target->Box()).x;
 
+    //! TODO Error Handling
 		if ((alerted && dist < (seeDist*2)) || dist < seeDist) {
 			//!
+      //! TODO Error Handling
 			if (dist < 2*atkDist && stompCD.Get() > stCD) {
 				state = CompAI::state::stomping;
 				ac->change_current("stomp");
@@ -1014,6 +1063,7 @@ template<int atkDist,int seeDist,int stCD,int atkCount,int stompCount >
 		}
 	}
 	//! If the object is walking
+  //! TODO Error Handling
 	else if (state == CompAI::state::walking) {
 		CompMovement *move = COMPMOVEp(GO(ai->entity));
 		//! If alert is big and timer is bigger than 5
@@ -1029,6 +1079,7 @@ template<int atkDist,int seeDist,int stCD,int atkCount,int stompCount >
 			float dist = GO(ai->entity)->Box().distEdge(target->Box()).x;
 
 			//TODO: make line of sight component
+      //! TODO Error Handling
 			if (dist > (seeDist*2) || (!alerted && dist > seeDist)) {
 				state = CompAI::state::looking;
 				move->speed.x = 0;
@@ -1056,11 +1107,14 @@ template<int atkDist,int seeDist,int stCD,int atkCount,int stompCount >
 				music.play_music(1);
 				cd.Restart();
 			}
+      //! TODO Error Handling
 			else if (dist < atkDist + abs(move->speed.x)*time) {
 				//! If the character not matched the target yet
+        //! TODO Error Handling
 				if (GO(ai->entity)->Box().x < target->Box().x) {
 					move->move = dist - atkDist;
 				}
+        //! TODO Error Handling
 				else {
 					move->move = -dist + atkDist;
 				}
@@ -1071,6 +1125,7 @@ template<int atkDist,int seeDist,int stCD,int atkCount,int stompCount >
           music.play_music(1);
           ac->change_current("idle");
 				}
+        //! TODO Error Handling
 				else {
 					state = CompAI::state::charging, ac->change_current("charge",false); // State of charging
 				}
@@ -1082,6 +1137,7 @@ template<int atkDist,int seeDist,int stCD,int atkCount,int stompCount >
 				GO(ai->entity)->flipped = true;
 				move->speed.x = 350.0f;
 			}
+      //! TODO Error Handling
 			else {
 				GO(ai->entity)->flipped = false;
 				move->speed.x = -350.0f;
@@ -1091,6 +1147,7 @@ template<int atkDist,int seeDist,int stCD,int atkCount,int stompCount >
 }
 	//! The object is in attack.
 	else if (state == CompAI::state::attacking) {
+    //! TODO Error Handling
 		if (!alerted && attacked > 3) {
 			state = CompAI::state::idling;
 			attacked = 0;
@@ -1101,6 +1158,7 @@ template<int atkDist,int seeDist,int stCD,int atkCount,int stompCount >
 		}
 		else if (ac->get_current_name() != "attack" && ac->get_current_name() != "attack_r") {
 			float dist = GO(ai->entity)->Box().distEdge(target->Box()).x;
+      //! TODO Error Handling
 			if (dist > atkDist) {
 				state = CompAI::state::looking; // State of object is looking
 				music.open_music_file("audio/porco-grunhido-3.wav");
@@ -1141,6 +1199,7 @@ template<int atkDist,int seeDist,int stCD,int atkCount,int stompCount >
 		else if (ac->get_current_name() != "stomp" && ac->get_current_name() != "stomp_r") {
 			float dist = GO(ai->entity)->Box().distEdge(target->Box()).x;
 			//! Distance of character is bigger than the double
+      //! TODO Error Handling
 			if (dist > atkDist*2) {
 
 				state = CompAI::state::looking; // Character is observing
@@ -1157,12 +1216,14 @@ template<int atkDist,int seeDist,int stCD,int atkCount,int stompCount >
       }
 		}
 		else {
+      //! TODO Error Handling
 			if (target->Box().x > GO(ai->entity)->Box().x && !GO(ai->entity)->flipped) {
 				GO(ai->entity)->flipped = true;
 			}
 			else {
 				//! Nothing to do
 			}
+      //! TODO Error Handling
 			if (target->Box().x < GO(ai->entity)->Box().x &&  GO(ai->entity)->flipped) {
 				GO(ai->entity)->flipped = false;
 		}
@@ -1171,6 +1232,7 @@ template<int atkDist,int seeDist,int stCD,int atkCount,int stompCount >
 		}
 	}
 }
+  //! TODO Error Handling
 	else if (state == CompAI::state::charging) {
 		if (ac->get_current_name() != "charge" && ac->get_current_name() != "charge_r") {
 			state = CompAI::state::looking;
@@ -1186,9 +1248,11 @@ template<int atkDist,int seeDist,int stCD,int atkCount,int stompCount >
 		}
 	}
 	//! State of character is walking
+  //! TODO Error Handling
 	else if (state == CompAI::state::walking) {
 		CompMovement *move = COMPMOVEp(GO(ai->entity));
 
+    //! TODO Error Handling
 		if (cd.Get() > 5) {
 			cd.Restart();
 			state = CompAI::state::idling;
@@ -1211,6 +1275,7 @@ template<int atkDist,int seeDist,int stCD,int atkCount,int stompCount >
 
 				move->speed.x = 0;
 
+        //! TODO Error Handling
 				if (GO(ai->entity)->Box().x < target->Box().x) {
 					move->move=dist-(2*atkDist);
 				}
@@ -1224,6 +1289,7 @@ template<int atkDist,int seeDist,int stCD,int atkCount,int stompCount >
 				music.open_music_file("audio/porco-pisada.wav");
 				music.play_music(1);
 			}
+      //! TODO Error Handling
 			else if (dist < atkDist+abs(move->speed.x)*time) {
 				move->speed.x = 0; // The object is idle
 				if (GO(ai->entity)->Box().x < target->Box().x) {
@@ -1240,6 +1306,7 @@ template<int atkDist,int seeDist,int stCD,int atkCount,int stompCount >
             music.play_music(1);
 
             ac->change_current("idle");
+        //! TODO Error Handling
 				} else {
 					 state = CompAI::state::charging, ac->ChangeCur("charge");
 				}
@@ -1248,6 +1315,7 @@ template<int atkDist,int seeDist,int stCD,int atkCount,int stompCount >
 				GO(ai->entity)->flipped = true;
 				move->speed.x = 100.0f;
 			}
+      //! TODO Error Handling
 			else {
 				GO(ai->entity)->flipped = false;
 				move->speed.x = -100.0f;
@@ -1255,6 +1323,7 @@ template<int atkDist,int seeDist,int stCD,int atkCount,int stompCount >
 		}
 	}
 	else if (state == CompAI::state::attacking) {
+    //! TODO Error Handling
 		if (GO(ai->entity)->Box().distEdge(target->Box()).x > atkDist) {
 			attacked = 0;
 			cd.Restart();
@@ -1271,12 +1340,14 @@ template<int atkDist,int seeDist,int stCD,int atkCount,int stompCount >
 			if (target->Box().x > GO(ai->entity)->Box().x && !GO(ai->entity)->flipped) {
 				GO(ai->entity)->flipped = true;
 			}
+      //! TODO Error Handling
 			else {
 				//! Nothing to do
 			}
 			if (target->Box().x < GO(ai->entity)->Box().x &&  GO(ai->entity)->flipped) {
 				GO(ai->entity)->flipped = false;
 			}
+      //! TODO Error Handling
 			else {
 				//! Nothing to do
 			}
@@ -1346,6 +1417,7 @@ void PlayerControlFunc(GameObject* go, float time) {
 	if (curAnim == "kick" || curAnim == "fire" || curAnim == "fire2") {
 		return;
 	}
+  //! TODO Error Handling
 	else {
 		//! Nothing to do
 	}
@@ -1356,7 +1428,7 @@ void PlayerControlFunc(GameObject* go, float time) {
 	else if (arrowReady && INPUT.key_is_down(KEY(s)) && curAnim == "idle") {
 		ac->change_current("fire2",false);
 	}
-	//else if (              INPUT.key_pressed (KEY(s)) && curAnim == "idle")ac->change_current("kick", false);
+  //! TODO Error Handling
 	else {
 		if (!mem->ints["onAir"]) {
 			mem->ints["doubleJump"] = 0;
@@ -1366,8 +1438,13 @@ void PlayerControlFunc(GameObject* go, float time) {
 		}
 
 		if (INPUT.key_pressed(KEY_UP) && !mem->ints["doubleJump"]) {
-			if (!mem->ints["onAir"])speed.y = -1000.0f;
-			else speed.y = -750.0f;
+			if (!mem->ints["onAir"]) {
+        speed.y = -1000.0f;
+			}
+      //! TODO Error Handling
+      else {
+        speed.y = -750.0f;
+      }
 			mem->ints["doubleJump"] = mem->ints["onAir"];
 			mem->ints["onAir"] = 1;
 			//ac->change_current("jump");
@@ -1377,6 +1454,7 @@ void PlayerControlFunc(GameObject* go, float time) {
 			speed.x = -400.0f;
 		else if (INPUT.key_is_down(KEY_RIGHT) && !INPUT.key_is_down(KEY_LEFT))
 			speed.x = 400.0f;
+      //! TODO Error Handling
 		else speed.x = 0.0f;
 	}
 
@@ -1385,6 +1463,7 @@ void PlayerControlFunc(GameObject* go, float time) {
 		if (curAnim == "walk") {
 			ac->change_current("idle");
 		}
+    //! TODO Error Handling
 		else {
 			// Nothing to do
 		}
@@ -1393,6 +1472,7 @@ void PlayerControlFunc(GameObject* go, float time) {
 		if (curAnim == "idle") {
 			ac->change_current("walk");
 		}
+    //! TODO Error Handling
 		else {
 			// Nothing to do
 		}
@@ -1400,6 +1480,7 @@ void PlayerControlFunc(GameObject* go, float time) {
 			go->flipped = !go->flipped;
 			// ac->change_current("flipped",false);
 		}
+    //! TODO Error Handling
 		else {
 			// Nothing to do
 		}
@@ -1418,6 +1499,7 @@ void PlayerMonsterCollision(const CompCollider::Coll &a,const CompCollider::Coll
 	if (speed == Vec2{}) {
 		return;
 	}
+  //! TODO Error Handling
 	else {
 		// Nothing to do
 	}
@@ -1428,6 +1510,7 @@ void PlayerMonsterCollision(const CompCollider::Coll &a,const CompCollider::Coll
 	if (move != totMove) {
 		COMPHPp(GO(a.entity))->Damage(1);
 	}
+  //! TODO Error Handling
 	else {
 		// Nothing to do
 	}
@@ -1450,6 +1533,7 @@ void PlayerBlockCollision(const CompCollider::Coll &a,const CompCollider::Coll &
 	if (totMove == Vec2{}) {
 		return;
 	}
+  //! TODO Error Handling
 	else {
 		// Nothing to do
 	}
@@ -1458,6 +1542,7 @@ void PlayerBlockCollision(const CompCollider::Coll &a,const CompCollider::Coll &
 	if (move.x != totMove.x) {
 		speed.x = 0.0f;
 	}
+  //! TODO Error Handling
 	else {
 		// Nothing to do
 	}
@@ -1467,6 +1552,7 @@ void PlayerBlockCollision(const CompCollider::Coll &a,const CompCollider::Coll &
 		if (totMove.y > 0) {
 			mem->ints["onAir"] = 0;
 		}
+    //! TODO Error Handling
 		else {
 			// Nothing to do
 		}
@@ -1565,6 +1651,7 @@ uint GameObject::Create(const string& blueprint, const Vec2& pos, const Vec2& au
 	if (blueprint == "mike") {
 		return MakeMike(pos);
 	}
+  //! TODO Refactor
 	else {
 		// Nothing to do
 	}
@@ -1584,6 +1671,7 @@ uint GameObject::Create(const string& blueprint, const Vec2& pos, const Vec2& au
 	if (blueprint == "porco") {
 		return MakeBoar(pos);
 	}
+  //! TODO Error Handling
 	else {
 		// Nothing to do
 	}
