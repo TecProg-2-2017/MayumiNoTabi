@@ -28,7 +28,7 @@ public:
 	void set_current_frame(int frame, bool force=false);
   void set_current_frame_by_force(int frame, bool force);
 
-	bool Looped()const;
+	bool is_looped()const;
 
   void update(float time);
   void checks_animation_call(int frame);

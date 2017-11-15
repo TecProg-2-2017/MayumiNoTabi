@@ -36,11 +36,11 @@
 		*	\brief A positive integer, that represents the height of the text box
     */
 Text::Text(const string& txt, int fSize, SDL_Color c, Style st,
-		string file, int x, int y) : fontName{file} {
-	SetColor(c);
-	SetText(txt);
-	SetStyle(st);
-	SetFontSize(fSize);
+		string file, int x, int y) : font_name{file} {
+	set_color(c);
+	set_text(txt);
+	set_style(st);
+	set_font_size(fSize);
 	box.x = x;
 	box.y = y;
 }
@@ -51,12 +51,12 @@ Text::Text(const string& txt, int fSize, SDL_Color c, Style st,
     */
 
 Text::~Text() {
-	//! Iterates through all the lineArray lines
-	for (auto& i : lineArray) {
+	//! Iterates through all the line_array lines
+	for (auto& i : line_array) {
 		//! Checks if that line has texture
 		if (i.texture){
 			//! Destroies the line texture
-			SDL_DestroyTexture(i.texture)
+			SDL_DestroyTexture(i.texture);
 		}
 	}
 }
@@ -71,14 +71,14 @@ Text::~Text() {
 	@return The execution of this method returns no value
 	@warning Method that requires review of comment
 */
-void Text::Render(Vec2 camera, Rect* clipRect) {
+void Text::render(Vec2 camera, Rect* clipRect) {
 	//! @var pos
 	Vec2 pos = box.hotspot(hotspot); //!< A Vec2 that representes the position of the text box hotspot
 
 	//! @var x
-	int x = pos.x - (camera.x * CAMERAZOOM); //!< A positive integer that represents the beginning of the text box rectangle in the axis x
+	int position_x = pos.x - (camera.x * CAMERAZOOM); //!< A positive integer that represents the beginning of the text box rectangle in the axis x
 	//! @var y
-	int y = pos.y - (camera.y * CAMERAZOOM); //!< A positive integer that represents the beginning of the text box rectangle in the axis y
+	int position_y = pos.y - (camera.y * CAMERAZOOM); //!< A positive integer that represents the beginning of the text box rectangle in the axis y
 
 	//! \warning modularize decision structure
 	//! Checks if the text box rectangle exist
@@ -87,8 +87,8 @@ void Text::Render(Vec2 camera, Rect* clipRect) {
 		Vec2 clipRectEnd(clipRect->x + clipRect->w - 1,
 			clipRect->y + clipRect->h - 1); //!< A Vec2, that represents the end position of the text box rectangle
 
-		//! Iterates through all the lineArray lines
-		for (auto& i : lineArray) {
+		//! Iterates through all the line_array lines
+		for (auto& i : line_array) {
 			//! Checks if the text box rectangle end position in the axis y is lower
 			//! that teh box position in the axis y
 			if (clipRectEnd.y < i.box.y) {
@@ -165,7 +165,7 @@ void Text::Render(Vec2 camera, Rect* clipRect) {
 
   @return The execution of this method returns no value
 */
-void Text::SetPos(int x,int y) {
+void Text::set_box_position(int x,int y) {
 	box.x = x;
 	box.y = y;
 }
@@ -177,8 +177,8 @@ void Text::SetPos(int x,int y) {
   @brief A Vec2, that represents the new text box position
   @return The execution of this method returns no value
 */
-void Text::SetPos(Vec2 v) {
-	SetPos(v.x, v.y);
+void Text::set_box_position(Vec2 v) {
+	set_box_position(v.x, v.y);
 }
 
 /*!
@@ -188,7 +188,7 @@ void Text::SetPos(Vec2 v) {
   @brief A string, that represents the new text of the text box
   @return The execution of this method returns no value
 */
-void Text::SetText(string txt) {
+void Text::set_text(string txt) {
 	//! Checks if the txt is empty
 	if (txt == ""){
 		//! Attributes a white space to txt
@@ -196,7 +196,7 @@ void Text::SetText(string txt) {
 	}
 	//! @var text
 	stringstream text(txt); //!< A stringstream that recivies the txt
-	lineArray.clear();
+	line_array.clear();
 	//! Iterates through all lines in text
 	for (TextLine line;getline(text, line.text);) {
 		//! Checks if the text in the line is empty
@@ -207,7 +207,7 @@ void Text::SetText(string txt) {
 		line_array.push_back(line);
 	}
 
-	RemakeTexture();
+	remake_texture();
 }
 
 
@@ -221,13 +221,13 @@ void Text::SetText(string txt) {
   @brief A string, that represents the new line text
   @return The execution of this method returns no value
 */
-void Text::SetLine(int line, string txt) {
+void Text::set_line(int line, string txt) {
 	//! Checks if the line number exists in the array of lines
-	if (line >= 0 && line < (int)lineArray.size()) {
+	if (line >= 0 && line < (int)line_array.size()) {
 		//! Replaces the line text for the new line text
-		lineArray[line].text = txt;
+		line_array[line].text = txt;
 
-		RemakeTexture();
+		remake_texture();
 	}
 }
 
@@ -238,12 +238,12 @@ void Text::SetLine(int line, string txt) {
 	@brief A SDL_Color, that represents the new color
   @return The execution of this method returns no value
 */
-void Text::SetColor(SDL_Color c) {
+void Text::set_color(SDL_Color c) {
 	color.r = c.r;
 	color.g = c.g;
 	color.b = c.b;
 	color.a = c.a;
-	RemakeTexture();
+	remake_texture();
 }
 
 /*!
@@ -253,9 +253,9 @@ void Text::SetColor(SDL_Color c) {
 	@brief A Style, that represents the new style
   @return The execution of this method returns no value
 */
-void Text::SetStyle(Style st) {
+void Text::set_style(Style st) {
 	style = st;
-	RemakeTexture();
+	remake_texture();
 }
 
 
@@ -266,11 +266,11 @@ void Text::SetStyle(Style st) {
 	@brief A positive integer, that represents the new font size
   @return The execution of this method returns no value
 */
-void Text::SetFontSize(int fSize) {
-	fontSize = fSize;
-	font = Resources::GetFont(fontName,fontSize);
+void Text::set_font_size(int fSize) {
+	font_size = fSize;
+	font = Resources::game_get_font(font_name,font_size);
 
-	RemakeTexture();
+	remake_texture();
 }
 
 
@@ -281,7 +281,7 @@ void Text::SetFontSize(int fSize) {
 	@brief A Hotspot, that represents the new box hotspot
   @return The execution of this method returns no value
 */
-void Text::SetHotspot(Hotspot h) {
+void Text::set_hotspot(Hotspot h) {
 	hotspot = h;
 }
 
@@ -290,23 +290,23 @@ void Text::SetHotspot(Hotspot h) {
 	@brief A getter of the attribute box
 	@return A Rect, that represents the text box
 */
-Rect Text::GetBox()const {
+Rect Text::get_box()const {
 	return box;
 }
 
 /*!
-	@fn void Text::RemakeTexture()
+	@fn void Text::remake_texture()
 	@brief Method that remakes the texture of the text box
 	@return The execution of this method returns no value
 */
-void Text::RemakeTexture() {
+void Text::remake_texture() {
 	//! Checks if the font was initialized
 	if (font.get()) {
 		//! @var surface
 		SDL_Surface *surface = nullptr; //!< A pointer to SDL_Surface, that represents a surface
 		box.w = box.h = 0;
-		//! Iterates through all lines of the lineArray
-		for (auto& i : lineArray) {
+		//! Iterates through all lines of the line_array
+		for (auto& i : line_array) {
 			//! Checks if the line has texture
 			if (i.texture){
 				//! Destroies the line texture
@@ -344,8 +344,8 @@ void Text::RemakeTexture() {
 
 		//! Checks if the alignment is CENTERED
 		if (alignment == Align::CENTERED) {
-			//! Iterates through the lineArray
-			for (auto& i : lineArray){
+			//! Iterates through the line_array
+			for (auto& i : line_array){
 				//! Applies the alignment is CENTERED
 				i.box.x=(box.w-i.box.w)/2;
 			}
@@ -353,8 +353,8 @@ void Text::RemakeTexture() {
 		}
 		//! Checks if the alignment is RIGHT
 		else if (alignment == Align::RIGHT) {
-			//! Iterates through the lineArray
-			for (auto& i : lineArray){
+			//! Iterates through the line_array
+			for (auto& i : line_array){
 				//! Applies the alignment is RIGHT
 				i.box.x=(box.w-i.box.w);
 			}
