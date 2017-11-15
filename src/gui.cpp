@@ -49,10 +49,10 @@ bool GUI_Element::IsVisible()const{
 GUI_Button::GUI_Button(uint a,const Vec2& pos):GUI_Element(pos),action{a}{
 }
 
-void GUI_Button::Update() {
+void GUI_Button::update() {
 	if (GUI.gui_button_is_selected(this)) return;
 	else if (GUI.gui_button_is_down()) return;
-	
+
 	Rect button = box;
 	CLIP_RECT(button, DEFAULT_MARGIN);
 	hover=button.contains(INPUT.get_mouse_position());
@@ -102,10 +102,10 @@ GUI_CheckButton::GUI_CheckButton(bool& v,const Vec2& pos):GUI_Button(GUI_NONE,po
 }
 
 
-void GUI_CheckButton::Update() {
+void GUI_CheckButton::update() {
 	if (GUI.gui_button_is_selected(this)) return;
 	else if (GUI.gui_button_is_down()) return;
-	
+
 	Rect button = box;
 	CLIP_RECT(button, DEFAULT_MARGIN*2);
 	hover=button.contains(INPUT.get_mouse_position());
@@ -175,17 +175,17 @@ GUI_InputBox::~GUI_InputBox() {
 }
 
 
-void GUI_InputBox::Update() {
+void GUI_InputBox::update() {
 	if (GUI.gui_button_is_selected(this)) return;
 	else if (GUI.gui_button_is_down()) return;
-	
+
 	Rect button = box;
 	CLIP_RECT(button, DEFAULT_MARGIN);
 	hover=button.contains(INPUT.get_mouse_position());
 	bool closed = false;
 	if (hover)
 		GUI.select_gui_button(this);
-		
+
 	if (INPUT.mouse_button_pressed(MBUTTON_LEFT)) {
 		if (!press) {
 			if (hover) {
@@ -198,7 +198,7 @@ void GUI_InputBox::Update() {
 		}
 	}
 	if (!press) return;
-	
+
 	if (closed || INPUT.key_pressed(KEY_ENTER)) {
 		press = false;
 		INPUT.stop_text_input(&input);
@@ -259,7 +259,7 @@ void GUI_InputBox::render() {
 			offset -= rect.x-cursor.x;
 			cursor.x = rect.x;
 		}
-		
+
 		if (INPUT.text_cursor_blink())
 			DRAW_LINE(cursor.x,cursor.y,cursor.x,cursor.y+DEFAULT_FONT_SIZE);
 
@@ -333,7 +333,7 @@ GUI_Array::~GUI_Array() {
 }
 
 
-void GUI_Array::Update() {
+void GUI_Array::update() {
 	Vec2 mouse = INPUT.get_mouse_position();
 	for (auto it=array.rbegin();it!=array.rend();it++) {
 		GUI_Element& element = **it;
@@ -469,14 +469,14 @@ void GUI_Window::update() {
 		GUI.request_gui_element_pop(this);
 		return;
 	}
-	
+
 	bool hover=box.contains(INPUT.get_mouse_position());
-	if (!hover) { 
+	if (!hover) {
 		if (INPUT.mouse_button_pressed(MBUTTON_LEFT))
 			GUI.select_gui_window(nullptr);
 		return;
 	}
-	
+
 	if (INPUT.mouse_button_pressed(MBUTTON_LEFT))
 		GUI.select_gui_window(this);
 	closeButton.update();

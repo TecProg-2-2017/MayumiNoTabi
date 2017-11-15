@@ -8,6 +8,7 @@
 #include <componentMovement.hpp>
 #include <gameObject.hpp>
 #include <game.hpp>
+#include <assert.h>
 
 /*!
 	* @fn CompGravity::CompGravity(float g)
@@ -81,7 +82,6 @@ void CompGravity::render() {
 Component::type CompGravity::get_type() const{
 	LOG_METHOD_START('CompGravity::get_type');
 
-	LOG_METHOD_CLOSE('CompGravity::get_type', t_gravity.to_string());
 
 	return Component::type::t_gravity;
 }
