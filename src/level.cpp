@@ -96,13 +96,14 @@ void Level::load_level_from_file(const string& file) {
     //! Loading the collision layer
     int level_map_width = level_tile_map.get_width();
     int level_map_height = level_tile_map.get_height();
+    int level_area = level_map_width*level_map_height;
 
     level_collision_layer.clear();
-    level_collision_layer.resize(level_map_width*level_map_height);
+    level_collision_layer.resize(level_area);
     
 
     level_collision_groups.clear();
-    level_collision_groups.reserve(level_map_width*level_map_height);
+    level_collision_groups.reserve(level_area);
 
     int t = 0;
     int g = 0;
@@ -111,15 +112,17 @@ void Level::load_level_from_file(const string& file) {
         FOR(x,level_map_width) {
             file_input >> t;
             file_input.ignore(1);
-            level_collision_layer[(y*level_map_width)+x] = t-1;
+            int map_width_y_x = (y*level_map_width)+x;
+            
+            level_collision_layer[map_width_y_x] = t-1;
 
             if (t == EMPTY_TILE) {
-                level_collision_groups[(y*level_map_width)+x] = 0;
+                level_collision_groups[map_width_y_x] = 0;
             }
             else {
                 file_input >> g;
                 file_input.ignore(1);
-                level_collision_groups[(y*level_map_width)+x] = g;
+                level_collision_groups[map_width_y_x] = g;
             }
         }
     }
@@ -265,14 +268,14 @@ void Level::map_level_area(uint& uid, map<int,pair<Rect,int>>& mp,
         int& level_tile_width, int& level_tile_height) {
 
     for(auto &it:mp) {
-        Rect r = it.second.first;
+        Rect rectangle = it.second.first;
 
-        r.w-=r.x-1;
-        r.h-=r.y-1;
-        r.x*=level_tile_width;
-        r.w*=level_tile_width;
-        r.y*=level_tile_height;
-        r.h*=level_tile_height;
+        rectangle.w = rectangle.w - rectangle.x - 1;
+        rectangle.h = rectangle.h - rectangle.y - 1;
+        rectangle.x = rectangle.x * level_tile_width;
+        rectangle.w = rectangle.w * level_tile_width;
+        rectangle.y = rectangle.y * level_tile_height;
+        rectangle.h = rectangle.h * level_tile_height;
 
         int t = it.second.second;
 
@@ -313,6 +316,7 @@ void Level::load_level_objects(bool collisors) {
 
     int level_tile_width = level_tile_set.get_width(); //! <Tile level width
     int level_tile_height = level_tile_set.get_height(); //! <Tile level Height
+
     map<int,pair<Rect,int>> mp;
 
     map_collision_layer_and_groups(mp, level_tile_width, level_tile_height);
@@ -339,13 +343,15 @@ void Level::save_level_objects(const vector<pair<ii,ii>>& grouped) {
 
     FOR(y,level_map_height) {
         FOR(x,level_map_width) {
-            if (level_collision_layer[(y*level_map_width)+x]==EMPTY_TILE) {
-                level_collision_groups[(y*level_map_width)+x] = 0;
+            int width_y_x = (y*level_map_width)+x;
+
+            if (level_collision_layer[width_y_x] == EMPTY_TILE) {
+                level_collision_groups[width_y_x] = 0;
             }
             else{
-                auto &group = grouped[(level_map_width*y)+x];
-                if (group.first.first==x && group.first.second==y)ids[group.first]=id++;
-                level_collision_groups[(y*level_map_width)+x] = ids[group.first];
+                auto &group = grouped[with_y_x];
+                if (group.first.first == x && group.first.second == y)ids[group.first]=id++;
+                level_collision_groups[width_y_x] = ids[group.first];
             }
         }
     }
@@ -389,7 +395,6 @@ void Level::load_write_file(ofstream& file_output, const string& file) {
     else {
         // Do nothing
     }
-
 }
 
 /*!
@@ -424,12 +429,13 @@ void Level::save_collision_layer(stringstream& level_stream_out) {
 
     int level_map_width = level_tile_map.get_width();
     int level_map_height = level_tile_map.get_height();
+    int width_y_x = (y*level_map_width)+x;
 
     FOR(y,level_map_height) {
         FOR(x,level_map_width) {
             char s[200] = {0};
 
-            sprintf(s,"%02d-%03d, ",level_collision_layer[(y*level_map_width)+x]+1,level_collision_groups[(y*level_map_width)+x]);
+            sprintf(s,"%02d-%03d, ",level_collision_layer[width_y_x]+1,level_collision_groups[width_y_x]);
             string str(s);
 
             level_stream_out << str;
