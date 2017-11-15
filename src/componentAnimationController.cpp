@@ -25,7 +25,6 @@ CompAnimControl::CompAnimControl(string filename, CompCollider* collider) {
   LOG_METHOD_START("CompAnimControl::CompAnimControl");
   LOG_VARIABLE("filename", filename);
 
-  assert(collider != NULL);
   assert(filename != "");
 
   ifstream in(ANIMATION_PATH + filename + ".txt");
@@ -232,7 +231,6 @@ void CompAnimControl::render() {
 void CompAnimControl::own(GameObject *game_object) {
   LOG_METHOD_START("CompAnimControl::own");
 
-  assert(game_object != NULL);
 
   entity = game_object->uid;
 
@@ -299,6 +297,5 @@ string &CompAnimControl::get_current_name() {
 
 Component::type CompAnimControl::get_type()const {
   LOG_METHOD_START("CompAnimControl::get_type");
-  assert(Component::type::t_animation_control != NULL);
   return Component::type::t_animation_control;
 }

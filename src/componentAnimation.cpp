@@ -41,7 +41,6 @@ CompAnim::CompAnim(string filename, CompCollider* temporary_collider) {
   LOG_VARIABLE("temporary_collider", temporary_collider.to_string);
 
   assert(filename != "");
-  assert(temporary_collider != NULL);
 
 	ifstream in(ANIMATION_PATH + filename + ".txt");
 
@@ -142,7 +141,6 @@ CompAnim::CompAnim(string filename, CompCollider* temporary_collider) {
 CompAnim::~CompAnim() {
   LOG_METHOD_START("CompAnim::~CompAnim");
   // Iterates through coliders
-  assert(colliders != NULL);
 
   FOR(i, colliders.size()) {
 
@@ -170,7 +168,6 @@ CompAnim::~CompAnim() {
 
 bool CompAnim::Looped()const {
   LOG_METHOD_START("CompAnim::Looped");
-  assert(sp != NULL);
 
   bool is_animation_looped = sp.Looped();
 
@@ -190,7 +187,6 @@ bool CompAnim::Looped()const {
 void CompAnim::update(float time) {
   LOG_METHOD_START("CompAnim::update");
   LOG_VARIABLE("time", time);
-  assert(sp != NULL);
 
   int frame1 = get_current_frame(); //!< Used later for comparrison with next frame
   int frame2 = get_current_frame(); //!< Assigns the new frame to this variable for
@@ -222,7 +218,6 @@ void CompAnim::checks_animation_call(int frame) {
   LOG_VARIABLE("frame", frame);
   LOG_VARIABLE("called", called);
 
-  assert(sp != NULL);
   assert(frame > 0);
 
   if (!called) {
@@ -249,7 +244,6 @@ void CompAnim::checks_animation_call(int frame) {
 
 void CompAnim::render() {
   LOG_METHOD_START("CompAnim::render");
-  assert(sp != NULL);
 
   Vec2 full_box = GO(entity)->FullBox(); //!< Used to save the
   //!< position to render
@@ -258,7 +252,6 @@ void CompAnim::render() {
 
   LOG_VARIABLE("pos", pos.to_string());
 
-  assert(pos != NULL);
 
   sp.SetFlipH(GO(entity)->flipped);
 	sp.render(pos, GO(entity)->rotation, Camera::zoom);
@@ -278,7 +271,6 @@ void CompAnim::own(GameObject* go) {
   LOG_METHOD_START("CompAnim::own");
   LOG_VARIABLE("go", go.to_string());
 
-  assert(go != NULL);
 
 	entity = go->uid;
 
@@ -336,7 +328,6 @@ bool CompAnim::compare_frames(int frame1, int frame2) {
 
 int CompAnim::get_frame_count() const {
   LOG_METHOD_START("CompAnim::get_frame_count");
-  assert(sp != NULL);
 
   int qtd_frame = sp.get_frame_count();
 
@@ -354,7 +345,6 @@ int CompAnim::get_frame_count() const {
 
 int CompAnim::get_current_frame() const {
   LOG_METHOD_START("CompAnim::get_current_frame");
-  assert(sp != NULL);
 
   int current_frame = sp.get_current_frame();
 
@@ -378,7 +368,6 @@ void CompAnim::set_current_frame(int frame, // range: unknown
   LOG_VARIABLE("frame", frame);
   LOG_VARIABLE("force", force);
 
-  assert(sp != NULL);
 
   // Set frame as current if it isn't already
   if (frame != get_current_frame()) {
@@ -442,7 +431,6 @@ void CompAnim::set_current_frame_by_force(int frame,
   LOG_VARIABLE("frame", frame);
   LOG_VARIABLE("force", force);
 
-  assert(sp != NULL);
 
   // Sets current frame by force
   if (force == true) {
@@ -475,6 +463,5 @@ void CompAnim::set_current_frame_by_force(int frame,
 Component::type CompAnim::get_type()const {
   LOG_METHOD_START("CompAnim::get_type");
   LOG_METHOD_CLOSE("CompAnim::get_type", Component::type::t_animation);
-  assert(Component::type::t_animation != NULL);
   return Component::type::t_animation;
 }

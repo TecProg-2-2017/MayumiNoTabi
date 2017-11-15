@@ -30,8 +30,8 @@ public:
 	void load_level_from_file(const string& file);
 	string save_level_to_file(const string& file="");
 
-	void map_level_area(uint uid, map<int,pair<Rect,int>>& mp,
-		int& level_tile_width, int& level_tile_height);
+	void map_level_area(uint& uid, map<int,pair<Rect,int>>& mp,
+	        int& level_tile_width, int& level_tile_height);
 
 	void map_collision_layer_and_groups(map<int,pair<Rect,int>>& mp,
 		int& level_tile_width, int& level_tile_height);

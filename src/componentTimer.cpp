@@ -96,7 +96,6 @@ void CompTimer::render() {
 
 void CompTimer::own(GameObject* go) {
 
-	assert(go != NULL);
 
 	entity=go->uid;
 }

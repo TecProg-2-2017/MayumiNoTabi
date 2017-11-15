@@ -28,13 +28,13 @@ SDL_Color generate_color(int red,		// red value, 	range: 0 -> 255
   LOG_METHOD_START("Common::generate_color");
 
   LOG_VARIABLE("red", red);
-  assert(red >= 0 && red <= 255);
+  assert(red >= 0 and red <= 255);
 
   LOG_VARIABLE("green", green);
-  assert(green >= 0 && green <= 255);
+  assert(green >= 0 and green <= 255);
 
   LOG_VARIABLE("blue", blue);
-  assert(blue >= 0 && blue <= 255);
+  assert(blue >= 0 and blue <= 255);
 
   LOG_VARIABLE("alpha", alpha);
   assert(alpha >= 0);
@@ -43,9 +43,9 @@ SDL_Color generate_color(int red,		// red value, 	range: 0 -> 255
   SDL_Color color; //!< Object with the 4 color values
 
   color.r = red;
-  color.g = green;
-  color.b = blue;
-  color.a = alpha;
+	color.g = green;
+	color.b = blue;
+	color.a = alpha;
 
   LOG_METHOD_CLOSE("Common::generate_color", color.to_string());
   assert(color.red >= 0 && color.red <= 255);
@@ -86,7 +86,6 @@ float close_distance(const float &from, const float &to, const float &change) {
   }
 
   LOG_METHOD_CLOSE("Common::close_distance", from + change);
-  assert((from + change) != NULL);
   return from + change;
 }
 
@@ -114,10 +113,10 @@ pair<float, float> hotspot_positions[] = {
 };
 
 /*!
-  @fn       bool equals(const float &a, const float &b)
-  @brief    Compares two float constants && returns the boolean result
-  @param    const float &a, const float &b
-  @return   boolean value of the comparisson between the two params
+	@fn       bool equals(const float &a, const float &b)
+	@brief    Compares two float constants and returns the boolean result
+	@param    const float &a, const float &b
+	@return   boolean value of the comparisson between the two params
   @warning  PRECISION is a constant with 0.0001 as value, it validates the
 comparisson between the two float values
 */
