@@ -137,14 +137,7 @@ void Text::render(Vec2 camera, Rect* clipRect) {
 	assert(camera.y >= 0);
 	LOG_VARIABLE("camera.x",camera.x);
 	LOG_VARIABLE("camera.y",camera.y);
-	assert(clipRect->x >= 0);
-	assert(clipRect->y >= 0);
-	assert(clipRect->h >= 0);
-	assert(clipRect->w >= 0);
-	LOG_VARIABLE("clipRect.x",clipRect->x);
-	LOG_VARIABLE("clipRect.y",clipRect->y);
-	LOG_VARIABLE("clipRect.h",clipRect->h);
-	LOG_VARIABLE("clipRect.w",clipRect->w);
+
 	//! @var pos
 	Vec2 pos = box.hotspot(hotspot); //!< A Vec2 that representes the position of the text box hotspot
 	assert(pos.x >= 0);
@@ -268,9 +261,9 @@ void Text::remake_texture() {
 */
 void Text::set_box_position(int x,int y) {
 	LOG_METHOD_START("Text::set_box_position");
-	assert(x > 0);
+	assert(x >= 0);
 	LOG_VARIABLE("x",x);
-	assert(y > 0);
+	assert(y >=	 0);
 	LOG_VARIABLE("y",y);
 	box.x = x;
 	box.y = y;

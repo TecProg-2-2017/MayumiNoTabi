@@ -65,7 +65,7 @@ using uint=unsigned int;
 // Debugging log
 #define LOG_METHOD_START(complete_name_of_the_method) std::cout << "--> " << complete_name_of_the_method << std::endl;
 #define LOG_METHOD_CLOSE(complete_name_of_the_method, return_value) std::cout << "<-- " << complete_name_of_the_method << " returned:" << return_value << std::endl;
-#define LOG_VARIABLE(var_name, var_value) std::cout << var_name << ": " << var_value << std::endl;
+#define LOG_VARIABLE(var_name, var_value) std::cout<< "    " << var_name << ": " << var_value << std::endl;
 #define LOG_MSG(message) std::cout << message << std::endl;
 
 

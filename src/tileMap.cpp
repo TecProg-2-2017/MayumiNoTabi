@@ -214,9 +214,6 @@ void TileMap::define_corners(int *firstX, int *firstY, int *lastX, int *lastY,
 
 void TileMap::render_layer(int layer,int position_x ,int position_y) {
 	LOG_METHOD_START("TileMap::render_layer");
-	assert(position_x >= 0);
-	LOG_VARIABLE("position_x",position_x);
-	assert(position_y >= 0);
 	LOG_VARIABLE("position_y",position_y);
   //! @var width
 	//!< a integer that represents the tile set width
@@ -277,8 +274,6 @@ void TileMap::render_layer(int layer,int position_x ,int position_y) {
 
 void TileMap::render(Vec2 position) {
 	LOG_METHOD_START("TileMap::render");
-	assert(position.x >= 0);
-	assert(position.y >= 0);
 	LOG_VARIABLE("position.x",position.x);
 	LOG_VARIABLE("position.y",position.y);
   //! Iterates through the layer of the tile map
@@ -303,11 +298,8 @@ void TileMap::render(Vec2 position) {
 */
 int& TileMap::at(int position_x,int position_y,int position_z) {
 	LOG_METHOD_START("TileMap::at");
-	assert(position_x >= 0);
 	LOG_VARIABLE("position_x",position_x);
-	assert(position_y >= 0);
 	LOG_VARIABLE("position_y",position_y);
-	assert(position_z >= 0);
 	LOG_VARIABLE("position_z",position_z);
 
 	//! @var relative_position_x;
@@ -325,10 +317,9 @@ int& TileMap::at(int position_x,int position_y,int position_z) {
 		+ relative_position_z;
 	//! @var tile
 	//!< Represents the found tile
-	int tile = tile_matrix[relative_position];
 
-	LOG_METHOD_CLOSE("TileMap::at",tile);
-	return tile;
+	LOG_METHOD_CLOSE("TileMap::at",tile_matrix[relative_position]);
+	return tile_matrix[relative_position];
 }
 
 /*!
@@ -345,11 +336,8 @@ int& TileMap::at(int position_x,int position_y,int position_z) {
 */
 int TileMap::at(int position_x,int position_y,int position_z) const{
 	LOG_METHOD_START("TileMap::at");
-	assert(position_x >= 0);
 	LOG_VARIABLE("position_x",position_x);
-	assert(position_y >= 0);
 	LOG_VARIABLE("position_y",position_y);
-	assert(position_z >= 0);
 	LOG_VARIABLE("position_z",position_z);
 
 	//! @var relative_position_x;
@@ -367,10 +355,9 @@ int TileMap::at(int position_x,int position_y,int position_z) const{
 		+ relative_position_z;
 	//! @var tile
 	//!< Represents the found tile
-	int tile = tile_matrix[relative_position];
 
-	LOG_METHOD_CLOSE("TileMap::at",tile);
-	return tile;
+	LOG_METHOD_CLOSE("TileMap::at",tile_matrix[relative_position]);
+	return tile_matrix[relative_position];
 }
 
 /*!
