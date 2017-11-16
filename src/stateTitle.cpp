@@ -75,6 +75,7 @@ void StateTitle::Begin() {
 	LOG_METHOD_START("StateTitle::Begin");
 	//! Defines the GameObject
 	//! @var text
+	//!< A GameObject with the informations of the game
 	GameObject* text = new GameObject{Rect{(WINSIZE.x / 2), (WINSIZE.y / 2), 0,
 																					0}};//!< A GameObject with the informations of the game
 	assert(text != NULL);
@@ -99,17 +100,26 @@ void StateTitle::update(float time) {
 	if (INPUT.get_quit_requested() || INPUT.key_pressed(KEY_ESC)){
 		quit_requested = true;
 	}
+	else{
+		// do nothing
+	}
 
 	//! Checks if the user pressed the space key
 	if (INPUT.key_pressed(KEY_SPACE)) {
 		bt2.set_frame(1);
 		GAMEINST.Push(new StateStage{"level_0"});
 	}
+	else{
+		// do nothing
+	}
 	//! Checks if the user pressed the 'e' key
 	if (INPUT.key_pressed(KEY(e))) {
 
 		bt1.set_frame(1);
 		GAMEINST.Push(new StateEditor{});
+	}
+	else{
+		// do nothing
 	}
 	UpdateArray(time);
 

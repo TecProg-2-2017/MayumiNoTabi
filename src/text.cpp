@@ -70,14 +70,55 @@ Text::Text(const string& txt, int fSize, SDL_Color c, Style st,
 
 Text::~Text() {
 	//! Iterates through all the line_array lines
-	for (auto& i : line_array) {
+	for (auto& line : line_array) {
 		//! Checks if that line has texture
-		if (i.texture){
+		if (line.texture){
 			//! Destroies the line texture
-			SDL_DestroyTexture(i.texture);
+			SDL_DestroyTexture(line.texture);
+		}
+		else{
+			//do nothing
 		}
 	}
 	LOG_METHOD_CLOSE("Text::~Text","destructor");
+}
+
+
+void Text::render_line_texture (Rect* clipRect, TextLine line,Vec2 clipRectEnd,
+													Vec2 lineBoxEnd,int position_x,int position_y){
+	SDL_Rect clip;
+	SDL_Rect dest;
+
+	if (clipRect->x > line.box.x) {
+		clip.x = clipRect->x - line.box.x;
+		dest.x = position_x + clipRect->x;
+	}
+	else {
+		clip.x = 0;
+		dest.x = position_x + line.box.x;
+	}
+	if (clipRect->y > line.box.y) {
+		clip.y = clipRect->y - line.box.y;
+		dest.y = position_y + clipRect->y;
+	}
+	else {
+		clip.y = 0;
+		dest.y = position_y + line.box.y;
+	}
+	if (clipRectEnd.x < lineBoxEnd.x) {
+		clip.w = dest.w = clipRectEnd.x - line.box.x - clip.x +1;
+	}
+	else {
+		clip.w = dest.w = lineBoxEnd.x - line.box.x - clip.x +1;
+	}
+	if (clipRectEnd.y < lineBoxEnd.y) {
+		clip.h = dest.h = clipRectEnd.y - line.box.y - clip.y +1;
+	}
+	else {
+		clip.h = dest.h = lineBoxEnd.y - line.box.y - clip.y +1;
+	}
+
+	SDL_RenderCopy(GAMERENDER,line.texture,&clip,&dest);
 }
 
 /*!
@@ -118,71 +159,42 @@ void Text::render(Vec2 camera, Rect* clipRect) {
 	//! Checks if the text box rectangle exist
 	if (clipRect) {
 		//! @var
+		//!< A Vec2, that represents the end position of the text box rectangle
 		Vec2 clipRectEnd(clipRect->x + clipRect->w - 1,
-			clipRect->y + clipRect->h - 1); //!< A Vec2, that represents the end position of the text box rectangle
+			clipRect->y + clipRect->h - 1);
 
 		//! Iterates through all the line_array lines
-		for (auto& i : line_array) {
+		for (auto& line : line_array) {
 			//! Checks if the text box rectangle end position in the axis y is lower
 			//! that teh box position in the axis y
-			if (clipRectEnd.y < i.box.y) {
+			if (clipRectEnd.y >= line.box.y) {
+				//! @var lineBoxEnd
+				//!< A Vec2 that recivies the end positions in the line
+				Vec2 lineBoxEnd(line.box.x2()-1, line.box.y2()-1);
+
+				//! Checks if the end position of the line is lower that the text box
+				//! rectangle end position in the axis
+				if (lineBoxEnd.y >= clipRect->y) {
+					render_line_texture(clipRect, line, clipRectEnd, lineBoxEnd,
+						position_x,position_y);
+				}
+				else{
+					continue;
+				}
+			}
+			else{
 				break;
 			}
-			//! \warning else (do nothing)
-
-			//! @var lineBoxEnd
-			Vec2 lineBoxEnd(i.box.x2()-1, i.box.y2()-1); //!< A Vec2 that recivies the end positions in the line
-
-			//! Checks if the end position of the line is lower that the text box rectangle end position in the axis
-			//! \warning: Useless decision structure
-			if (lineBoxEnd.y < clipRect->y) {
-				continue;
-			}
-
-			//! \warning else (do nothing)
-
-			SDL_Rect clip;
-			SDL_Rect dest;
-			if (clipRect->x > i.box.x) {
-				clip.x = clipRect->x - i.box.x;
-				dest.x = position_x + clipRect->x;
-			}
-			else {
-				clip.x = 0;
-				dest.x = position_x + i.box.x;
-			}
-			if (clipRect->y > i.box.y) {
-				clip.y = clipRect->y - i.box.y;
-				dest.y = position_y + clipRect->y;
-			}
-			else {
-				clip.y = 0;
-				dest.y = position_y + i.box.y;
-			}
-			if (clipRectEnd.x < lineBoxEnd.x) {
-				clip.w = dest.w = clipRectEnd.x - i.box.x - clip.x +1;
-			}
-			else {
-				clip.w = dest.w = lineBoxEnd.x - i.box.x - clip.x +1;
-			}
-			if (clipRectEnd.y < lineBoxEnd.y) {
-				clip.h = dest.h = clipRectEnd.y - i.box.y - clip.y +1;
-			}
-			else {
-				clip.h = dest.h = lineBoxEnd.y - i.box.y - clip.y +1;
-			}
-
-			SDL_RenderCopy(GAMERENDER,i.texture,&clip,&dest);
 		}
 	}
 	else {
-		for (auto& i : line_array) {
+		for (auto& line : line_array) {
 			SDL_Rect dest;
-			dest.x=position_x+i.box.x;
-			dest.y=position_y+i.box.y;
-			dest.w=i.box.w;
-			dest.h=i.box.h;
-			SDL_RenderCopy(GAMERENDER,i.texture,nullptr,&dest);
+			dest.x=position_x+line.box.x;
+			dest.y=position_y+line.box.y;
+			dest.w=line.box.w;
+			dest.h=line.box.h;
+			SDL_RenderCopy(GAMERENDER,line.texture,nullptr,&dest);
 		}
 	}
 	LOG_METHOD_CLOSE("Text::render","void");
@@ -201,59 +213,43 @@ void Text::remake_texture() {
 		SDL_Surface *surface = nullptr; //!< A pointer to SDL_Surface, that represents a surface
 		box.w = box.h = 0;
 		//! Iterates through all lines of the line_array
-		for (auto& i : line_array) {
+		for (auto& line : line_array) {
 			//! Checks if the line has texture
-			if (i.texture){
+			if (line.texture){
 				//! Destroies the line texture
-				SDL_DestroyTexture(i.texture);
+				SDL_DestroyTexture(line.texture);
 			}
-			//! Checks if the style is SOLID
-			if (style == Style::SOLID){
-				//! Applies the style is SOLID
-				surface = TTF_RenderText_Solid(font.get(), i.text.c_str(), color);
+			else{
+				// do nothing
 			}
-			//! Checks if the style is SHADED
-			else if (style==Style::SHADED){
-				//! Applies the style is SHADED
-				surface = TTF_RenderText_Shaded(font.get(), i.text.c_str(),
-																					color,SDL_COLOR_BLACK);
-			}
-			//! Checks if the style is BLENDED
-			else if (style == Style::BLENDED){
-				//! Applies the style is BLENDED
-				surface = TTF_RenderText_Blended(font.get(), i.text.c_str(), color);
-			}
-			i.texture = SDL_CreateTextureFromSurface(GAMERENDER, surface);
-			//! Resize the text box
-			i.box.w = surface->w;
-			i.box.h = surface->h;
-			//!Checks if the width of the line is bigger than the box width
-			if (i.box.w > box.w){
-				box.w = i.box.w;
-			}
-			i.box.y = box.h;
-			box.h += i.box.h;
+			surface = remake_surface(surface,&line);
 		}
 		SDL_FreeSurface(surface);
 
 		//! Checks if the alignment is CENTERED
 		if (alignment == Align::CENTERED) {
 			//! Iterates through the line_array
-			for (auto& i : line_array){
+			for (auto& line : line_array){
 				//! Applies the alignment is CENTERED
-				i.box.x=(box.w-i.box.w)/2;
+				line.box.x=(box.w-line.box.w)/2;
 			}
 
 		}
 		//! Checks if the alignment is RIGHT
 		else if (alignment == Align::RIGHT) {
 			//! Iterates through the line_array
-			for (auto& i : line_array){
+			for (auto& line : line_array){
 				//! Applies the alignment is RIGHT
-				i.box.x=(box.w-i.box.w);
+				line.box.x=(box.w-line.box.w);
 			}
 
 		}
+		else{
+			// do nothing
+		}
+	}
+	else{
+		// do nothing
 	}
 	LOG_METHOD_CLOSE("Text::remake_texture","void");
 }
@@ -313,6 +309,9 @@ void Text::set_text(string txt) {
 		//! Attributes a white space to txt
 		txt = " ";
 	}
+	else{
+		// do nothing
+	}
 	//! @var text
 	stringstream text(txt); //!< A stringstream that recivies the txt
 	line_array.clear();
@@ -322,6 +321,9 @@ void Text::set_text(string txt) {
 		if (line.text=="") {
 			//! Attributes a white space to the line text
 			line.text = " ";
+		}
+		else{
+			// do nothing
 		}
 		line_array.push_back(line);
 	}
@@ -351,6 +353,9 @@ void Text::set_line(int line, string txt) {
 		line_array[line].text = txt;
 
 		remake_texture();
+	}
+	else{
+		// do nothing
 	}
 	LOG_METHOD_CLOSE("Text::set_line","void");
 }
@@ -441,6 +446,51 @@ Rect Text::get_box()const {
 	LOG_METHOD_START("Text::get_box");
 	LOG_METHOD_CLOSE("Text::get_box",box);
 	return box;
+}
+
+SDL_Surface* Text::define_surface(SDL_Surface *surface,TextLine* line){
+	//! Checks if the style is SOLID
+	if (style == Style::SOLID){
+		//! Applies the style is SOLID
+		surface = TTF_RenderText_Solid(font.get(), line->text.c_str(), color);
+	}
+	//! Checks if the style is SHADED
+	else if (style==Style::SHADED){
+		//! Applies the style is SHADED
+		surface = TTF_RenderText_Shaded(font.get(), line->text.c_str(),
+																			color,SDL_COLOR_BLACK);
+	}
+	//! Checks if the style is BLENDED
+	else if (style == Style::BLENDED){
+		//! Applies the style is BLENDED
+		surface = TTF_RenderText_Blended(font.get(), line->text.c_str(), color);
+	}
+	else{
+		// do nothing
+	}
+
+	return surface;
+}
+
+SDL_Surface* Text::remake_surface(SDL_Surface *surface,TextLine* line){
+	surface = define_surface(surface,line);
+
+	line->texture = SDL_CreateTextureFromSurface(GAMERENDER, surface);
+
+	//! Resize the text box
+	line->box.w = surface->w;
+	line->box.h = surface->h;
+	//!Checks if the width of the line is bigger than the box width
+	if (line->box.w > box.w){
+		box.w = line->box.w;
+	}
+	else{
+		// do nothing
+	}
+	line->box.y = box.h;
+	box.h += line->box.h;
+
+	return surface;
 }
 
 Text::TextLine::TextLine() {}
