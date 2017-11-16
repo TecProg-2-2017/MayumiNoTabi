@@ -13,6 +13,7 @@
 #include <game.hpp>
 #include <gameObject.hpp>
 #include <complib.hpp>
+#include <assert.h>
 
 /*!
 	@class StateStage
@@ -31,14 +32,19 @@ StateStage::StateStage(string lvl):levelName{lvl},
 	floresta_bg2{"img/floresta-away.png"},
 	floresta_bg3{"img/jogotela-ponte-away.png"}
 	{
+	LOG_METHOD_START("StateStage::StateStage");
 	LoadAssets();
+	LOG_METHOD_CLOSE("StateStage::StateStage","constructor");
 }
 
 //! A destructor.
     /*!
       This is a destructor method of StateStage class
     */
-StateStage::~StateStage() {}
+StateStage::~StateStage() {
+	LOG_METHOD_START("StateStage::~StateStage");
+	LOG_METHOD_CLOSE("StateStage::~StateStage","destructor");
+}
 
 /*!
 	@fn void StateStage::Begin()
@@ -46,13 +52,14 @@ StateStage::~StateStage() {}
 	@return The execution of this method returns no value
 */
 void StateStage::Begin() {
-
+	LOG_METHOD_START("StateStage::Begin");
 	//! Loads the level and the player
 	level.load_level_from_file(levelName);
 	player = GameObject::MakePlayer(Vec2{550.0f,430.0f});
 	AddObject(player);
 	Camera::follow(player);
 	level.load_level_objects();
+	LOG_METHOD_CLOSE("StateStage::Begin","void");
 }
 
 /*!
@@ -63,6 +70,8 @@ void StateStage::Begin() {
 	@return The execution of this method returns no value
 */
 void StateStage::update(float time) {
+	LOG_METHOD_START("StateStage::update");
+	LOG_VARIABLE("time",time);
 	Camera::update_camera(time);
 	//! Checks if the player requested to quit
 	if (INPUT.get_quit_requested()){
@@ -113,6 +122,8 @@ void StateStage::update(float time) {
 	}
 
 	UpdateArray(time);
+
+	LOG_METHOD_CLOSE("StateStage::update","void");
 }
 
 
@@ -124,6 +135,7 @@ void StateStage::update(float time) {
 */
 
 void StateStage::render() {
+	LOG_METHOD_START("StateStage::render");
 	level.background_sprite.render(0, 0);
 	// floresta_bg1.render(RENDERPOS(Vec2(0,0)));
 	// floresta_bg2.render(RENDERPOS(Vec2(4433,0)));
@@ -137,6 +149,7 @@ void StateStage::render() {
 	floresta_bg3.render(RENDERPOS(Vec2(4032*6,0)));
 	level.level_tile_map.render();
 	RenderArray();
+	LOG_METHOD_CLOSE("StateStage::render","void");
 }
 
 /*!
@@ -145,7 +158,9 @@ void StateStage::render() {
 	@return The execution of this method returns no value
 */
 void StateStage::Pause() {
+	LOG_METHOD_START("StateStage::Pause");
 	Camera::unfollow();
+	LOG_METHOD_CLOSE("StateStage::Pause","void");
 }
 
 /*!
@@ -154,7 +169,9 @@ void StateStage::Pause() {
 	@return The execution of this method returns no value
 */
 void StateStage::Resume() {
+	LOG_METHOD_START("StateStage::Resume");
 	Camera::follow(PLAYER_UID);
+	LOG_METHOD_CLOSE("StateStage::Resume","void");
 }
 
 /*!
@@ -163,6 +180,7 @@ void StateStage::Resume() {
 	@return The execution of this method returns no value
 */
 void StateStage::LoadAssets() {
+	LOG_METHOD_START("StateStage::LoadAssets");
 	Resources::game_get_image("img/porco/porco-chifrada.png");
 	Resources::game_get_image("img/porco/porco-correndo.png");
 	Resources::game_get_image("img/porco/porco-idle.png");
@@ -187,6 +205,7 @@ void StateStage::LoadAssets() {
 	Resources::game_get_image("img/porco/rage/porco-morte-virado.png");
 	Resources::game_get_image("img/porco/rage/porco-stun-virado.png");
 	Resources::game_get_image("img/porco/rage/porco-virando-virado.png");
+	LOG_METHOD_CLOSE("StateStage::LoadAssets","void");
 }
 
 /*!
@@ -194,4 +213,7 @@ void StateStage::LoadAssets() {
 	@brief Virtual method that loads GUI
 	@return The execution of this method returns no value
 */
-void StateStage::LoadGUI() {}
+void StateStage::LoadGUI() {
+	LOG_METHOD_START("StateStage::LoadGUI");
+	LOG_METHOD_CLOSE("StateStage::LoadGUI","void");
+}

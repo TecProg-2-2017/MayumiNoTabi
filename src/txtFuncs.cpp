@@ -159,7 +159,7 @@ template<class T> txtFuncType1 DamageArea(T& in) {
 
 		set<uint> gos = GAMESTATE.GetEntitiesInRange(rect.x,rect.x2());
 		for (uint go:gos) {
-			if (dmgSelf || GO(go)->team != self->team) {
+			if (dmgSelf or GO(go)->team != self->team) {
 				//TODO: change collision to work with rotation
 				if (GO(go)->HasComponent(Component::type::t_hp) && area.collides(GO(go)->Box())) {
 					COMPHPp(GO(go))->damage(dmgLow+(rand()%(dmgHigh-dmgLow)));
@@ -190,7 +190,7 @@ template<class T> txtFuncType1 DamageAreaFixed(T& in) {
 
 		set<uint> gos = GAMESTATE.GetEntitiesInRange(rect.x,rect.x2());
 		for (uint go:gos) {
-			if (dmgSelf || GO(go)->team != self->team) {
+			if (dmgSelf or GO(go)->team != self->team) {
 				//TODO: change collision to work with rotation
 				if (GO(go)->HasComponent(Component::type::t_hp) && area.collides(GO(go)->Box())) {
 					COMPHPp(GO(go))->damage(dmgLow+(rand()%(dmgHigh-dmgLow)));
@@ -230,7 +230,7 @@ template<class T> txtFuncType1 FireProjectile(T& in) {
 	while (file >> cur >> count) {
 		DEBUG(cur);
 		DEBUG(count);
-		if (cur=="start" || cur=="hit_enemy" || cur=="hit_ally" || cur=="hit_block") {
+		if (cur=="start" or cur=="hit_enemy" or cur=="hit_ally" or cur=="hit_block") {
 			FOR(i,count) {
 				file >> target >> funcN;
 				if (cur == "start")start.push_back(make_pair(target,txtFuncsF[funcN](file)));
@@ -281,7 +281,7 @@ template<class T> txtFuncType1 FireProjectile(T& in) {
 					}
 				}
 				if (!GO(b.entity)->HasComponent(Component::type::t_movement)) {
-					if ((isAlly && vars.count("stick_ally")==0) || (!isAlly && vars.count("stick_enemy")==0))return;
+					if ((isAlly and vars.count("stick_ally")==0) or (!isAlly and vars.count("stick_enemy")==0))return;
 					Vec2 pos = GO(a.entity)->Box().corner() + move + totMove/4.0f;
 					auto &func = txtFuncsS["AddSprite2"];
 					istringstream iss(projFileStatic + " " + to_string(pos.x) + to_string(pos.y) + " 5");

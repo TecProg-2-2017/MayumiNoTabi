@@ -9,6 +9,7 @@
 #include <camera.hpp>
 #include <game.hpp>
 #include <resources.hpp>
+#include <assert.h>
 
 /*!
 	@class Text
@@ -37,12 +38,29 @@
     */
 Text::Text(const string& txt, int fSize, SDL_Color c, Style st,
 		string file, int x, int y) : font_name{file} {
+	LOG_METHOD_START("Text::Text");
+	LOG_VARIABLE("txt",txt);
+	LOG_VARIABLE("fSize",fSize);
+	assert(c.r >= 0);
+	assert(c.g >= 0);
+	assert(c.b >= 0);
+	assert(c.a >= 0);
+	LOG_VARIABLE("c.r",c.r);
+	LOG_VARIABLE("c.g",c.g);
+	LOG_VARIABLE("c.b",c.b);
+	LOG_VARIABLE("c.a",c.a);
+	LOG_VARIABLE("file",file);
+	assert(x >= 0);
+	LOG_VARIABLE("x",x);
+	assert(y >= 0);
+	LOG_VARIABLE("y",y);
 	set_color(c);
 	set_text(txt);
 	set_style(st);
 	set_font_size(fSize);
 	box.x = x;
 	box.y = y;
+	LOG_METHOD_CLOSE("Text::Text","constructor");
 }
 
 //! A destructor.
@@ -59,6 +77,7 @@ Text::~Text() {
 			SDL_DestroyTexture(i.texture);
 		}
 	}
+	LOG_METHOD_CLOSE("Text::~Text","destructor");
 }
 
 /*!
@@ -72,8 +91,23 @@ Text::~Text() {
 	@warning Method that requires review of comment
 */
 void Text::render(Vec2 camera, Rect* clipRect) {
+	LOG_METHOD_START("Text::render");
+	assert(camera.x >= 0);
+	assert(camera.y >= 0);
+	LOG_VARIABLE("camera.x",camera.x);
+	LOG_VARIABLE("camera.y",camera.y);
+	assert(clipRect->x >= 0);
+	assert(clipRect->y >= 0);
+	assert(clipRect->h >= 0);
+	assert(clipRect->w >= 0);
+	LOG_VARIABLE("clipRect.x",clipRect->x);
+	LOG_VARIABLE("clipRect.y",clipRect->y);
+	LOG_VARIABLE("clipRect.h",clipRect->h);
+	LOG_VARIABLE("clipRect.w",clipRect->w);
 	//! @var pos
 	Vec2 pos = box.hotspot(hotspot); //!< A Vec2 that representes the position of the text box hotspot
+	assert(pos.x >= 0);
+	assert(pos.y >= 0);
 
 	//! @var x
 	int position_x = pos.x - (camera.x * CAMERAZOOM); //!< A positive integer that represents the beginning of the text box rectangle in the axis x
@@ -151,152 +185,7 @@ void Text::render(Vec2 camera, Rect* clipRect) {
 			SDL_RenderCopy(GAMERENDER,i.texture,nullptr,&dest);
 		}
 	}
-}
-
-/*!
-	@fn void Text::SetPos(int x,int y)
-	@brief A setter for the text box position
-  @param x
-  @brief A positive integer, that represents the new text box positon in the
-	axis x
-	@param y
-  @brief A positive integer, that represents the new text box positon in the
-	axis y
-
-  @return The execution of this method returns no value
-*/
-void Text::set_box_position(int x,int y) {
-	box.x = x;
-	box.y = y;
-}
-
-/*!
-	@fn void Text::SetPos(Vec2 v)
-	@brief A setter for the text box position
-  @param v
-  @brief A Vec2, that represents the new text box position
-  @return The execution of this method returns no value
-*/
-void Text::set_box_position(Vec2 v) {
-	set_box_position(v.x, v.y);
-}
-
-/*!
-	@fn void Text::SetText(string txt)
-	@brief A setter for attribute text
-  @param txt
-  @brief A string, that represents the new text of the text box
-  @return The execution of this method returns no value
-*/
-void Text::set_text(string txt) {
-	//! Checks if the txt is empty
-	if (txt == ""){
-		//! Attributes a white space to txt
-		txt = " ";
-	}
-	//! @var text
-	stringstream text(txt); //!< A stringstream that recivies the txt
-	line_array.clear();
-	//! Iterates through all lines in text
-	for (TextLine line;getline(text, line.text);) {
-		//! Checks if the text in the line is empty
-		if (line.text=="") {
-			//! Attributes a white space to the line text
-			line.text = " ";
-		}
-		line_array.push_back(line);
-	}
-
-	remake_texture();
-}
-
-
-/*!
-	@fn void Text::SetLine(int line, string txt)
-	@brief A setter for a line in the text
-	@param line
-	@brief A positive integer, that represents the the number of the line that
-	will be replaced
-  @param txt
-  @brief A string, that represents the new line text
-  @return The execution of this method returns no value
-*/
-void Text::set_line(int line, string txt) {
-	//! Checks if the line number exists in the array of lines
-	if (line >= 0 && line < (int)line_array.size()) {
-		//! Replaces the line text for the new line text
-		line_array[line].text = txt;
-
-		remake_texture();
-	}
-}
-
-void Text::set_alignment(Align al){
-	alignment = al;
-	remake_texture();
-}
-
-/*!
-	@fn void Text::SetColor(SDL_Color c))
-	@brief A setter for the text color
-	@param c
-	@brief A SDL_Color, that represents the new color
-  @return The execution of this method returns no value
-*/
-void Text::set_color(SDL_Color c) {
-	color.r = c.r;
-	color.g = c.g;
-	color.b = c.b;
-	color.a = c.a;
-	remake_texture();
-}
-
-/*!
-	@fn void Text::SetStyle(Style st)
-	@brief A setter for the text style
-	@param st
-	@brief A Style, that represents the new style
-  @return The execution of this method returns no value
-*/
-void Text::set_style(Style st) {
-	style = st;
-	remake_texture();
-}
-
-
-/*!
-	@fn void Text::SetFontSize(int fSize)
-	@brief A setter for the size of the text font
-	@param fSize
-	@brief A positive integer, that represents the new font size
-  @return The execution of this method returns no value
-*/
-void Text::set_font_size(int fSize) {
-	font_size = fSize;
-	font = Resources::game_get_font(font_name,font_size);
-
-	remake_texture();
-}
-
-
-/*!
-	@fn void Text::SetHotspot(Hotspot h)
-	@brief A setter for the text box hotspot
-	@param h
-	@brief A Hotspot, that represents the new box hotspot
-  @return The execution of this method returns no value
-*/
-void Text::set_hotspot(Hotspot h) {
-	hotspot = h;
-}
-
-/*!
-	@fn Rect Text::GetBox()const
-	@brief A getter of the attribute box
-	@return A Rect, that represents the text box
-*/
-Rect Text::get_box()const {
-	return box;
+	LOG_METHOD_CLOSE("Text::render","void");
 }
 
 /*!
@@ -305,6 +194,7 @@ Rect Text::get_box()const {
 	@return The execution of this method returns no value
 */
 void Text::remake_texture() {
+	LOG_METHOD_START("Text::remake_texture");
 	//! Checks if the font was initialized
 	if (font.get()) {
 		//! @var surface
@@ -334,7 +224,6 @@ void Text::remake_texture() {
 				surface = TTF_RenderText_Blended(font.get(), i.text.c_str(), color);
 			}
 			i.texture = SDL_CreateTextureFromSurface(GAMERENDER, surface);
-
 			//! Resize the text box
 			i.box.w = surface->w;
 			i.box.h = surface->h;
@@ -366,6 +255,192 @@ void Text::remake_texture() {
 
 		}
 	}
+	LOG_METHOD_CLOSE("Text::remake_texture","void");
+}
+
+/*!
+	@fn void Text::SetPos(int x,int y)
+	@brief A setter for the text box position
+  @param x
+  @brief A positive integer, that represents the new text box positon in the
+	axis x
+	@param y
+  @brief A positive integer, that represents the new text box positon in the
+	axis y
+
+  @return The execution of this method returns no value
+*/
+void Text::set_box_position(int x,int y) {
+	LOG_METHOD_START("Text::set_box_position");
+	assert(x > 0);
+	LOG_VARIABLE("x",x);
+	assert(y > 0);
+	LOG_VARIABLE("y",y);
+	box.x = x;
+	box.y = y;
+	LOG_METHOD_CLOSE("Text::set_box_position","void");
+}
+
+/*!
+	@fn void Text::SetPos(Vec2 v)
+	@brief A setter for the text box position
+  @param v
+  @brief A Vec2, that represents the new text box position
+  @return The execution of this method returns no value
+*/
+void Text::set_box_position(Vec2 v) {
+	LOG_METHOD_START("Text::set_box_position");
+	assert(v.x >= 0);
+	assert(v.y >= 0);
+	LOG_VARIABLE("v.x",v.x);
+	LOG_VARIABLE("v.y",v.y);
+	set_box_position(v.x, v.y);
+	LOG_METHOD_CLOSE("Text::set_box_position","void");
+}
+
+/*!
+	@fn void Text::SetText(string txt)
+	@brief A setter for attribute text
+  @param txt
+  @brief A string, that represents the new text of the text box
+  @return The execution of this method returns no value
+*/
+void Text::set_text(string txt) {
+	LOG_METHOD_START("Text::set_text");
+	LOG_VARIABLE("txt",txt);
+	//! Checks if the txt is empty
+	if (txt == ""){
+		//! Attributes a white space to txt
+		txt = " ";
+	}
+	//! @var text
+	stringstream text(txt); //!< A stringstream that recivies the txt
+	line_array.clear();
+	//! Iterates through all lines in text
+	for (TextLine line;getline(text, line.text);) {
+		//! Checks if the text in the line is empty
+		if (line.text=="") {
+			//! Attributes a white space to the line text
+			line.text = " ";
+		}
+		line_array.push_back(line);
+	}
+
+	remake_texture();
+	LOG_METHOD_CLOSE("Text::set_text","void");
+}
+
+
+/*!
+	@fn void Text::SetLine(int line, string txt)
+	@brief A setter for a line in the text
+	@param line
+	@brief A positive integer, that represents the the number of the line that
+	will be replaced
+  @param txt
+  @brief A string, that represents the new line text
+  @return The execution of this method returns no value
+*/
+void Text::set_line(int line, string txt) {
+	LOG_METHOD_START("Text::set_line");
+	LOG_VARIABLE("line",line);
+	LOG_VARIABLE("txt",txt);
+	//! Checks if the line number exists in the array of lines
+	if (line >= 0 and line < (int)line_array.size()) {
+		//! Replaces the line text for the new line text
+		line_array[line].text = txt;
+
+		remake_texture();
+	}
+	LOG_METHOD_CLOSE("Text::set_line","void");
+}
+
+void Text::set_alignment(Align al){
+	alignment = al;
+	remake_texture();
+}
+
+/*!
+	@fn void Text::SetColor(SDL_Color c))
+	@brief A setter for the text color
+	@param c
+	@brief A SDL_Color, that represents the new color
+  @return The execution of this method returns no value
+*/
+void Text::set_color(SDL_Color c) {
+	LOG_METHOD_START("Text::set_color");
+	assert(c.r >= 0);
+	assert(c.g >= 0);
+	assert(c.b >= 0);
+	assert(c.a >= 0);
+	LOG_VARIABLE("c.r",c.r);
+	LOG_VARIABLE("c.g",c.g);
+	LOG_VARIABLE("c.b",c.b);
+	LOG_VARIABLE("c.a",c.a);
+	color.r = c.r;
+	color.g = c.g;
+	color.b = c.b;
+	color.a = c.a;
+	remake_texture();
+	LOG_METHOD_CLOSE("Text::set_color","void");
+}
+
+/*!
+	@fn void Text::SetStyle(Style st)
+	@brief A setter for the text style
+	@param st
+	@brief A Style, that represents the new style
+  @return The execution of this method returns no value
+*/
+void Text::set_style(Style st) {
+	LOG_METHOD_START("Text::SetStyle");
+	style = st;
+	remake_texture();
+	LOG_METHOD_CLOSE("Text::set_style","void");
+}
+
+
+/*!
+	@fn void Text::SetFontSize(int fSize)
+	@brief A setter for the size of the text font
+	@param fSize
+	@brief A positive integer, that represents the new font size
+  @return The execution of this method returns no value
+*/
+void Text::set_font_size(int fSize) {
+	LOG_METHOD_START("Text::SetFontSize");
+	LOG_VARIABLE("fSize",fSize);
+	font_size = fSize;
+	font = Resources::game_get_font(font_name,font_size);
+
+	remake_texture();
+	LOG_METHOD_CLOSE("Text::set_font_size","void");
+}
+
+
+/*!
+	@fn void Text::SetHotspot(Hotspot h)
+	@brief A setter for the text box hotspot
+	@param h
+	@brief A Hotspot, that represents the new box hotspot
+  @return The execution of this method returns no value
+*/
+void Text::set_hotspot(Hotspot h) {
+	LOG_METHOD_START("Text::set_hotspot");
+	LOG_VARIABLE("h",h);
+	hotspot = h;
+	LOG_METHOD_CLOSE("Text::set_hotspot","void");
+}
+
+/*!
+	@fn Rect Text::GetBox()const
+	@brief A getter of the attribute box
+	@return A Rect, that represents the text box
+*/
+Rect Text::get_box()const {
+	LOG_METHOD_START("Text::get_box");
+	LOG_METHOD_CLOSE("Text::get_box",box);
+	return box;
 }
 
 Text::TextLine::TextLine() {}

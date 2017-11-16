@@ -6,6 +6,7 @@
  *  \sa timer.hpp
  */
 #include <timer.hpp>
+#include <assert.h>
 
 /*!
 	@class Timer
@@ -17,7 +18,9 @@
     This is a empty constructor method of Timer class
     */
 Timer::Timer() {
-
+	LOG_METHOD_START("Timer::Timer");
+	LOG_MSG("This is a empty constructor method of Timer class");
+	LOG_METHOD_CLOSE("Timer::Timer", "constructor");
 }
 
 /*!
@@ -27,9 +30,11 @@ Timer::Timer() {
 	@brief A float, that represents time that will bee add to the timer
 	@return The execution of this method returns no value
 */
-
 void Timer::add_time(float additional_time) {
+	LOG_METHOD_START("Timer::add_time");
+	LOG_VARIABLE("time", time);
 	time+=additional_time;
+	LOG_METHOD_CLOSE("Timer::add_time","void");
 }
 
 /*!
@@ -38,7 +43,9 @@ void Timer::add_time(float additional_time) {
 	@return The execution of this method returns no value
 */
 void Timer::restart_time() {
+	LOG_METHOD_START("Timer::restart_time");
 	time=0;
+	LOG_METHOD_CLOSE("Timer::restart_time","void");
 }
 
 /*!
@@ -47,5 +54,8 @@ void Timer::restart_time() {
 	@return A positive float, that represents the timer's current time
 */
 float Timer::get_time() {
+	LOG_METHOD_START("Timer::get_time");
+	LOG_METHOD_CLOSE("time",time);
+	assert(time >= 0);
 	return time;
 }
