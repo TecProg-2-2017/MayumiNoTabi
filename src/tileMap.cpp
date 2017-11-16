@@ -150,84 +150,53 @@ void TileMap::save(stringstream& output_file) {
   @return The execution of this method returns no value
 */
 void TileMap::define_corners(int *firstX, int *firstY, int *lastX, int *lastY,
-															int width, int height){
+															int width, int height, int position_x,
+															 int position_y ){
+	//! Checks if the camera is ahead of the posX in axis x
+		if (position_x<CAMERA.x){
+			//! Reallocates the beginning of the layer in the axis x
+			*firstX = (CAMERA.x-position_x)/width;
+		}
+		else{
+			// do nothing
+		}
 
-void TileMap::render_layer(int layer,int position_x ,int position_y) {
-	LOG_METHOD_START("TileMap::render_layer");
-	assert(position_x >= 0);
-	LOG_VARIABLE("position_x",position_x);
-	assert(position_y >= 0);
-	LOG_VARIABLE("position_y",position_y);
+		//! Checks if the camera is ahead of the posy in axis y
+		if (position_y<CAMERA.y){
+			//! Reallocates the beginning of the layer in the axis y
+			*firstY = (CAMERA.y-position_y)/height;
+		 }
+		 else{
+			 // do nothing
+		 }
+		//! @var mapCorner
+		//!< a two-dimensional vector, that represents the positons of the coners
+		//!< of the map
+		Vec2 mapCorner = Vec2(position_x+(map_width*width),
+													position_y+(map_height*height));
+		//! @var cameraConer
+		//!< a two-dimensional vector, that represents the positons of the coners of
+		//!< the camera
+	  Vec2 cameraCorner = CAMERA+(WINSIZE/CAMERAZOOM);
 
-	//! @var width
-	int width=tile_set->get_width(); //!< a integer that represents the tile set width
-	assert(width >= 0);
-  //! @var height
-	int height=tile_set->get_height(); //!< a integer that represents the tile set height
-	assert(height >= 0);
-	//! @var tile
-	int tile; //! a integer that represents a tile
-  //! @var firstX
-	//!< a integer that represents the beginning of the layer in the axis x
-	int firstX=0;
-  //! @var firstY
-	//!< a integer that represents the beginning of the layer in the axis y
-  int firstY=0;
-  //! @var lastX
-	//!< a integer that represents the end of the layer in the axis x
-  int lastX=map_width;
-  //! @var lastY
-	//!< a integer that represents the end of the layer in the axis y
-  int lastY=map_height;
-
-  //! Checks if the camera is ahead of the posX in axis x
-	if (position_x<CAMERA.x){
-		//! Reallocates the beginning of the layer in the axis x
-		firstX = (CAMERA.x-position_x)/width;
-	}
-	else{
-		// do nothing
-	}
-
-	//! Checks if the camera is ahead of the posy in axis y
-	if (position_y<CAMERA.y){
-		//! Reallocates the beginning of the layer in the axis y
-		firstY = (CAMERA.y-position_y)/height;
-	 }
-	 else{
-		 // do nothing
-	 }
-
-  //! Defines the map and camera corners
-	//! @var map_corner_x
-	//!< Defines the corner of the map in the axis x
-	int map_corner_x = position_x+(map_width*width);
-	//! @var map_corner_y
-	//!< Defines the corner of the map in the axis y
-	int map_corner_y = position_y+(map_height*height);
-  //! @var mapCorner
-	Vec2 mapCorner = Vec2(map_corner_x,map_corner_y);//!< a two-dimensional vector, that represents the positons of the coners of the map
-	//! @var cameraConer
-  Vec2 cameraCorner = CAMERA+(WINSIZE/CAMERAZOOM);//!< a two-dimensional vector, that represents the positons of the coners of the camera
-
-  //! Checks if the coner of the map is ahead of the coner of the camera in axis
-  //! x
-  if (mapCorner.x>cameraCorner.x){
-		//! Reallocates the end of the layer in the axis x
-    lastX -= (mapCorner.x-cameraCorner.x)/width;
-  }
-	else{
-		// do nothing
-	}
-	//! Checks if the coner of the map is ahead of the coner of the camera in axis
-  //! y
-  if (mapCorner.y>cameraCorner.y){
-    //! Reallocates the end of the layer in the axis y
-		lastY -= (mapCorner.y-cameraCorner.y)/height;
-  }
-  else{
-		//do nothing
-	}
+	  //! Checks if the coner of the map is ahead of the coner of the camera in axis
+	  //! x
+	  if (mapCorner.x>cameraCorner.x){
+			//! Reallocates the end of the layer in the axis x
+	    *lastX -= (mapCorner.x-cameraCorner.x)/width;
+	  }
+		else{
+			// do nothing
+		}
+		//! Checks if the coner of the map is ahead of the coner of the camera in axis
+	  //! y
+	  if (mapCorner.y>cameraCorner.y){
+	    //! Reallocates the end of the layer in the axis y
+			*lastY -= (mapCorner.y-cameraCorner.y)/height;
+	  }
+	  else{
+			//do nothing
+		}
 }
 
 /*!
@@ -244,13 +213,20 @@ void TileMap::render_layer(int layer,int position_x ,int position_y) {
 */
 
 void TileMap::render_layer(int layer,int position_x ,int position_y) {
+	LOG_METHOD_START("TileMap::render_layer");
+	assert(position_x >= 0);
+	LOG_VARIABLE("position_x",position_x);
+	assert(position_y >= 0);
+	LOG_VARIABLE("position_y",position_y);
   //! @var width
 	//!< a integer that represents the tile set width
 	int width=tile_set->get_width();
+	assert(width >= 0);
   //! @var height
 	//!< a integer that represents the tile set height
 	int height=tile_set->get_height();
   //! @var tile
+	assert(height >= 0);
 	//! a integer that represents a tile
 	int tile;
   //! @var firstX
@@ -266,7 +242,7 @@ void TileMap::render_layer(int layer,int position_x ,int position_y) {
 	//!< a integer that represents the end of the layer in the axis y
   int lastY=map_height;
 
-	define_corners(firstX,firstY,lastX,lastY,width,height);
+	define_corners(&firstX,&firstY,&lastX,&lastY,width,height,position_x,position_y);
 
   //! Iterates the height of the layer
 	for (int y_iterator=firstY;y_iterator<=lastY;y_iterator++) {

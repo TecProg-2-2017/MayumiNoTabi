@@ -74,7 +74,7 @@ Text::~Text() {
 		//! Checks if that line has texture
 		if (line.texture){
 			//! Destroies the line texture
-			SDL_DestroyTexture(line.texture)
+			SDL_DestroyTexture(line.texture);
 		}
 		else{
 			//do nothing
@@ -84,8 +84,8 @@ Text::~Text() {
 }
 
 
-void render_line_texture (Rect* clipRect, TextLine line,Vec2 clipRectEnd,
-													Vec2 lineBoxEnd){
+void Text::render_line_texture (Rect* clipRect, TextLine line,Vec2 clipRectEnd,
+													Vec2 lineBoxEnd,int position_x,int position_y){
 	SDL_Rect clip;
 	SDL_Rect dest;
 
@@ -175,7 +175,8 @@ void Text::render(Vec2 camera, Rect* clipRect) {
 				//! Checks if the end position of the line is lower that the text box
 				//! rectangle end position in the axis
 				if (lineBoxEnd.y >= clipRect->y) {
-					render_line_texture(clipRect, line, clipRectEnd, lineBoxEnd);
+					render_line_texture(clipRect, line, clipRectEnd, lineBoxEnd,
+						position_x,position_y);
 				}
 				else{
 					continue;
@@ -221,7 +222,7 @@ void Text::remake_texture() {
 			else{
 				// do nothing
 			}
-			surface = remake_surface(surface);
+			surface = remake_surface(surface,&line);
 		}
 		SDL_FreeSurface(surface);
 
@@ -358,9 +359,6 @@ void Text::set_line(int line, string txt) {
 	}
 	LOG_METHOD_CLOSE("Text::set_line","void");
 }
-else{
-	// do nothing
-}
 
 void Text::set_alignment(Align al){
 	alignment = al;
@@ -450,47 +448,47 @@ Rect Text::get_box()const {
 	return box;
 }
 
-SDL_Surface* define_surface(SDL_Surface *surface){
+SDL_Surface* Text::define_surface(SDL_Surface *surface,TextLine* line){
 	//! Checks if the style is SOLID
 	if (style == Style::SOLID){
 		//! Applies the style is SOLID
-		surface = TTF_RenderText_Solid(font.get(), line.text.c_str(), color);
+		surface = TTF_RenderText_Solid(font.get(), line->text.c_str(), color);
 	}
 	//! Checks if the style is SHADED
 	else if (style==Style::SHADED){
 		//! Applies the style is SHADED
-		surface = TTF_RenderText_Shaded(font.get(), line.text.c_str(),
+		surface = TTF_RenderText_Shaded(font.get(), line->text.c_str(),
 																			color,SDL_COLOR_BLACK);
 	}
 	//! Checks if the style is BLENDED
 	else if (style == Style::BLENDED){
 		//! Applies the style is BLENDED
-		surface = TTF_RenderText_Blended(font.get(), line.text.c_str(), color);
+		surface = TTF_RenderText_Blended(font.get(), line->text.c_str(), color);
 	}
 	else{
 		// do nothing
 	}
 
-	return surface
+	return surface;
 }
 
-SDL_Surface* remake_surface(SDL_Surface *surface){
-	surface = define_surface(surface);
+SDL_Surface* Text::remake_surface(SDL_Surface *surface,TextLine* line){
+	surface = define_surface(surface,line);
 
-	line.texture = SDL_CreateTextureFromSurface(GAMERENDER, surface);
+	line->texture = SDL_CreateTextureFromSurface(GAMERENDER, surface);
 
 	//! Resize the text box
-	line.box.w = surface->w;
-	line.box.h = surface->h;
+	line->box.w = surface->w;
+	line->box.h = surface->h;
 	//!Checks if the width of the line is bigger than the box width
-	if (line.box.w > box.w){
-		box.w = i.box.w;
+	if (line->box.w > box.w){
+		box.w = line->box.w;
 	}
 	else{
 		// do nothing
 	}
-	line.box.y = box.h;
-	box.h += line.box.h;
+	line->box.y = box.h;
+	box.h += line->box.h;
 
 	return surface;
 }

@@ -15,8 +15,7 @@
 #include <assert.h>
 
 #define BACKGROUND "img/tela-inicio2.png"
-#define INSTRUCTION_TEXT "IDJ-Projeto\n\nPress [Space]" +
-													" to continue\n[E] Level Editor\n"
+#define INSTRUCTION_TEXT "IDJ-Projeto\n\nPress [Space] to continue\n[E] Level Editor\n"
 
 /*!
 	@class StateTitle
