@@ -26,13 +26,11 @@
 */
 TileSet::TileSet(int width, int height, string file_path) {
 	LOG_METHOD_START("TileSet::TileSet");
-	LOG_VARIABLE("width",width);
 	assert(width >= 0);
-	LOG_VARIABLE("height",height);
+	LOG_VARIABLE("width",width);
 	assert(height >= 0);
+	LOG_VARIABLE("height",height);
 	LOG_VARIABLE("file_path",file_path);
-	assert(file_path != NULL)
-	LOG_MSG("This is a constructor method of TileSet class");
 	load(width, height, file_path);
 	LOG_METHOD_CLOSE("TileSet::TileSet","constructor");
 }
@@ -63,7 +61,9 @@ TileSet::TileSet() {
 void TileSet::render(unsigned int index,float position_x,float position_y, float extended_scale) {
 	LOG_METHOD_START("TileSet::render");
 	LOG_VARIABLE("index",index);
+	assert(position_x >= 0);
 	LOG_VARIABLE("position_x",position_x);
+	assert(position_y >= 0);
 	LOG_VARIABLE("position_y",position_y);
 	LOG_VARIABLE("extended_scale",extended_scale);
 	//! Checks if the number of tiles is bigger that the index
@@ -94,12 +94,11 @@ void TileSet::render(unsigned int index,float position_x,float position_y, float
 */
 void TileSet::load(int  width, int height, string file_path) {
 	LOG_METHOD_START("TileSet::load");
-	LOG_VARIABLE("width",width);
 	assert(width >= 0);
-	LOG_VARIABLE("height",height);
+	LOG_VARIABLE("width",width);
 	assert(height >= 0);
+	LOG_VARIABLE("height",height);
 	LOG_VARIABLE("file_path",file_path);
-	assert(file_path != NULL);
   //! Attributes the value of the width and height of a tile
 	tile_width = width;
 	tile_height = height;
@@ -146,7 +145,7 @@ int TileSet::get_height() {
 */
 int TileSet::get_tile_count() {
 	LOG_METHOD_START("TileSet::get_tile_count");
-	LOG_METHOD_CLOSE("TileSet::get_tile_count",rows*colums);
-	assert(rows * colums >= 0);
+	LOG_METHOD_CLOSE("TileSet::get_tile_count",rows*columns);
+	assert(rows * columns >= 0);
 	return rows*columns;
 }

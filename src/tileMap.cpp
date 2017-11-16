@@ -38,8 +38,6 @@ TileMap::TileMap(int width, int height, TileSet* tile_set) : tile_set{tile_set},
 	LOG_VARIABLE("width",width);
 	assert(height >= 0);
 	LOG_VARIABLE("height",height);
-	assert(tile_set != NULL);
-	LOG_VARIABLE("tile_set",tale_set);
 	tile_matrix.reserve(map_width*map_height);
   //! Iterates through tileMatrix height of tile map
 	FOR(height_iterator, map_height)
@@ -59,8 +57,6 @@ TileMap::TileMap(int width, int height, TileSet* tile_set) : tile_set{tile_set},
     */
 TileMap::TileMap(TileSet* tile_set):tile_set{tile_set}{
 	LOG_METHOD_START("TileMap::TileMap");
-	assert(tile_set != NULL);
-	LOG_VARIABLE("tile_set",tile_set);
 	LOG_METHOD_CLOSE("TileMap::TileMap","constructor");
 }
 
@@ -74,8 +70,6 @@ TileMap::TileMap(TileSet* tile_set):tile_set{tile_set}{
 */
 void TileMap::load(ifstream& input_file) {
 	LOG_METHOD_START("TileMap::load");
-	assert(input_file != NULL);
-	LOG_VARIABLE("input_file",input_file);
   //! @var line
 	string line;//!< A string that represents the first line of the in file
 
@@ -115,8 +109,6 @@ void TileMap::load(ifstream& input_file) {
 */
 void TileMap::save(stringstream& output_file) {
 	LOG_METHOD_START("TileMap::save");
-	assert(output_file != NULL);
-	LOG_VARIABLE("output_file",output_file);
 
   //! Saves the width, height and depth of the tile matrix on out
 	output_file<<map_width<<","<<map_height<<","<<map_depth<<endl<<endl;
@@ -152,7 +144,6 @@ void TileMap::save(stringstream& output_file) {
 
 void TileMap::render_layer(int layer,int position_x ,int position_y) {
 	LOG_METHOD_START("TileMap::render_layer");
-	LOG_VARIABLE("layer"layer);
 	assert(position_x >= 0);
 	LOG_VARIABLE("position_x",position_x);
 	assert(position_y >= 0);
@@ -241,11 +232,11 @@ void TileMap::render_layer(int layer,int position_x ,int position_y) {
 */
 
 void TileMap::render(Vec2 position) {
-	LOG_METHOD_START("TileMap::render",TileMap::render);
-	assert(position != NULL);
+	LOG_METHOD_START("TileMap::render");
 	assert(position.x >= 0);
 	assert(position.y >= 0);
-	LOG_VARIABLE("position",position);
+	LOG_VARIABLE("position.x",position.x);
+	LOG_VARIABLE("position.y",position.y);
   //! Iterates through the layer of the tile map
 	FOR(depth_iterator,map_depth) {
 		//! Renders the tile map layer
@@ -367,7 +358,7 @@ void TileMap::change_size(int new_width,int new_height) {
     //! Iterates y from 0 to maxY
 		FOR(height_iterator,max_y){
 			//! Iterates x to 0 to maxX
-      FOR(width_iterator,max_x)
+      FOR(width_iterator,max_x){
 				int relative_position_x = width_iterator;
 				//! @var relative_position_y;
 				//!< Represents the relative y axis position of the element;
@@ -404,8 +395,6 @@ void TileMap::change_size(int new_width,int new_height) {
 */
 void TileMap::set_tile_set(TileSet* tile_set) {
 	LOG_METHOD_START("TileMap::set_tile_set");
-	assert(tile_set != NULL);
-	LOG_VARIABLE("tile_set",tile_set);
 	this->tile_set = tile_set;
 	LOG_METHOD_CLOSE("TileMap::set_tile_set","void");
 }

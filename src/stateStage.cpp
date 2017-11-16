@@ -33,8 +33,6 @@ StateStage::StateStage(string lvl):levelName{lvl},
 	floresta_bg3{"img/jogotela-ponte-away.png"}
 	{
 	LOG_METHOD_START("StateStage::StateStage");
-	assert(lvl >= 0);
-	LOG_VARIABLE("lvl",lvl);
 	LoadAssets();
 	LOG_METHOD_CLOSE("StateStage::StateStage","constructor");
 }
@@ -73,9 +71,8 @@ void StateStage::Begin() {
 */
 void StateStage::update(float time) {
 	LOG_METHOD_START("StateStage::update");
-	assert(lvl >= 0);
 	LOG_VARIABLE("time",time);
-	Camera::update(time);
+	Camera::update_camera(time);
 	//! Checks if the player requested to quit
 	if (INPUT.get_quit_requested()){
 		quit_requested = true;
