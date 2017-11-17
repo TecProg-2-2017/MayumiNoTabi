@@ -26,10 +26,11 @@
 */
 TileSet::TileSet(int width, int height, string file_path) {
 	LOG_METHOD_START("TileSet::TileSet");
-	assert(width >= 0);
+	assert(width > 0);
 	LOG_VARIABLE("width",width);
-	assert(height >= 0);
+	assert(height > 0);
 	LOG_VARIABLE("height",height);
+	assert(file_path != "");
 	LOG_VARIABLE("file_path",file_path);
 	load(width, height, file_path);
 	LOG_METHOD_CLOSE("TileSet::TileSet","constructor");
@@ -58,22 +59,23 @@ TileSet::TileSet() {
 	@return The execution of this method returns no value
 	@warning Method that requires review of comment
 */
-void TileSet::render(unsigned int index,float position_x,float position_y, float extended_scale) {
+void TileSet::render(unsigned int index, float position_x, float position_y,
+											float extended_scale) {
 	LOG_METHOD_START("TileSet::render");
 	LOG_VARIABLE("index",index);
 	LOG_VARIABLE("position_x",position_x);
 	LOG_VARIABLE("position_y",position_y);
 	LOG_VARIABLE("extended_scale",extended_scale);
 	//! Checks if the number of tiles is bigger that the index
-	if ((int)index<(rows*columns)) {
+	if ((int)index < (rows * columns)) {
 		//! var sprite_start_x
 		//!< A positive integer that represents the start of the sprite in x
-		int setclip_start_x = tile_width*(index%columns);
+		int setclip_start_x = tile_width * (index % columns);
 		//! var sprite_start_y
 		//!< A positive integer that represents the start of the sprite in y
 		int setclip_start_y = tile_height*(index/columns);
-		tileSet.SetClip(setclip_start_x,setclip_start_y,tile_width,tile_height);
-		tileSet.render(position_x,position_y,0,extended_scale);
+		tileSet.SetClip(setclip_start_x, setclip_start_y,tile_width, tile_height);
+		tileSet.render(position_x, position_y, 0, extended_scale);
 	}
 	else{
 		// do nothing
@@ -94,9 +96,9 @@ void TileSet::render(unsigned int index,float position_x,float position_y, float
 */
 void TileSet::load(int  width, int height, string file_path) {
 	LOG_METHOD_START("TileSet::load");
-	assert(width >= 0);
+	assert(width > 0);
 	LOG_VARIABLE("width",width);
-	assert(height >= 0);
+	assert(height > 0);
 	LOG_VARIABLE("height",height);
 	LOG_VARIABLE("file_path",file_path);
   //! Attributes the value of the width and height of a tile
@@ -107,9 +109,9 @@ void TileSet::load(int  width, int height, string file_path) {
   tileSet.Open(file_path);
 
   //! Defines the numbers of rows and columns of the tile set
-  rows = tileSet.GetHeight()/tile_height;
+  rows = tileSet.GetHeight() / tile_height;
 	assert(rows >= 0);
-	columns = tileSet.GetWidth()/tile_width;
+	columns = tileSet.GetWidth() / tile_width;
 	assert(columns >= 0);
 	LOG_METHOD_CLOSE("TileSet::load","void");
 }
@@ -147,5 +149,5 @@ int TileSet::get_tile_count() {
 	LOG_METHOD_START("TileSet::get_tile_count");
 	LOG_METHOD_CLOSE("TileSet::get_tile_count",rows*columns);
 	assert(rows * columns >= 0);
-	return rows*columns;
+	return rows * columns;
 }

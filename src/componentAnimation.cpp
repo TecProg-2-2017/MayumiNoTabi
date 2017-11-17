@@ -151,6 +151,7 @@ CompAnim::~CompAnim() {
     else {
       // Do nothing
     }
+    LOG_MSG("bleh");
 
     delete colliders[i];
   }
