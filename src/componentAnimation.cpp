@@ -151,6 +151,7 @@ CompAnim::~CompAnim() {
     else {
       // Do nothing
     }
+    LOG_MSG("bleh");
 
     delete colliders[i];
   }
@@ -218,7 +219,7 @@ void CompAnim::checks_animation_call(int frame) {
   LOG_VARIABLE("frame", frame);
   LOG_VARIABLE("called", called);
 
-  assert(frame > 0);
+  assert(frame >= 0);
 
   if (!called) {
     // Iterates through frame
@@ -299,7 +300,7 @@ bool CompAnim::compare_frames(int frame1, int frame2) {
   LOG_VARIABLE("frame1", frame1);
   LOG_VARIABLE("frame2", frame2);
 
-  assert(frame1 < 0 or frame2 < 0);
+  assert(frame1 >= 0 and frame2 >= 0);
 
   if (frame1 != frame2) {
     LOG_METHOD_CLOSE("CompAnim::compare_frames", 'true');
@@ -396,7 +397,7 @@ void CompAnim::set_new_frame(int frame1, int frame2) {
   LOG_VARIABLE("frame1", frame1);
   LOG_VARIABLE("frame2", frame2);
 
-  assert(frame1 < 0 or frame2 < 0);
+  assert(frame1 >= 0 and frame2 >= 0);
 
   // Checks if current frames is the same as the next one, if they're not the
   // next frame is set

@@ -32,13 +32,16 @@
     * tile map
     */
 
-TileMap::TileMap(int width, int height, TileSet* tile_set) : tile_set{tile_set},map_width{width},map_height{height},map_depth{1} {
+TileMap::TileMap(int width, int height, TileSet* tile_set) : tile_set{tile_set},
+																														map_width{width},
+																														map_height{height},
+																														map_depth{1} {
 	LOG_METHOD_START("TileMap::TileMap");
 	assert(width >= 0);
 	LOG_VARIABLE("width",width);
 	assert(height >= 0);
 	LOG_VARIABLE("height",height);
-	tile_matrix.reserve(map_width*map_height);
+	tile_matrix.reserve(map_width * map_height);
   //! Iterates through tileMatrix height of tile map
 	FOR(height_iterator, map_height)
 	  //! Iterates through tileMatrix width of tile map
@@ -55,7 +58,7 @@ TileMap::TileMap(int width, int height, TileSet* tile_set) : tile_set{tile_set},
 		*	\brief A pointer to TileSet, that represents the first tile set of the
     * tile map
     */
-TileMap::TileMap(TileSet* tile_set):tile_set{tile_set}{
+TileMap::TileMap(TileSet* tile_set) : tile_set{tile_set}{
 	LOG_METHOD_START("TileMap::TileMap");
 	LOG_METHOD_CLOSE("TileMap::TileMap","constructor");
 }
@@ -78,21 +81,21 @@ void TileMap::load(ifstream& input_file) {
 
 	//! Reads a line of in and defines the map width, map height and map depth
 	tile_matrix.clear();
-	tile_matrix.reserve(map_width*map_height*map_depth);
+	tile_matrix.reserve(map_width * map_height * map_depth);
 
   //! @var tile
 	int tile;//!< a integer that represents a tile
 
   //! Iterates through the tile matrix depth
-	FOR(d,map_depth) {
+	FOR(depth_iterator, map_depth) {
     //! Iterates through the tile matrix height
-		FOR(h,map_height) {
+		FOR(height_iterator, map_height) {
       //! Iterates through the tile matrix width
-			FOR(w,map_width) {
+			FOR(width_iterator, map_width) {
         //! Loads each position from in and saves on tile matrix
         input_file >> tile;
 				input_file.ignore(1);
-				at(w,h,d) = tile-1;
+				at(width_iterator, height_iterator, depth_iterator) = tile - 1;
 			}
 		}
 	}
@@ -114,11 +117,11 @@ void TileMap::save(stringstream& output_file) {
 	output_file<<map_width<<","<<map_height<<","<<map_depth<<endl<<endl;
 
   //! Iterates through the tile matrix depth
-	FOR(depth_iterator,map_depth) {
+	FOR(depth_iterator, map_depth) {
     //! Iterates through the tile matrix width
-		FOR(height_iterator,map_height) {
+		FOR(height_iterator, map_height) {
       //! Iterates through the tile matrix width
-			FOR(width_iterator,map_width) {
+			FOR(width_iterator, map_width) {
         //! Saves each position of the tile matrix in the out
 				output_file<<at(width_iterator,height_iterator,depth_iterator)+1<<",\t";
 			}
@@ -152,19 +155,19 @@ void TileMap::save(stringstream& output_file) {
 void TileMap::define_corners(int *firstX, int *firstY, int *lastX, int *lastY,
 															int width, int height, int position_x,
 															 int position_y ){
-	//! Checks if the camera is ahead of the posX in axis x
-		if (position_x<CAMERA.x){
+	  //! Checks if the camera is ahead of the posX in axis x
+		if (position_x < CAMERA.x){
 			//! Reallocates the beginning of the layer in the axis x
-			*firstX = (CAMERA.x-position_x)/width;
+			*firstX = (CAMERA.x-position_x) / width;
 		}
 		else{
 			// do nothing
 		}
 
 		//! Checks if the camera is ahead of the posy in axis y
-		if (position_y<CAMERA.y){
+		if (position_y < CAMERA.y){
 			//! Reallocates the beginning of the layer in the axis y
-			*firstY = (CAMERA.y-position_y)/height;
+			*firstY = (CAMERA.y - position_y) / height;
 		 }
 		 else{
 			 // do nothing
@@ -172,27 +175,27 @@ void TileMap::define_corners(int *firstX, int *firstY, int *lastX, int *lastY,
 		//! @var mapCorner
 		//!< a two-dimensional vector, that represents the positons of the coners
 		//!< of the map
-		Vec2 mapCorner = Vec2(position_x+(map_width*width),
+		Vec2 mapCorner = Vec2(position_x + (map_width*width),
 													position_y+(map_height*height));
 		//! @var cameraConer
 		//!< a two-dimensional vector, that represents the positons of the coners of
 		//!< the camera
-	  Vec2 cameraCorner = CAMERA+(WINSIZE/CAMERAZOOM);
+	  Vec2 cameraCorner = CAMERA + (WINSIZE / CAMERAZOOM);
 
-	  //! Checks if the coner of the map is ahead of the coner of the camera in axis
-	  //! x
-	  if (mapCorner.x>cameraCorner.x){
+	  //! Checks if the coner of the map is ahead of the coner of the camera in
+	  //! axis x
+	  if (mapCorner.x > cameraCorner.x){
 			//! Reallocates the end of the layer in the axis x
-	    *lastX -= (mapCorner.x-cameraCorner.x)/width;
+	    *lastX -= (mapCorner.x - cameraCorner.x) / width;
 	  }
 		else{
 			// do nothing
 		}
-		//! Checks if the coner of the map is ahead of the coner of the camera in axis
-	  //! y
-	  if (mapCorner.y>cameraCorner.y){
+		//! Checks if the coner of the map is ahead of the coner of the camera in
+	  //! axis y
+	  if (mapCorner.y > cameraCorner.y){
 	    //! Reallocates the end of the layer in the axis y
-			*lastY -= (mapCorner.y-cameraCorner.y)/height;
+			*lastY -= (mapCorner.y - cameraCorner.y) / height;
 	  }
 	  else{
 			//do nothing
@@ -212,15 +215,12 @@ void TileMap::define_corners(int *firstX, int *firstY, int *lastX, int *lastY,
   @warning Method that requires review of comment
 */
 
-void TileMap::render_layer(int layer,int position_x ,int position_y) {
+void TileMap::render_layer(int layer, int position_x, int position_y) {
 	LOG_METHOD_START("TileMap::render_layer");
-	assert(position_x >= 0);
-	LOG_VARIABLE("position_x",position_x);
-	assert(position_y >= 0);
 	LOG_VARIABLE("position_y",position_y);
   //! @var width
 	//!< a integer that represents the tile set width
-	int width=tile_set->get_width();
+	int width = tile_set->get_width();
 	assert(width >= 0);
   //! @var height
 	//!< a integer that represents the tile set height
@@ -228,33 +228,34 @@ void TileMap::render_layer(int layer,int position_x ,int position_y) {
   //! @var tile
 	assert(height >= 0);
 	//! a integer that represents a tile
-	int tile;
+	int tile = 0;
   //! @var firstX
 	//!< a integer that represents the beginning of the layer in the axis x
-	int firstX=0;
+	int firstX = 0;
   //! @var firstY
 	//!< a integer that represents the beginning of the layer in the axis y
-  int firstY=0;
+  int firstY = 0;
   //! @var lastX
 	//!< a integer that represents the end of the layer in the axis x
-  int lastX=map_width;
+  int lastX = map_width;
   //! @var lastY
 	//!< a integer that represents the end of the layer in the axis y
-  int lastY=map_height;
+  int lastY = map_height;
 
-	define_corners(&firstX,&firstY,&lastX,&lastY,width,height,position_x,position_y);
+	define_corners(&firstX ,&firstY, &lastX, &lastY, width, height, position_x,
+									position_y);
 
   //! Iterates the height of the layer
-	for (int y_iterator=firstY;y_iterator<=lastY;y_iterator++) {
+	for (int y_iterator = firstY; y_iterator <= lastY; y_iterator++) {
 		//! Iterates the width of the layer
-    for (int x_iterator=firstX;x_iterator<=lastX;x_iterator++) {
+    for (int x_iterator = firstX; x_iterator <= lastX; x_iterator++) {
 
 			tile = at(x_iterator, y_iterator, layer);
       //! Checks if the tile is empty
 			if (tile != EMPTY_TILE){
 				//! Render the tile
-				tile_set->render(tile, RENDERPOSX(position_x+(x_iterator*width)),
-													RENDERPOSY(position_y+(y_iterator*height)),
+				tile_set->render(tile, RENDERPOSX(position_x + (x_iterator * width)),
+													RENDERPOSY(position_y + (y_iterator * height)),
 													CAMERAZOOM);
 			}
 			else{
@@ -277,14 +278,12 @@ void TileMap::render_layer(int layer,int position_x ,int position_y) {
 
 void TileMap::render(Vec2 position) {
 	LOG_METHOD_START("TileMap::render");
-	assert(position.x >= 0);
-	assert(position.y >= 0);
 	LOG_VARIABLE("position.x",position.x);
 	LOG_VARIABLE("position.y",position.y);
   //! Iterates through the layer of the tile map
-	FOR(depth_iterator,map_depth) {
+	FOR(depth_iterator, map_depth) {
 		//! Renders the tile map layer
-    render_layer(depth_iterator,position.x,position.y);
+    render_layer(depth_iterator, position.x, position.y);
 	}
 	LOG_METHOD_CLOSE("TileMap::render","void");
 }
@@ -301,13 +300,10 @@ void TileMap::render(Vec2 position) {
   @brief A positive integer, that recives the z axis position of the element
 	@return A address to integer,that represents the tile of the tile matrix
 */
-int& TileMap::at(int position_x,int position_y,int position_z) {
+int& TileMap::at(int position_x, int position_y, int position_z) {
 	LOG_METHOD_START("TileMap::at");
-	assert(position_x >= 0);
 	LOG_VARIABLE("position_x",position_x);
-	assert(position_y >= 0);
 	LOG_VARIABLE("position_y",position_y);
-	assert(position_z >= 0);
 	LOG_VARIABLE("position_z",position_z);
 
 	//! @var relative_position_x;
@@ -315,20 +311,19 @@ int& TileMap::at(int position_x,int position_y,int position_z) {
 	int relative_position_x = position_x;
 	//! @var relative_position_y;
 	//!< Represents the relative y axis position of the element;
-	int relative_position_y = (position_y*map_width);
+	int relative_position_y = (position_y * map_width);
 	//! @var relative_position_z;
 	//!< Represents the relative z axis position of the element;
-	int relative_position_z = (position_z*map_width*map_height);
+	int relative_position_z = (position_z * map_width * map_height);
 	//! @var relative_position;
 	//!< Represents the relative position of the element;
-	int relative_position = relative_position_x +relative_position_y
+	int relative_position = relative_position_x + relative_position_y
 		+ relative_position_z;
 	//! @var tile
 	//!< Represents the found tile
-	int tile = tile_matrix[relative_position];
 
-	LOG_METHOD_CLOSE("TileMap::at",tile);
-	return tile;
+	LOG_METHOD_CLOSE("TileMap::at",tile_matrix[relative_position]);
+	return tile_matrix[relative_position];
 }
 
 /*!
@@ -345,11 +340,8 @@ int& TileMap::at(int position_x,int position_y,int position_z) {
 */
 int TileMap::at(int position_x,int position_y,int position_z) const{
 	LOG_METHOD_START("TileMap::at");
-	assert(position_x >= 0);
 	LOG_VARIABLE("position_x",position_x);
-	assert(position_y >= 0);
 	LOG_VARIABLE("position_y",position_y);
-	assert(position_z >= 0);
 	LOG_VARIABLE("position_z",position_z);
 
 	//! @var relative_position_x;
@@ -367,10 +359,9 @@ int TileMap::at(int position_x,int position_y,int position_z) const{
 		+ relative_position_z;
 	//! @var tile
 	//!< Represents the found tile
-	int tile = tile_matrix[relative_position];
 
-	LOG_METHOD_CLOSE("TileMap::at",tile);
-	return tile;
+	LOG_METHOD_CLOSE("TileMap::at",tile_matrix[relative_position]);
+	return tile_matrix[relative_position];
 }
 
 /*!
@@ -392,32 +383,35 @@ void TileMap::change_size(int new_width,int new_height) {
 	//!<  A integer vector, that represents the tile map with the new size
   vector<int> new_matrix(new_width*new_height*map_depth, EMPTY_TILE);
 	//! @var max_x
-  int max_x = min(new_width, map_width); //!< A integer, that represents the lower value between newWidth and mapWidth
+	//!< A integer, that represents the lower value between newWidth and mapWidth
+	int max_x = min(new_width, map_width);
 	assert(max_x >= 0);
 	//! @var max_y
-  int max_y = min(new_height, map_height); //!< A integer, that represents the lower value between newHeight and mapHeight
+	//!< A integer, that represents the lower value between newHeight and
+	//! mapHeight
+  int max_y = min(new_height, map_height);
 	assert(max_y >= 0);
 
   //! Iterates z from 0 to the tile map depth
-	FOR(depth_iterator,map_depth){
+	FOR(depth_iterator, map_depth){
     //! Iterates y from 0 to maxY
-		FOR(height_iterator,max_y){
+		FOR(height_iterator, max_y){
 			//! Iterates x to 0 to maxX
-      FOR(width_iterator,max_x){
+      FOR(width_iterator, max_x){
 				int relative_position_x = width_iterator;
 				//! @var relative_position_y;
 				//!< Represents the relative y axis position of the element;
-				int relative_position_y = (height_iterator*new_width);
+				int relative_position_y = (height_iterator * new_width);
 				//! @var relative_position_z;
 				//!< Represents the relative z axis position of the element;
-				int relative_position_z = (depth_iterator*new_width*new_height);
+				int relative_position_z = (depth_iterator * new_width * new_height);
 				//! @var relative_position;
 				//!< Represents the relative position of the element;
-				int relative_position = relative_position_x +relative_position_y
+				int relative_position = relative_position_x + relative_position_y
 					+ relative_position_z;
 
 				//! Copies the elements of the tile matrix to the newMatrix
-				new_matrix[relative_position] = at(width_iterator,height_iterator,
+				new_matrix[relative_position] = at(width_iterator, height_iterator,
 					depth_iterator);
 			}
 		}
@@ -452,8 +446,8 @@ void TileMap::set_tile_set(TileSet* tile_set) {
 */
 int TileMap::get_width() const{
 	LOG_METHOD_START("TileMap::get_width");
-	LOG_METHOD_CLOSE("TileMap::get_width",map_width);
 	assert(map_width >= 0);
+	LOG_METHOD_CLOSE("TileMap::get_width",map_width);
 	return map_width;
 }
 
@@ -465,8 +459,8 @@ int TileMap::get_width() const{
 */
 int TileMap::get_height() const{
 	LOG_METHOD_START("TileMap::get_height");
-	LOG_METHOD_CLOSE("TileMap::get_height",map_height);
 	assert(map_height >= 0);
+	LOG_METHOD_CLOSE("TileMap::get_height",map_height);
 	return map_height;
 }
 
@@ -477,7 +471,7 @@ int TileMap::get_height() const{
 */
 int TileMap::get_depth() const{
 	LOG_METHOD_START("TileMap::get_depth");
-	LOG_METHOD_CLOSE("TileMap::get_depth",map_depth);
 	assert(map_depth >= 0);
+	LOG_METHOD_CLOSE("TileMap::get_depth",map_depth);
 	return map_depth;
 }
