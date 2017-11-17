@@ -61,9 +61,7 @@ TileSet::TileSet() {
 void TileSet::render(unsigned int index,float position_x,float position_y, float extended_scale) {
 	LOG_METHOD_START("TileSet::render");
 	LOG_VARIABLE("index",index);
-	assert(position_x >= 0);
 	LOG_VARIABLE("position_x",position_x);
-	assert(position_y >= 0);
 	LOG_VARIABLE("position_y",position_y);
 	LOG_VARIABLE("extended_scale",extended_scale);
 	//! Checks if the number of tiles is bigger that the index

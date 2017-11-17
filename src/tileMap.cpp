@@ -325,10 +325,9 @@ int& TileMap::at(int position_x,int position_y,int position_z) {
 		+ relative_position_z;
 	//! @var tile
 	//!< Represents the found tile
-	int tile = tile_matrix[relative_position];
 
-	LOG_METHOD_CLOSE("TileMap::at",tile);
-	return tile;
+
+	return tile_matrix[relative_position];
 }
 
 /*!
@@ -367,10 +366,8 @@ int TileMap::at(int position_x,int position_y,int position_z) const{
 		+ relative_position_z;
 	//! @var tile
 	//!< Represents the found tile
-	int tile = tile_matrix[relative_position];
 
-	LOG_METHOD_CLOSE("TileMap::at",tile);
-	return tile;
+	return tile_matrix[relative_position];
 }
 
 /*!
