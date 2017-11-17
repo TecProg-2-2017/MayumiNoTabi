@@ -11,13 +11,19 @@
  *  @warning All variables are initialized
  */
 
- #include <componentMovement.hpp>
+#include <componentMovement.hpp>
 #include <gameObject.hpp>
 #include <game.hpp>
 #include <assert.h>
 
 
 //! Functions to be called by the methods in order to perform actions
+
+/*!
+	@fn CompMovement::chooseTypeComponentMovement
+	@brief Chooses the kid of the movement executed by the specified component
+	@params float time
+*/
 
 void CompMovement::chooseTypeComponentMovement(float time){
 
