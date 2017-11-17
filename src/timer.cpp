@@ -33,7 +33,7 @@ Timer::Timer() {
 void Timer::add_time(float additional_time) {
 	LOG_METHOD_START("Timer::add_time");
 	LOG_VARIABLE("time", time);
-	time+=additional_time;
+	time += additional_time;
 	LOG_METHOD_CLOSE("Timer::add_time","void");
 }
 
@@ -44,7 +44,7 @@ void Timer::add_time(float additional_time) {
 */
 void Timer::restart_time() {
 	LOG_METHOD_START("Timer::restart_time");
-	time=0;
+	time = 0;
 	LOG_METHOD_CLOSE("Timer::restart_time","void");
 }
 

@@ -37,17 +37,21 @@
 		*	\brief A positive integer, that represents the height of the text box
     */
 Text::Text(const string& txt, int fSize, SDL_Color c, Style st,
-		string file, int x, int y) : font_name{file} {
+						string file, int x, int y) : font_name{file} {
 	LOG_METHOD_START("Text::Text");
 	LOG_VARIABLE("txt",txt);
 	LOG_VARIABLE("fSize",fSize);
 	assert(c.r >= 0);
-	assert(c.g >= 0);
-	assert(c.b >= 0);
-	assert(c.a >= 0);
+	assert(c.r < 255);
 	LOG_VARIABLE("c.r",c.r);
+	assert(c.g >= 0);
+	assert(c.g < 255);
 	LOG_VARIABLE("c.g",c.g);
+	assert(c.b >= 0);
+	assert(c.b < 255);
 	LOG_VARIABLE("c.b",c.b);
+	assert(c.a >= 0);
+	assert(c.a < 255);
 	LOG_VARIABLE("c.a",c.a);
 	LOG_VARIABLE("file",file);
 	assert(x >= 0);
@@ -85,7 +89,7 @@ Text::~Text() {
 
 
 void Text::render_line_texture (Rect* clipRect, TextLine line,Vec2 clipRectEnd,
-													Vec2 lineBoxEnd,int position_x,int position_y){
+													Vec2 lineBoxEnd, int position_x, int position_y){
 	SDL_Rect clip;
 	SDL_Rect dest;
 
@@ -139,16 +143,20 @@ void Text::render(Vec2 camera, Rect* clipRect) {
 	LOG_VARIABLE("camera.y",camera.y);
 
 	//! @var pos
-	Vec2 pos = box.hotspot(hotspot); //!< A Vec2 that representes the position of the text box hotspot
+	//!< A Vec2 that representes the position of the text box hotspot
+	Vec2 pos = box.hotspot(hotspot);
 	assert(pos.x >= 0);
 	assert(pos.y >= 0);
 
 	//! @var x
-	int position_x = pos.x - (camera.x * CAMERAZOOM); //!< A positive integer that represents the beginning of the text box rectangle in the axis x
+	//!< A positive integer that represents the beginning of the text box
+	//! rectangle in the axis x
+	int position_x = pos.x - (camera.x * CAMERAZOOM);
 	//! @var y
-	int position_y = pos.y - (camera.y * CAMERAZOOM); //!< A positive integer that represents the beginning of the text box rectangle in the axis y
+	//!< A positive integer that represents the beginning of the text box
+	//! rectangle in the axis y
+	int position_y = pos.y - (camera.y * CAMERAZOOM);
 
-	//! \warning modularize decision structure
 	//! Checks if the text box rectangle exist
 	if (clipRect) {
 		//! @var
@@ -203,7 +211,8 @@ void Text::remake_texture() {
 	//! Checks if the font was initialized
 	if (font.get()) {
 		//! @var surface
-		SDL_Surface *surface = nullptr; //!< A pointer to SDL_Surface, that represents a surface
+		//!< A pointer to SDL_Surface, that represents a surface
+		SDL_Surface *surface = nullptr;
 		box.w = box.h = 0;
 		//! Iterates through all lines of the line_array
 		for (auto& line : line_array) {
