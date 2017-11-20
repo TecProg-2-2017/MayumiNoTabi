@@ -16,6 +16,14 @@
 
 #define BACKGROUND "img/tela-inicio2.png"
 #define INSTRUCTION_TEXT "IDJ-Projeto\n\nPress [Space] to continue\n[E] Level Editor\n"
+#define COMPONENT_Text_SIZE 36
+#define BG_START_POSITION_AXIS_X 0
+#define BG_START_POSITION_AXIS_Y 0
+#define BT1_START_POSITION_AXIS_X 500
+#define BT1_START_POSITION_AXIS_Y 300
+#define BT2_START_POSITION_AXIS_X 100
+#define BT2_START_POSITION_AXIS_Y 300
+
 
 /*!
 	@class StateTitle
@@ -79,7 +87,8 @@ void StateTitle::Begin() {
 	GameObject* text = new GameObject{Rect{(WINSIZE.x / 2), (WINSIZE.y / 2), 0,
 																					0}};//!< A GameObject with the informations of the game
 	assert(text != NULL);
-	text->AddComponent(new CompText{INSTRUCTION_TEXT, 36, SDL_COLOR_WHITE,
+	text->AddComponent(new CompText{INSTRUCTION_TEXT, COMPONENT_Text_SIZE,
+											SDL_COLOR_WHITE,
 											Hotspot::CENTER});
 	AddObject(text->uid);
 	LOG_METHOD_CLOSE("StateTitle::Begin","void");
@@ -134,9 +143,9 @@ void StateTitle::update(float time) {
 
 void StateTitle::render() {
 	LOG_METHOD_START("StateTitle::render");
-	bg.render(0,0);
-	bt1.render(500,300);
-	bt2.render(100,300);
+	bg.render(BG_START_POSITION_AXIS_X,BG_START_POSITION_AXIS_Y);
+	bt1.render(BT1_START_POSITION_AXIS_X,BT1_START_POSITION_AXIS_Y);
+	bt2.render(BT2_START_POSITION_AXIS_X,BT2_START_POSITION_AXIS_Y);
 	// RenderArray();
 	LOG_METHOD_CLOSE("StateTitle::render","void");
 }

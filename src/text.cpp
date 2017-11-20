@@ -17,6 +17,8 @@
 
 */
 
+#define MAXIMUM_COLOR 255
+#define MINIMUM_COLOR 0
 
 //! A constructor.
     /*!
@@ -41,17 +43,15 @@ Text::Text(const string& txt, int fSize, SDL_Color c, Style st,
 	LOG_METHOD_START("Text::Text");
 	LOG_VARIABLE("txt",txt);
 	LOG_VARIABLE("fSize",fSize);
-	assert(c.r >= 0);
-	assert(c.r < 255);
+	assert(c.r >= MINIMUM_COLOR);
+	assert(c.r <= MAXIMUM_COLOR);
 	LOG_VARIABLE("c.r",c.r);
-	assert(c.g >= 0);
-	assert(c.g < 255);
+	assert(c.g >= MINIMUM_COLOR);
+	assert(c.g <= MAXIMUM_COLOR);
 	LOG_VARIABLE("c.g",c.g);
-	assert(c.b >= 0);
-	assert(c.b < 255);
+	assert(c.b >= MINIMUM_COLOR);
+	assert(c.b <= MAXIMUM_COLOR);
 	LOG_VARIABLE("c.b",c.b);
-	assert(c.a >= 0);
-	assert(c.a < 255);
 	LOG_VARIABLE("c.a",c.a);
 	LOG_VARIABLE("file",file);
 	assert(x >= 0);
