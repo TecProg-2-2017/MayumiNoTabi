@@ -74,7 +74,8 @@ TileMap::TileMap(TileSet* tile_set) : tile_set{tile_set}{
 void TileMap::load(ifstream& input_file) {
 	LOG_METHOD_START("TileMap::load");
   //! @var line
-	string line;//!< A string that represents the first line of the in file
+	//!< A string that represents the first line of the in file
+	string line = "";
 
 	getline(input_file,line);
 	sscanf(line.c_str()," %d,%d,%d",&map_width,&map_height,&map_depth);
@@ -84,7 +85,7 @@ void TileMap::load(ifstream& input_file) {
 	tile_matrix.reserve(map_width * map_height * map_depth);
 
   //! @var tile
-	int tile;//!< a integer that represents a tile
+	int tile = 0;//!< a integer that represents a tile
 
   //! Iterates through the tile matrix depth
 	FOR(depth_iterator, map_depth) {

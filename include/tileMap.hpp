@@ -13,9 +13,9 @@ class GameObject;
 class TileMap{
 	vector<int> tile_matrix;
 	TileSet* tile_set;
-	int map_width;
-	int map_height;
-	int map_depth;
+	int map_width = 0;
+	int map_height = 0;
+	int map_depth = 0;
 public:
 	TileMap(int width, int height, TileSet* tile_set);
 	TileMap(TileSet* tile_set);
