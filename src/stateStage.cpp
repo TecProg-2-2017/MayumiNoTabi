@@ -43,12 +43,13 @@
 		* \param lvl
 		* \brief A string, that represents the name of the current level
 		*/
-StateStage::StateStage(string lvl):levelName{lvl},
+StateStage::StateStage(string level):level_name{level},
 	// floresta_bg1{"img/jogotela-campo-1-away.png"},
 	florest_bg2{"img/floresta-away.png"},
 	florest_bg3{"img/jogotela-ponte-away.png"}
 	{
 	LOG_METHOD_START("StateStage::StateStage");
+	LOG_VARIABLE("level",level);
 	LoadAssets();
 	LOG_METHOD_CLOSE("StateStage::StateStage","constructor");
 }
@@ -100,7 +101,7 @@ void StateStage::update(float time) {
 
 	//! Checks if the player pressed the key 'ESC'
 	if (INPUT.key_pressed(KEY_ESC)){
-		popRequested=true;
+		popRequested = true;
 	}
 	else{
 		// do nothing
@@ -112,8 +113,8 @@ void StateStage::update(float time) {
 
 	//! Checks if the player pressed the key 'u'
 	if (INPUT.key_pressed(KEY(u))){
-		AddObject(GameObject::MakePorco(pos+Vec2{BOAR_POSITION_AXIS_X,
-																							BOAR_POSITION_AXIS_Y}));
+		AddObject(GameObject::MakePorco(pos + Vec2{BOAR_POSITION_AXIS_X,
+																							 BOAR_POSITION_AXIS_Y}));
 	}
 	else{
 		// do nothing
@@ -121,8 +122,8 @@ void StateStage::update(float time) {
 
 	//! Checks if the player pressed the key 'p'
 	if (INPUT.key_pressed(KEY(p))){
-		AddObject(GameObject::MakeMike(pos+Vec2{MIKE_POSITION_AXIS_X,
-																						MIKE_POSITION_AXIS_Y}));
+		AddObject(GameObject::MakeMike(pos + Vec2{MIKE_POSITION_AXIS_X,
+																						  MIKE_POSITION_AXIS_Y}));
 	}
 	else{
 		// do nothing
@@ -130,10 +131,10 @@ void StateStage::update(float time) {
 
 	//! Checks if the player pressed the key 'o'
 	if (INPUT.key_pressed(KEY(o))){
-		AddObject(GameObject::MakeBanshee(pos+Vec2{BANSHEE_START_POSITION_AXIS_x,
-																								BANSHEE_START_POSITION_AXIS_Y},
-																			pos+Vec2{BANSHEE_END_POSITION_AXIS_x,
-																								BANSHEE_END_POSITION_AXIS_Y}));
+		AddObject(GameObject::MakeBanshee(pos + Vec2{BANSHEE_START_POSITION_AXIS_x,
+																								 BANSHEE_START_POSITION_AXIS_Y},
+																			pos + Vec2{BANSHEE_END_POSITION_AXIS_x,
+																								 BANSHEE_END_POSITION_AXIS_Y}));
 	}
 	else{
 		// do nothing
@@ -141,8 +142,8 @@ void StateStage::update(float time) {
 
 	//! Checks if the player pressed the key 'i'
 	if (INPUT.key_pressed(KEY(i))){
-		AddObject(GameObject::MakeMask(pos+Vec2{MASK_POSITION_AXIS_X,
-																						MASK_POSITION_AXIS_Y}));
+		AddObject(GameObject::MakeMask(pos + Vec2{MASK_POSITION_AXIS_X,
+																						  MASK_POSITION_AXIS_Y}));
 	}
 	else{
 		// do nothing

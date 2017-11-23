@@ -14,15 +14,15 @@
 #define PLAYER (GAMESTATE.entities[PLAYER_UID].get())
 
 class StateStage: public State{
-	string levelName;
+	string level_name = "";
 	Level level;
 public:
 	uint player;
 
-	StateStage(string lvl);
+	StateStage(string level = "");
 	~StateStage();
 
-	virtual void update(float time);
+	virtual void update(float time = "");
 	virtual void render();
 
 	virtual void Begin();
