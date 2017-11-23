@@ -71,9 +71,11 @@ void TileSet::render(unsigned int index, float position_x, float position_y,
 		//! var sprite_start_x
 		//!< A positive integer that represents the start of the sprite in x
 		int setclip_start_x = tile_width * (index % columns);
+		assert(setclip_start_x >= 0);
 		//! var sprite_start_y
 		//!< A positive integer that represents the start of the sprite in y
-		int setclip_start_y = tile_height*(index/columns);
+		int setclip_start_y = tile_height * (index / columns);
+		assert(setclip_start_y >= 0);
 		tileSet.SetClip(setclip_start_x, setclip_start_y,tile_width, tile_height);
 		tileSet.render(position_x, position_y, 0, extended_scale);
 	}

@@ -8,16 +8,16 @@
 class TileSet{
 	Sprite tileSet;
 
-	int rows;
-	int columns;
+	int rows = 0;
+	int columns = 0;
 
-	int tile_width;
-	int tile_height;
+	int tile_width = 0;
+	int tile_height = 0;
 public:
 	TileSet();
-	TileSet(int  width,int height,string file_path);
+	TileSet(int  width = 0,int height = 0,string file_path);
 
-	void load(int width, int height, string file_path);
+	void load(int width = 0, int height = 0, string file_path);
 
 	void render(unsigned int index,float position_x,float position_y, float extended_scale = 1.0f);
 
