@@ -90,8 +90,8 @@ Text::~Text() {
 
 void Text::render_line_texture (Rect* clipRect, TextLine line,Vec2 clipRectEnd,
 													Vec2 lineBoxEnd, int position_x, int position_y){
-	SDL_Rect clip;
-	SDL_Rect dest;
+	SDL_Rect clip{0, 0, 0, 0};
+	SDL_Rect dest{0, 0, 0, 0};
 
 	if (clipRect->x > line.box.x) {
 		clip.x = clipRect->x - line.box.x;
@@ -190,12 +190,12 @@ void Text::render(Vec2 camera, Rect* clipRect) {
 	}
 	else {
 		for (auto& line : line_array) {
-			SDL_Rect dest;
-			dest.x=position_x+line.box.x;
-			dest.y=position_y+line.box.y;
-			dest.w=line.box.w;
-			dest.h=line.box.h;
-			SDL_RenderCopy(GAMERENDER,line.texture,nullptr,&dest);
+			SDL_Rect dest{0, 0, 0, 0};
+			dest.x = position_x + line.box.x;
+			dest.y = position_y + line.box.y;
+			dest.w = line.box.w;
+			dest.h = line.box.h;
+			SDL_RenderCopy(GAMERENDER, line.texture, nullptr, &dest);
 		}
 	}
 	LOG_METHOD_CLOSE("Text::render","void");
@@ -318,7 +318,7 @@ void Text::set_text(string txt) {
 	stringstream text(txt); //!< A stringstream that recivies the txt
 	line_array.clear();
 	//! Iterates through all lines in text
-	for (TextLine line;getline(text, line.text);) {
+	for (TextLine line; getline(text, line.text);) {
 		//! Checks if the text in the line is empty
 		if (line.text=="") {
 			//! Attributes a white space to the line text
@@ -362,8 +362,8 @@ void Text::set_line(int line, string txt) {
 	LOG_METHOD_CLOSE("Text::set_line","void");
 }
 
-void Text::set_alignment(Align al){
-	alignment = al;
+void Text::set_alignment(Align alignment){
+	this.alignment = alignment;
 	remake_texture();
 }
 
@@ -374,20 +374,20 @@ void Text::set_alignment(Align al){
 	@brief A SDL_Color, that represents the new color
   @return The execution of this method returns no value
 */
-void Text::set_color(SDL_Color c) {
+void Text::set_color(SDL_Color color) {
 	LOG_METHOD_START("Text::set_color");
-	assert(c.r >= 0);
-	assert(c.g >= 0);
-	assert(c.b >= 0);
-	assert(c.a >= 0);
-	LOG_VARIABLE("c.r",c.r);
-	LOG_VARIABLE("c.g",c.g);
-	LOG_VARIABLE("c.b",c.b);
-	LOG_VARIABLE("c.a",c.a);
-	color.r = c.r;
-	color.g = c.g;
-	color.b = c.b;
-	color.a = c.a;
+	assert(color.r >= 0);
+	assert(color.g >= 0);
+	assert(color.b >= 0);
+	assert(color.a >= 0);
+	LOG_VARIABLE("color.r",color.r);
+	LOG_VARIABLE("c.g",color.g);
+	LOG_VARIABLE("color.b",color.b);
+	LOG_VARIABLE("color.a",color.a);
+	this.color.r = color.r;
+	this.color.g = color.g;
+	this.color.b = color.b;
+	this.color.a = color.a;
 	remake_texture();
 	LOG_METHOD_CLOSE("Text::set_color","void");
 }
@@ -395,13 +395,13 @@ void Text::set_color(SDL_Color c) {
 /*!
 	@fn void Text::SetStyle(Style st)
 	@brief A setter for the text style
-	@param st
+	@param style
 	@brief A Style, that represents the new style
   @return The execution of this method returns no value
 */
-void Text::set_style(Style st) {
+void Text::set_style(Style style) {
 	LOG_METHOD_START("Text::SetStyle");
-	style = st;
+	this.style = style;
 	remake_texture();
 	LOG_METHOD_CLOSE("Text::set_style","void");
 }
@@ -428,14 +428,14 @@ void Text::set_font_size(int fSize) {
 /*!
 	@fn void Text::SetHotspot(Hotspot h)
 	@brief A setter for the text box hotspot
-	@param h
+	@param hotspot
 	@brief A Hotspot, that represents the new box hotspot
   @return The execution of this method returns no value
 */
-void Text::set_hotspot(Hotspot h) {
+void Text::set_hotspot(Hotspot hotspot) {
 	LOG_METHOD_START("Text::set_hotspot");
-	LOG_VARIABLE("h",h);
-	hotspot = h;
+	LOG_VARIABLE("hotspot",hotspot);
+	this.hotspot = hotspot;
 	LOG_METHOD_CLOSE("Text::set_hotspot","void");
 }
 
@@ -446,18 +446,22 @@ void Text::set_hotspot(Hotspot h) {
 */
 Rect Text::get_box()const {
 	LOG_METHOD_START("Text::get_box");
+	LOG_VARIABLE("box.r",box.r);
+	LOG_VARIABLE("box.g",box.g);
+	LOG_VARIABLE("box.b",box.b);
+	LOG_VARIABLE("box.a",box.a);
 	LOG_METHOD_CLOSE("Text::get_box",box);
 	return box;
 }
 
-SDL_Surface* Text::define_surface(SDL_Surface *surface,TextLine* line){
+SDL_Surface* Text::define_surface(SDL_Surface *surface, TextLine* line){
 	//! Checks if the style is SOLID
 	if (style == Style::SOLID){
 		//! Applies the style is SOLID
 		surface = TTF_RenderText_Solid(font.get(), line->text.c_str(), color);
 	}
 	//! Checks if the style is SHADED
-	else if (style==Style::SHADED){
+	else if (style == Style::SHADED){
 		//! Applies the style is SHADED
 		surface = TTF_RenderText_Shaded(font.get(), line->text.c_str(),
 																			color,SDL_COLOR_BLACK);
