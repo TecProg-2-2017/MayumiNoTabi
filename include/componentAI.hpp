@@ -19,6 +19,8 @@ public:
 
 	CompAI(aiFunc func);
 	~CompAI();
+
+private:
 	void render_component_ai();
 	void update(float time);
 	void render();

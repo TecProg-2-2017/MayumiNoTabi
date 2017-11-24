@@ -23,12 +23,12 @@ public:
   //public members
   CompAnimControl(string filename,CompCollider* collider);
   ~CompAnimControl();
-
-  void change_current(string anim,bool rep=true);
   CompAnim& get_current();
   const string& get_current_name()const;
   string& get_current_name();
 
+private:
+  void change_current(string anim,bool rep=true);
   void update(float time);
   void render();
   void own(GameObject *game_object);

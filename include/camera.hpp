@@ -17,16 +17,21 @@ class GameObject;
 
 
 class Camera {
-  static bool camera_is_following;
-  static uint camera_focus;
 
 public:
+  static bool camera_is_following;
+  static uint camera_focus;
   static Vec2 camera_position;
   static Vec2 camera_speed;
   static Vec2 camera_size;
   static float camera_zoom;
   static bool camera_is_locked;
 
+  static Vec2 render_camera_pos(const Vec2& vec2_vector);
+  static float render_camera_pos_x(const float& x_axis_pos);
+  static float render_camera_pos_y(const float& y_axis_pos);
+
+private:
   static void follow(uint new_focus);
   static void unfollow();
   static uint get_camera_focus();
@@ -37,9 +42,6 @@ public:
 
   static void center_camera_to(const Vec2& vec2_vector);
 
-  static Vec2 render_camera_pos(const Vec2& vec2_vector);
-  static float render_camera_pos_x(const float& x_axis_pos);
-  static float render_camera_pos_y(const float& y_axis_pos);
 };
 
 #endif

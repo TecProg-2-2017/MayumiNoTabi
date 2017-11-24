@@ -13,15 +13,16 @@
 
 class CompAnim : public Component{
 public:
+	//public members
 	vector<CompCollider*> colliders;
 	map<int,vector<function<void(GameObject*)>>> frameFunc;
 	Sprite sp;
 	bool called=true;
-
-	//public members
 	CompAnim();
 	CompAnim(string file,CompCollider* coll);
 	~CompAnim();
+
+private:
 
 	int get_frame_count()const;
 	int get_current_frame()const;
